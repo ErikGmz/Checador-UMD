@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+ <title>Checador</title>
+ <meta charset = "utf-8">
+    <style type="text/css">
+
+#registro {
+    width:800px;
+    padding:0px;
+    margin:80px;
+    border: 3px dashed #FFF;
+    background-color:#01A9DC;
+	float: right;
+
+}
+
+#registro fieldset {
+    border:0;
+	background-color: rgba(0,0,255,0);
+    padding:50px 20px;
+}
+
+#registro legend {
+    font: bold 30px Arial, sans-serif;
+    color:white;
+    padding:0 5px;
+
+}
+
+#registro p label {
+    font:bold 18px Geneva, Arial, Helvetica, sans-serif;
+    float: center;
+    width: 22%;
+    text-align:center;
+    padding:5px;
+    color: #fff;
+
+}
+ .mi-imagen-abajo-derecha{
+    position:absolute;
+    bottom:5px;
+    right:10px;
+}		
+	.mi-imagen-abajo1-derecha{
+	 position:absolute;
+    bottom:5px;
+    right:80px;
+}
+
+.mi-imagen-abajo2-derecha{
+	 position:absolute;
+    bottom:5px;
+    right:150px;
+}
+#registro p br { clear: left; }
+
+.enviar { margin:3px 0 0 83px; }
+
+        #fondo
+{position: absolute; top: 0; left: 0; width: 100%; z-index: -1}
+</style>
+
+    
+    
+</head>
+
+<body style="overflow-y:hidden">
+    <img id="fondo" src="img/checador_izquierda.png" alt="background image" />
+
+    
+<!--Pagina principal del Checador      -->
+    <div id="registro">
+
+        <fieldset>
+    <!-- Formulario para registro de Entrada y Salida con los campos tipo y id al momento de dar enviar mandar los datos a checador.php-->
+    <form action="checador.php" method="post"> 
+
+<center>
+<legend>Registro de Entrada y Salida</legend>
+
+<p>
+	<br>
+    <label>Eliga el tipo de Registro:</label><br><br>
+    <input type="radio" name="tipo" value="1"><label>Entrada</label>
+    <input type="radio" name="tipo" value="2"><label>Salida</label>  
+   
+         <br><br><br>
+        <label>Ingrese su ID: </label> <br>
+         <input type="text" style="WIDTH: 200px; HEIGHT: 50px; font-size: 25px; text-align:center" size=10 name="id" value="" required/>
+         <br><br><br>
+         <input type="submit" style="WIDTH: 150px; HEIGHT: 45px" name="submit" value="Registrar">
+           
+</p>
+	</center>
+		 
+</form>
+		 
+</fieldset>
+    </div>
+	<!-- ImageButton para acceder a la parte de Administrador, para haces esto es necesesario loggearse-->
+	<a href="login.php" ><img class="mi-imagen-abajo-derecha" src="img/admin.png" width="50" height="50"   /></a>
+	<a href="registrar_usr.php" ><img class="mi-imagen-abajo1-derecha" src="img/addusr.png" width="50" height="50"   /></a>
+     <a href="login.php" ><img class="mi-imagen-abajo2-derecha" src="img/contingencia.png" width="50" height="50"  align="right" /></a>
+      
+   
+</body>
+</html>
