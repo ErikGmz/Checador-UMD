@@ -1,0 +1,37 @@
+.fondo-pantone-azul-claro {
+    background-color: rgb(207, 216, 235);
+}
+
+.fondo-pantone-azul-intermedio {
+    background-color: rgb(176, 178, 210);
+}
+
+.fondo-pantone-azul-oscuro {
+    background-color: rgb(22, 48, 114);
+}
+
+.fondo-pantone-amarillo {
+    background-color: rgb(249, 177, 34);
+}
+
+.fondo-pantone-rojo-oscuro {
+    background-color: rgb(224, 0, 91);
+}
+
+.fondo-pantone-rojo-claro {
+    background-color: rgb(255, 143, 161);
+}
+
+.fondo-pantone-verde-oscuro {
+    background-color: rgb(1, 145, 56);
+}
+
+.fondo-pantone-verde-claro {
+    background-color: rgb(135, 211, 148);
+}
+
+.centrado-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

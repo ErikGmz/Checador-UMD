@@ -1,0 +1,40 @@
+body {
+    background-image: url("../img/iconouaa.png");
+    background-repeat: repeat;
+    background-size: clamp(50px, 7vw, 300px);
+}
+
+@media screen and (max-width: 991px) {
+    #logouaa-claro {
+        content: url(../img/logouaa-reducido-claro.png);
+    }
+}
+
+@media screen and (min-width: 992px) {
+    #logouaa-claro {
+        content: url(../img/logouaa-claro.png);
+    }
+
+    .row.interfaz {
+        height: 100%;
+        max-height: 645px;
+    }
+
+    img {
+        max-width: 270px !important;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    img {
+        max-width: 350px !important;
+    }
+}
+
+.recuadro {
+    max-width: clamp(100px, 100%, 500px);
+}
+
+#ID-colaborador {
+    max-width: clamp(100px, 100%, 250px);
+}

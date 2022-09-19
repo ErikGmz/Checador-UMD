@@ -1,110 +1,125 @@
-<!DOCTYPE html>
+<!--Código HTML del archivo-->
+<html lang="es">
+    <!--Cabecera de la página-->
+    <head>
+        <!--Metadatos de la página-->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-<html lang="en">
+        <!--Estilos de la página-->
+        <link rel="stylesheet" href="css/clases_globales.css">
+        <link rel="stylesheet" href="css/estilos_checador.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
-<head>
- <title>Checador</title>
- <meta charset = "utf-8">
-    <style type="text/css">
+        <!--Título de la página-->
+        <title> Checador Unidad Médico Didáctica </title>
 
-#registro {
-    width:800px;
-    padding:0px;
-    margin:80px;
-    border: 3px dashed #FFF;
-    background-color:#01A9DC;
-	float: right;
+        <!--Ícono de la página-->
+        <link rel="apple-touch-icon" sizes="76x76" href="favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+        <link rel="manifest" href="site.webmanifest">
+        <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+    </head>
 
-}
+    <!--Cuerpo de la página-->
+    <body class="fondo-pantone-azul-oscuro">
+        <div class="container-xxl min-vh-100 p-4 py-lg-0">
+            <div class="row interfaz">
+                <div class="logotipos col-12 col-lg-4 mb-4 mb-lg-0">
+                    <div class="col-12">
+                        <div class="row interfaz">      
+                            <!--Logotipos de la página-->
+                            <div class="mb-4 mb-md-5 mb-lg-0 col-12 col-md-6 col-lg-12 centrado-flex">
+                                <img class="img-fluid" id="logouaa-claro">
+                            </div>
+        
+                            <div class="mb-5 mb-md-5 mb-lg-0 col-12 col-md-6 col-lg-12 text-center centrado-flex">
+                                <img class="img-fluid" src="img/logoUMD.png">
+                            </div>
 
-#registro fieldset {
-    border:0;
-	background-color: rgba(0,0,255,0);
-    padding:50px 20px;
-}
+                            <!--Botones para administradores-->
+                            <div class="mb-2 mb-md-0 col-12 d-flex justify-content-around align-items-center justify-content-md-evenly">
+                                <button class="btn btn-light text-muted"> <i class="bi bi-clipboard2-check-fill fs-3"> </i> </button>
+                                <button class="btn btn-light text-muted"> <i class="bi bi-person-plus-fill fs-3"> </i> </button>
+                                <button class="btn btn-light text-muted"> <i class="bi bi-key-fill fs-3"> </i> </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-#registro legend {
-    font: bold 30px Arial, sans-serif;
-    color:white;
-    padding:0 5px;
+                <!--Recuadro para los chequeos de los colaboradores-->
+                <div class="col-12 col-lg-8 centrado-flex">
+                    <div class="w-100 rounded-4 p-4 fondo-pantone-azul-claro">
+                        <!--Título-->
+                        <h4 class="text-center"> Registros de colaboradores </h4>
+                        <hr class="border border-1 border-dark mb-4"> 
 
-}
+                        <form class="mb-0" method="POST">
+                            <div class="row px-1">
+                                <!--Elección del tipo de registro-->
+                                <div class="col-12 mb-4">
+                                    <div class="rounded-2 fondo-pantone-verde-claro recuadro mx-auto"> 
+                                        <h6 class="text-center text-white fondo-pantone-verde-oscuro py-3 rounded-top mb-0"> 
+                                            Tipo de registro 
+                                        </h6>
 
-#registro p label {
-    font:bold 18px Geneva, Arial, Helvetica, sans-serif;
-    float: center;
-    width: 22%;
-    text-align:center;
-    padding:5px;
-    color: #fff;
-
-}
- .mi-imagen-abajo-derecha{
-    position:absolute;
-    bottom:5px;
-    right:10px;
-}		
-	.mi-imagen-abajo1-derecha{
-	 position:absolute;
-    bottom:5px;
-    right:80px;
-}
-
-.mi-imagen-abajo2-derecha{
-	 position:absolute;
-    bottom:5px;
-    right:150px;
-}
-#registro p br { clear: left; }
-
-.enviar { margin:3px 0 0 83px; }
-
-        #fondo
-{position: absolute; top: 0; left: 0; width: 100%; z-index: -1}
-</style>
-
+                                        <div class="py-4">
+                                            <div class="form-check d-flex justify-content-center">
+                                                <div>
+                                                    <input class="form-check-input mb-2" type="radio" name="chequeo" value="entrada" id="opcion-entrada" checked>
+                                                    <label class="form-check-label fw-semibold" for="opcion-entrada">
+                                                        Registro de entrada
+                                                    </label>
+                                                </div>
+                                            </div>
     
-    
-</head>
+                                            <div class="form-check d-flex justify-content-center">
+                                                <div>
+                                                    <input class="form-check-input" type="radio" name="chequeo" value="salida" id="opcion-salida">
+                                                    <label class="form-check-label fw-semibold" for="opcion-salida">
+                                                        Registro de salida
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-<body style="overflow-y:hidden">
-    <img id="fondo" src="img/checador_izquierda.png" alt="background image" />
+                                <!--Datos del colaborador-->
+                                <div class="col-12 mb-4">
+                                    <div class="rounded-2 text-center fondo-pantone-azul-intermedio recuadro mx-auto"> 
+                                        <h6 class="text-center text-white fondo-pantone-azul-oscuro py-3 rounded-top mb-0"> 
+                                            Datos del colaborador
+                                        </h6>
 
-    
-<!--Pagina principal del Checador      -->
-    <div id="registro">
+                                        <div class="p-4">
+                                            <label for="ID-colaborador" class="form-label fw-semibold"> ID del colaborador </label>
+                                            <input type="text" class="form-control text-center mx-auto" id="ID-colaborador" autocomplete="OFF">
+                                        </div>
+                                    </div>
+                                </div>  
 
-        <fieldset>
-    <!-- Formulario para registro de Entrada y Salida con los campos tipo y id al momento de dar enviar mandar los datos a checador.php-->
-    <form action="checador.php" method="post"> 
+                                <!--Botón de envío-->
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary fw-semibold">
+                                        Realizar chequeo
+                                    </button>
+                                </div>  
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<center>
-<legend>Registro de Entrada y Salida</legend>
-
-<p>
-	<br>
-    <label>Eliga el tipo de Registro:</label><br><br>
-    <input type="radio" name="tipo" value="1"><label>Entrada</label>
-    <input type="radio" name="tipo" value="2"><label>Salida</label>  
-   
-         <br><br><br>
-        <label>Ingrese su ID: </label> <br>
-         <input type="text" style="WIDTH: 200px; HEIGHT: 50px; font-size: 25px; text-align:center" size=10 name="id" value="" required/>
-         <br><br><br>
-         <input type="submit" style="WIDTH: 150px; HEIGHT: 45px" name="submit" value="Registrar">
-           
-</p>
-	</center>
-		 
-</form>
-		 
-</fieldset>
-    </div>
-	<!-- ImageButton para acceder a la parte de Administrador, para haces esto es necesesario loggearse-->
-	<a href="login.php" ><img class="mi-imagen-abajo-derecha" src="img/admin.png" width="50" height="50"   /></a>
-	<a href="registrar_usr.php" ><img class="mi-imagen-abajo1-derecha" src="img/addusr.png" width="50" height="50"   /></a>
-     <a href="login.php" ><img class="mi-imagen-abajo2-derecha" src="img/contingencia.png" width="50" height="50"  align="right" /></a>
-      
-   
-</body>
+        <!--Scripts de la página-->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+    </body>
 </html>
