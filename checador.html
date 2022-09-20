@@ -38,15 +38,25 @@
                                 <img class="img-fluid" id="logouaa-claro">
                             </div>
         
-                            <div class="mb-5 mb-md-5 mb-lg-0 col-12 col-md-6 col-lg-12 text-center centrado-flex">
+                            <div class="mb-5 mb-md-5 mb-lg-0 col-12 col-md-6 col-lg-12 centrado-flex">
                                 <img class="img-fluid" src="img/logoUMD.png">
                             </div>
 
                             <!--Botones para administradores-->
                             <div class="mb-2 mb-md-0 col-12 d-flex justify-content-around align-items-center justify-content-md-evenly">
-                                <button class="btn btn-light text-muted"> <i class="bi bi-clipboard2-check-fill fs-3"> </i> </button>
-                                <button class="btn btn-light text-muted"> <i class="bi bi-person-plus-fill fs-3"> </i> </button>
-                                <button class="btn btn-light text-muted"> <i class="bi bi-key-fill fs-3"> </i> </button>
+                                <div class="row botones">
+                                    <div class="mb-3 mb-sm-0 col-12 col-sm-6 mb-lg-4 col-lg-12 centrado-flex">
+                                        <button class="btn btn-light text-muted"> 
+                                            <span class="fs-6 fw-semibold"> <i class="bi bi-calendar-date-fill me-1"> </i> Consultar horas </span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="col-12 col-sm-6 col-lg-12 centrado-flex">
+                                        <button class="btn btn-light text-muted"> 
+                                            <span class="fs-6 fw-semibold"> <i class="bi bi-key-fill me-1"> </i> Modo administrador </span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -73,7 +83,7 @@
                                                 <div>
                                                     <input class="form-check-input mb-2" type="radio" name="chequeo" value="entrada" id="opcion-entrada" checked>
                                                     <label class="form-check-label fw-semibold" for="opcion-entrada">
-                                                        Registro de entrada
+                                                        Tiempo de entrada
                                                     </label>
                                                 </div>
                                             </div>
@@ -82,7 +92,7 @@
                                                 <div>
                                                     <input class="form-check-input" type="radio" name="chequeo" value="salida" id="opcion-salida">
                                                     <label class="form-check-label fw-semibold" for="opcion-salida">
-                                                        Registro de salida
+                                                        Tiempo de salida
                                                     </label>
                                                 </div>
                                             </div>
@@ -90,16 +100,16 @@
                                     </div>
                                 </div>
 
-                                <!--Datos del colaborador-->
+                                <!--Datos de registro-->
                                 <div class="col-12 mb-4">
                                     <div class="rounded-2 text-center fondo-pantone-azul-intermedio recuadro mx-auto"> 
                                         <h6 class="text-center text-white fondo-pantone-azul-oscuro py-3 rounded-top mb-0"> 
-                                            Datos del colaborador
+                                            Datos de registro
                                         </h6>
 
                                         <div class="p-4">
                                             <label for="ID-colaborador" class="form-label fw-semibold"> ID del colaborador </label>
-                                            <input type="text" class="form-control text-center mx-auto" id="ID-colaborador" autocomplete="OFF">
+                                            <input type="text" class="form-control text-center mx-auto" id="ID-colaborador" autocomplete="OFF" required>
                                         </div>
                                     </div>
                                 </div>  
@@ -107,7 +117,7 @@
                                 <!--Botón de envío-->
                                 <div class="col-12 text-center">
                                     <button type="submit" class="btn btn-primary fw-semibold">
-                                        Realizar chequeo
+                                        Realizar registro
                                     </button>
                                 </div>  
                             </div>
