@@ -31,6 +31,10 @@ body {
     }
 }
 
+.contenido {
+    width: min(100%, 600px);
+}
+
 .recuadro {
     max-width: clamp(100px, 100%, 500px);
 }
