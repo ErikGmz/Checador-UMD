@@ -1,0 +1,30 @@
+DELIMITER $$
+	CREATE TRIGGER calculoHorasTotales
+		BEFORE INSERT
+		ON chequeo FOR EACH ROW
+	BEGIN
+		IF NEW.hora_final IS NOT NULL THEN
+			SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
+		END IF;
+	END$$    
+DELIMITER ;
+
+DELIMITER $$
+	CREATE TRIGGER calculoHorasTotalesActualizacion
+		BEFORE UPDATE
+		ON chequeo FOR EACH ROW
+	BEGIN
+		IF NEW.hora_final IS NOT NULL THEN
+			SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
+		END IF;
+	END$$    
+DELIMITER ;
+
+DELIMITER $$
+	CREATE TRIGGER calculoHorasContingencia
+		BEFORE INSERT
+		ON contingencia FOR EACH ROW
+	BEGIN
+		SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
+	END$$    
+DELIMITER ;

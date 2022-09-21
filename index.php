@@ -9,7 +9,7 @@
 
         <!--Estilos de la página-->
         <link rel="stylesheet" href="css/clases_globales.css">
-        <link rel="stylesheet" href="css/estilos_checador.css">
+        <link rel="stylesheet" href="css/estilos_usuarios.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
@@ -30,43 +30,16 @@
     <body class="fondo-pantone-azul-oscuro">
         <div class="container-xxl min-vh-100 p-4 py-lg-0">
             <div class="row interfaz">
-                <div class="logotipos col-12 col-lg-4 mb-4 mb-lg-0">
-                    <div class="col-12">
-                        <div class="row interfaz">      
-                            <!--Logotipos de la página-->
-                            <div class="mb-4 mb-md-5 mb-lg-0 col-12 col-md-6 col-lg-12 centrado-flex">
-                                <img class="img-fluid" id="logouaa-claro">
-                            </div>
-        
-                            <div class="mb-5 mb-md-5 mb-lg-0 col-12 col-md-6 col-lg-12 centrado-flex">
-                                <img class="img-fluid" src="img/logoUMD.png">
-                            </div>
-
-                            <!--Botones para administradores-->
-                            <div class="mb-2 mb-md-0 col-12 d-flex justify-content-around align-items-center justify-content-md-evenly">
-                                <div class="row botones">
-                                    <div class="mb-3 mb-sm-0 col-12 col-sm-6 mb-lg-4 col-lg-12 centrado-flex">
-                                        <button class="btn btn-light text-muted"> 
-                                            <span class="fs-6 fw-semibold"> <i class="bi bi-calendar-date-fill me-1"> </i> Consultar horas </span>
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="col-12 col-sm-6 col-lg-12 centrado-flex">
-                                        <button class="btn btn-light text-muted"> 
-                                            <span class="fs-6 fw-semibold"> <i class="bi bi-key-fill me-1"> </i> Modo administrador </span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!--Logotipos y botones de la página-->
+                <?php
+                    include("componentes_interfaz/logotipos_responsivos_pagina.php");
+                ?>
 
                 <!--Recuadro para los chequeos de los colaboradores-->
                 <div class="col-12 col-lg-8 centrado-flex">
                     <div class="rounded-4 p-4 fondo-pantone-azul-claro contenido">
                         <!--Título-->
-                        <h4 class="text-center"> Registros de colaboradores </h4>
+                        <h4 class="text-center"> Registros de entradas y salidas </h4>
                         <hr class="border border-1 border-dark mb-4"> 
 
                         <form class="mb-0" method="POST">
@@ -74,7 +47,7 @@
                                 <!--Elección del tipo de registro-->
                                 <div class="col-12 mb-4">
                                     <div class="rounded-2 fondo-pantone-verde-claro recuadro mx-auto"> 
-                                        <h6 class="text-center text-white fondo-pantone-verde-oscuro py-3 rounded-top mb-0"> 
+                                        <h6 class="text-center text-white fondo-pantone-verde-oscuro py-3 rounded-top mb-0 px-3"> 
                                             Tipo de registro 
                                         </h6>
 
@@ -103,7 +76,7 @@
                                 <!--Datos de registro-->
                                 <div class="col-12 mb-4">
                                     <div class="rounded-2 text-center fondo-pantone-azul-intermedio recuadro mx-auto"> 
-                                        <h6 class="text-center text-white fondo-pantone-azul-oscuro py-3 rounded-top mb-0"> 
+                                        <h6 class="text-center text-white fondo-pantone-azul-oscuro py-3 rounded-top mb-0 px-3"> 
                                             Datos de registro
                                         </h6>
 

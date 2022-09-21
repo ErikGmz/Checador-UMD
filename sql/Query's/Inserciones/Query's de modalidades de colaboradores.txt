@@ -1,0 +1,4 @@
+INSERT INTO checadorumd.modalidad_colaborador(ID, nombre) VALUES (1, "Presencial"),
+(2, "Pasantía"),
+(3, "A distancia"),
+(4, "Mixta");

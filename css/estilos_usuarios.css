@@ -1,9 +1,3 @@
-body {
-    background-image: url("../img/iconouaa.png");
-    background-repeat: repeat;
-    background-size: clamp(50px, 7vw, 300px);
-}
-
 @media screen and (max-width: 991px) {
     #logouaa-claro {
         content: url(../img/logouaa-reducido-claro.png);
@@ -23,6 +17,10 @@ body {
     img {
         max-width: 270px !important;
     }
+}
+
+#logoUMD {
+    content: url(../img/logoUMD.png);
 }
 
 @media screen and (min-width: 1200px) {
