@@ -28,3 +28,12 @@ DELIMITER $$
 		SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
 	END$$    
 DELIMITER ;
+
+DELIMITER $$
+	CREATE TRIGGER calculoHorasContingenciaActualizacion
+		BEFORE UPDATE
+		ON contingencia FOR EACH ROW
+	BEGIN
+		SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
+	END$$    
+DELIMITER ;

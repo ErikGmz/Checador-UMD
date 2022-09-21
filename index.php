@@ -42,7 +42,7 @@
                         <h4 class="text-center"> Registros de entradas y salidas </h4>
                         <hr class="border border-1 border-dark mb-4"> 
 
-                        <form class="mb-0" method="POST">
+                        <form class="mb-0" method="POST" action="gestion_chequeos/almacenar_chequeo.php">
                             <div class="row px-1">
                                 <!--Elección del tipo de registro-->
                                 <div class="col-12 mb-4">
@@ -82,7 +82,7 @@
 
                                         <div class="p-4">
                                             <label for="ID-colaborador" class="form-label fw-semibold"> ID del colaborador </label>
-                                            <input type="text" class="form-control text-center mx-auto" id="ID-colaborador" autocomplete="OFF" required>
+                                            <input type="text" name="ID" class="form-control text-center mx-auto" id="ID-colaborador" autocomplete="OFF" required>
                                         </div>
                                     </div>
                                 </div>  

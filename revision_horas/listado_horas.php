@@ -20,7 +20,7 @@
     colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad
     FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
     JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
-    WHERE colaborador.ID = " . @$_GET["ID-colaborador"] . " LIMIT 1;")) {
+    WHERE colaborador.ID = '" . @$_GET["ID-colaborador"] . "' LIMIT 1;")) {
         if($usuario->num_rows > 0) {
             # Definir los datos del usuario encontrado.
             $resultados = $usuario->fetch_row();
@@ -68,7 +68,7 @@
             $chequeos = $conexion_base->query("SELECT chequeo.fecha_chequeo, chequeo.hora_inicial, 
             chequeo.hora_final, chequeo.tiempo_total, contingencia.tiempo_total AS tiempo_contingencia, 
             chequeo.desbloqueo FROM chequeo LEFT JOIN contingencia ON chequeo.fecha_chequeo = contingencia.fecha
-            WHERE chequeo.ID_colaborador = " . @$_GET["ID-colaborador"] . "
+            WHERE chequeo.ID_colaborador = '" . @$_GET["ID-colaborador"] . "'
             AND chequeo.fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final';");
 
             # Obtener el conteo de horas totales 
@@ -76,36 +76,46 @@
             if(isset($chequeos) && $chequeos->num_rows > 0) {
                 $calculo_horas_totales = $conexion_base->query("SELECT 
                 SEC_TO_TIME(SUM(TIME_TO_SEC(tiempo_total))) AS 
-                tiempo_colaboracion FROM chequeo WHERE ID_colaborador = $ID_colaborador
+                tiempo_colaboracion FROM chequeo WHERE ID_colaborador = '$ID_colaborador'
                 AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final';");
                 
                 if(isset($calculo_horas_totales) && $calculo_horas_totales->num_rows > 0) {
                     $resultado = $calculo_horas_totales->fetch_row();
-                    $horas_totales = $resultado[0];
-                    $calculo_horas_totales->close();
+                    if(empty($resultado[0])) {
+                        $horas_totales = "N/A";
+                    }
+                    else {
+                        $horas_totales = $resultado[0];
+                    }
                 }
                 else {
                     $horas_totales = "N/A";
                 }
+                @$calculo_horas_totales->close();
 
                 # Obtener las horas correspondientes
                 # al servicio social, para el caso de
                 # los colaboradores que son becarios.
-                list($horas, $minutos, $segundos) = explode(":", $horas_totales);
-                $horas = (int)$horas;
-                $horas -= $horas_becario;
-                if($horas < 0) {
-                    $horas_servicio = "N/A";
+                if($horas_totales != "N/A") {
+                    list($horas, $minutos, $segundos) = explode(":", $horas_totales);
+                    $horas = (int)$horas;
+                    $horas -= $horas_becario;
+                    if($horas < 0) {
+                        $horas_servicio = "N/A";
+                    }
+                    else {
+                        $horas = completar_cero($horas);
+                        $horas_servicio = $horas . ":" . $minutos . ":" . $segundos;
+                    }
                 }
                 else {
-                    $horas = completar_cero($horas);
-                    $horas_servicio = $horas . ":" . $minutos . ":" . $segundos;
+                    $horas_servicio = "N/A";
                 }
 
                 # Obtener el tiempo total de contingencias
                 # del colaborador correspondiente.
                 $horas_contingencias = $conexion_base->query("SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(tiempo_total))) 
-                AS tiempo_contingencias FROM contingencia WHERE ID_colaborador = $ID_colaborador
+                AS tiempo_contingencias FROM contingencia WHERE ID_colaborador = '$ID_colaborador'
                 AND fecha BETWEEN '$fecha_inicial' AND '$fecha_final';");
 
                 if(isset($horas_contingencias) && $horas_contingencias->num_rows > 0) {
@@ -116,16 +126,16 @@
                     else {
                         $tiempo_contingencias = "N/A";
                     }
-                    $horas_contingencias->close();
                 }
                 else {
                     $tiempo_contingencias = "N/A";
                 }
+                @$horas_contingencias->close();
 
                 # Obtener la cantidad de desbloqueos
                 # del colaborador correspondiente.
                 $cantidad_desbloqueos = $conexion_base->query("SELECT SUM(desbloqueo) FROM chequeo 
-                WHERE ID_colaborador = $ID_colaborador AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final';");
+                WHERE ID_colaborador = '$ID_colaborador' AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final';");
 
                 if(isset($cantidad_desbloqueos) && $cantidad_desbloqueos->num_rows > 0) {
                     $resultado = $cantidad_desbloqueos->fetch_row();
@@ -135,11 +145,11 @@
                     else {
                         $veces_desbloqueos = "N/A";
                     }
-                    $cantidad_desbloqueos->close();
                 }
                 else {
                     $veces_desbloqueos = "N/A";
                 }
+                @$cantidad_desbloqueos->close();
             }
         } 
         $usuario->close();
@@ -188,7 +198,7 @@
                 <div class="col-12 centrado-flex">
                     <div class="rounded-4 p-4 fondo-pantone-azul-claro contenedor">
                         <!--Título-->
-                        <h4 class="text-center"> Revisión desglosada de horas </h4>
+                        <h4 class="text-center"> Revisión de horas </h4>
                         <hr class="border border-1 border-dark mb-4"> 
 
                         <div class="row px-1">
@@ -204,7 +214,7 @@
                                         if(!isset($resultados)) {
                                         ?>
                                             <p class="fw-semibold mb-0">
-                                                El usuario no fue encontrado
+                                                El colaborador no fue encontrado
                                             </p>
                                         <?php
                                         }
@@ -234,8 +244,12 @@
                                                 Fecha inicial: <?php echo date("d-m-Y", strtotime($fecha_inicial)); ?>
                                             </p>
 
-                                            <p class="fw-semibold mb-0">
+                                            <p class="fw-semibold mb-2">
                                                 Fecha final: <?php echo date("d-m-Y", strtotime($fecha_final)); ?>
+                                            </p>
+
+                                            <p class="fw-semibold mb-0">
+                                                Tipo de revisión: <?php echo ((@$_GET["chequeo"] == "desglose") ? "Desglosada" : "Resumida") ?>
                                             </p>
                                         <?php
                                         }
@@ -248,13 +262,16 @@
                             <div class="col-12">
                                 <div class="rounded-2 text-center fondo-pantone-azul-intermedio mx-auto"> 
                                     <h6 class="text-center text-white fondo-pantone-azul-oscuro py-3 rounded-top mb-0 px-3"> 
-                                        Revisión de horas desglosadas
+                                        Reporte de horas
                                     </h6>
 
                                     <div class="table-responsive mx-auto py-4 px-0 px-sm-4"> 
+                                        <?php
+                                        if(@$_GET["chequeo"] == "desglose") {
+                                        ?>
                                         <table class="table table-striped mb-0">
                                             <thead>
-                                                <tr>
+                                                <tr">
                                                     <th scope="col"> Fecha de registro </th>
                                                     <th scope="col"> Contingencia </th>
                                                     <th scope="col"> Desbloqueo </th>
@@ -276,13 +293,13 @@
 
                                                     while($chequeo = $chequeos->fetch_row()) {
                                                         echo "<tr> ";
-                                                        echo "<th scope='row'> " . date("d-m-Y", strtotime($chequeo[0])) . " </th> ";
-                                                        echo "<td> " . ((empty($chequeo[4])) ? "N/A" : $chequeo[4]) .  " </td> ";
-                                                        echo "<td> " . (($chequeo[5] == "0") ? "N/A" : $chequeo[5]) .  " </td> ";
-                                                        echo "<td> " . $dias[date("w", strtotime($chequeo[0])) - 1] . " </td> ";
-                                                        echo "<td> " . date("h:i:s A", strtotime($chequeo[1])) . " </td> ";
-                                                        echo "<td> " . ((empty($chequeo[2])) ? "N/A" : date("h:i:s A", strtotime($chequeo[2]))) . " </td>";
-                                                        echo "<td> " . ((empty($chequeo[3])) ? "N/A" : $chequeo[3]) . " </td>";
+                                                        echo "<th scope='row' class='py-3'> " . date("d-m-Y", strtotime($chequeo[0])) . " </th> ";
+                                                        echo "<td class='py-3'> " . ((empty($chequeo[4])) ? "N/A" : $chequeo[4]) .  " </td> ";
+                                                        echo "<td class='py-3'> " . (($chequeo[5] == "0") ? "N/A" : $chequeo[5]) .  " </td> ";
+                                                        echo "<td class='py-3'> " . $dias[date("w", strtotime($chequeo[0])) - 1] . " </td> ";
+                                                        echo "<td class='py-3'> " . date("h:i:s A", strtotime($chequeo[1])) . " </td> ";
+                                                        echo "<td class='py-3'> " . ((empty($chequeo[2])) ? "N/A" : date("h:i:s A", strtotime($chequeo[2]))) . " </td>";
+                                                        echo "<td class='py-3'> " . ((empty($chequeo[3])) ? "N/A" : $chequeo[3]) . " </td>";
                                                         echo " </tr>";
                                                     }
                                                     ?>
@@ -295,22 +312,26 @@
                                             <?php
                                             if(isset($chequeos) && $chequeos->num_rows > 0) {
                                             ?>
-                                            <tfoot class="table-group-divider">
+                                            <tfoot class="table-group-divider remarcado-inferior">
                                                 <tr>
-                                                    <td colspan="7" class="px-0">
+                                                    <td colspan="7" class="px-0 py-3">
                                                         <table class="table table-borderless mb-0">
                                                             <thead>
-                                                                <th scope="col"> Horas totales </th>
-                                                                <th scope="col"> Horas de servicio </th>
-                                                                <th scope="col"> Tiempo total de contingencias </th>
-                                                                <th scope="col"> Cantidad de desbloqueos </th>
+                                                                <tr>
+                                                                    <th scope="col"> Horas totales </th>
+                                                                    <th scope="col"> Horas de servicio </th>
+                                                                    <th scope="col"> Tiempo total de contingencias </th>
+                                                                    <th scope="col"> Cantidad de desbloqueos </th>
+                                                                </tr>
                                                             </thead>
 
                                                             <tbody>
-                                                                <td> <?php echo $horas_totales ?> </td>
-                                                                <td> <?php echo $horas_servicio ?> </td>
-                                                                <td> <?php echo $tiempo_contingencias ?> </td>
-                                                                <td> <?php echo $veces_desbloqueos ?> </td>
+                                                                <tr>
+                                                                    <td> <?php echo $horas_totales ?> </td>
+                                                                    <td> <?php echo $horas_servicio ?> </td>
+                                                                    <td> <?php echo $tiempo_contingencias ?> </td>
+                                                                    <td> <?php echo $veces_desbloqueos ?> </td>
+                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                     </td>
@@ -323,6 +344,38 @@
                                             }
                                             ?>
                                         </table>
+                                        <?php
+                                        }
+                                        else {
+                                        ?>
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col"> Horas totales </th>
+                                                    <th scope="col"> Horas de servicio </th>
+                                                    <th scope="col"> Tiempo total de contingencias </th>
+                                                    <th scope="col"> Cantidad de desbloqueos </th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody class="table-group-divider">
+                                                <?php
+                                                if(isset($chequeos) && $chequeos->num_rows > 0) {
+                                                ?>
+                                                <tr>
+                                                    <td> <?php echo $horas_totales ?> </td>
+                                                    <td> <?php echo $horas_servicio ?> </td>
+                                                    <td> <?php echo $tiempo_contingencias ?> </td>
+                                                    <td> <?php echo $veces_desbloqueos ?> </td>
+                                                </tr>
+                                                <?php
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                        <?php
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>  

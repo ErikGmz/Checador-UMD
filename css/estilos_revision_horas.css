@@ -39,3 +39,7 @@
         width: 45%;
     }
 }
+
+.remarcado-inferior {
+    border-bottom: 2px solid currentcolor !important;
+}
