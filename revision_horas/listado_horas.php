@@ -6,6 +6,9 @@
         die("Hubo un error al conectar con la base de datos. " . $conexion_base->connect_error);
     }
 
+    # Definir la zona horaria.
+    date_default_timezone_set('America/Mexico_City');
+
     include("../funciones_adicionales/formateado_numero.php");
     if(!isset($_GET["ID-colaborador"])) {
         $_GET["ID-colaborador"] = "''";
