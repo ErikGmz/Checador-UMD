@@ -77,7 +77,8 @@
                 $calculo_horas_totales = $conexion_base->query("SELECT 
                 SEC_TO_TIME(SUM(TIME_TO_SEC(tiempo_total))) AS 
                 tiempo_colaboracion FROM chequeo WHERE ID_colaborador = '$ID_colaborador'
-                AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final';");
+                AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final'
+                AND bloqueo_registro = '0';");
                 
                 if(isset($calculo_horas_totales) && $calculo_horas_totales->num_rows > 0) {
                     $resultado = $calculo_horas_totales->fetch_row();
@@ -132,24 +133,26 @@
                 }
                 @$horas_contingencias->close();
 
-                # Obtener la cantidad de bloqueos
+                # Obtener la cantidad de horas bloqueadas
                 # del colaborador correspondiente.
-                $cantidad_bloqueos = $conexion_base->query("SELECT SUM(bloqueo_registro) FROM chequeo 
-                WHERE ID_colaborador = '$ID_colaborador' AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final';");
+                $resultado_bloqueo = $conexion_base->query("SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(tiempo_total))) 
+                AS tiempo_bloqueo FROM chequeo WHERE ID_colaborador = '$ID_colaborador'
+                AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final'
+                AND bloqueo_registro = '1';");
 
-                if(isset($cantidad_bloqueos) && $cantidad_bloqueos->num_rows > 0) {
-                    $resultado = $cantidad_bloqueos->fetch_row();
-                    if(!empty($resultado[0]) && $resultado[0] > 0) {
-                        $veces_bloqueos = $resultado[0];
+                if(isset($resultado_bloqueo) && $resultado_bloqueo->num_rows > 0) {
+                    $resultado = $resultado_bloqueo->fetch_row();
+                    if(!empty($resultado[0])) {
+                        $tiempo_bloqueo = $resultado[0];
                     }
                     else {
-                        $veces_bloqueos = "N/A";
+                        $tiempo_bloqueo = "N/A";
                     }
                 }
                 else {
-                    $veces_bloqueos = "N/A";
+                    $tiempo_bloqueo = "N/A";
                 }
-                @$cantidad_bloqueos->close();
+                @$resultado_bloqueo->close();
             }
         } 
         $usuario->close();
@@ -321,7 +324,7 @@
                                                                     <th scope="col"> Horas totales </th>
                                                                     <th scope="col"> Horas de servicio </th>
                                                                     <th scope="col"> Tiempo total de contingencias </th>
-                                                                    <th scope="col"> Cantidad de bloqueos </th>
+                                                                    <th scope="col"> Tiempo total de bloqueos </th>
                                                                 </tr>
                                                             </thead>
 
@@ -330,7 +333,7 @@
                                                                     <td> <?php echo $horas_totales ?> </td>
                                                                     <td> <?php echo $horas_servicio ?> </td>
                                                                     <td> <?php echo $tiempo_contingencias ?> </td>
-                                                                    <td> <?php echo $veces_bloqueos ?> </td>
+                                                                    <td> <?php echo $tiempo_bloqueo ?> </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>

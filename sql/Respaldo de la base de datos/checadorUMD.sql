@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-09-2022 a las 00:01:11
+-- Tiempo de generación: 22-09-2022 a las 05:16:05
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -113,7 +113,7 @@ CREATE TABLE `chequeo` (
   `hora_inicial` time NOT NULL,
   `hora_final` time DEFAULT NULL,
   `tiempo_total` time DEFAULT NULL,
-  `desbloqueo` int(11) NOT NULL DEFAULT 0,
+  `bloqueo_registro` int(1) NOT NULL DEFAULT 0,
   `ID_colaborador` int(10) UNSIGNED NOT NULL
 ) ;
 
@@ -121,7 +121,7 @@ CREATE TABLE `chequeo` (
 -- Volcado de datos para la tabla `chequeo`
 --
 
-INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_total`, `desbloqueo`, `ID_colaborador`) VALUES
+INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_total`, `bloqueo_registro`, `ID_colaborador`) VALUES
 ('2021-08-02', '08:02:15', '14:08:02', '06:05:47', 0, 156709),
 ('2021-08-03', '08:01:09', '14:05:09', '06:04:00', 0, 156709),
 ('2021-08-04', '08:02:34', '14:02:35', '06:00:01', 0, 156709),
@@ -947,7 +947,7 @@ INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_to
 ('2022-03-17', '13:56:51', '19:00:57', '05:04:06', 0, 161271),
 ('2022-03-17', '13:10:33', '18:03:20', '04:52:47', 0, 174568),
 ('2022-03-17', '13:56:43', '19:00:49', '05:04:06', 0, 189468);
-INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_total`, `desbloqueo`, `ID_colaborador`) VALUES
+INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_total`, `bloqueo_registro`, `ID_colaborador`) VALUES
 ('2022-03-17', '13:05:04', '19:00:34', '05:55:30', 0, 202782),
 ('2022-03-17', '11:10:50', '15:00:12', '03:49:22', 0, 214137),
 ('2022-03-17', '14:29:23', '18:30:33', '04:01:10', 0, 231823),
@@ -1769,7 +1769,7 @@ INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_to
 ('2022-06-15', '08:08:19', '13:59:59', '05:51:40', 0, 160243),
 ('2022-06-15', '07:39:27', '14:03:44', '06:24:17', 0, 160554),
 ('2022-06-15', '13:55:34', '18:55:41', '05:00:07', 0, 189468);
-INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_total`, `desbloqueo`, `ID_colaborador`) VALUES
+INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_total`, `bloqueo_registro`, `ID_colaborador`) VALUES
 ('2022-06-15', '13:09:53', '18:58:14', '05:48:21', 0, 202782),
 ('2022-06-15', '10:27:09', '18:30:51', '08:03:42', 0, 231823),
 ('2022-06-15', '11:36:04', '16:31:47', '04:55:43', 1, 238160),
@@ -2592,7 +2592,7 @@ INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_to
 ('2022-09-05', '13:44:22', '17:50:44', '04:06:22', 0, 188027),
 ('2022-09-05', '10:02:44', '16:02:33', '05:59:49', 0, 188658),
 ('2022-09-05', '12:07:38', '14:59:23', '02:51:45', 0, 189270);
-INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_total`, `desbloqueo`, `ID_colaborador`) VALUES
+INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_total`, `bloqueo_registro`, `ID_colaborador`) VALUES
 ('2022-09-05', '09:46:38', '16:00:16', '06:13:38', 0, 204444),
 ('2022-09-05', '13:54:09', '18:00:47', '04:06:38', 1, 214137),
 ('2022-09-05', '09:02:32', '12:46:06', '03:43:34', 0, 226644),
@@ -2877,8 +2877,7 @@ INSERT INTO `chequeo` (`fecha_chequeo`, `hora_inicial`, `hora_final`, `tiempo_to
 ('2022-09-20', '11:22:31', '15:31:20', '04:08:49', 0, 275244),
 ('2022-09-20', '09:00:10', '14:58:35', '05:58:25', 0, 275992),
 ('2022-09-20', '09:47:52', '14:58:51', '05:10:59', 0, 276489),
-('2022-09-20', '13:52:23', NULL, NULL, 0, 297518),
-('2022-09-20', '10:08:09', '14:35:31', '04:27:22', 0, 338403);
+('2022-09-20', '13:52:23', NULL, NULL, 0, 297518);
 
 --
 -- Disparadores `chequeo`
