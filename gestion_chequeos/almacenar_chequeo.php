@@ -13,9 +13,10 @@
 
         # Verificar si el colaborador indicado existe.
         $colaborador = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
-        colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad
-        FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
+        colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad,
+        colaborador.numero_retardos, horario.hora_inicial FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
         JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
+        JOIN horario ON colaborador.ID_horario = horario.ID
         WHERE colaborador.ID = '" . $_POST["ID"] . "' LIMIT 1;");
         if(isset($colaborador) && $colaborador->num_rows > 0) {
             $datos_colaborador = $colaborador->fetch_row();
@@ -37,7 +38,28 @@
                         try {
                             if($conexion_base->query("INSERT INTO chequeo(fecha_chequeo, hora_inicial, ID_colaborador)
                             VALUES('" . date("Y-m-d") . "', '$hora_registro', '" . $_POST["ID"] . "');")) {
-                                $resultado = 1;
+                                # Verificar si se llegó 15 minutos después de
+                                # la hora inicial (esquema de retardos).
+                                if(strtotime("1970-01-01 $hora_registro UTC") - strtotime("1970-01-01 " . $datos_colaborador[7] . " UTC") >= strtotime("1970-01-01 00:15:00 UTC")) {
+                                    $incremento_retardos = (int)$datos_colaborador[6] + 1;
+
+                                    # Actualizar los retardos en los datos del colaborador.
+                                    if($conexion_base->query("UPDATE colaborador SET numero_retardos = '$incremento_retardos'
+                                    WHERE ID = '" . $_POST["ID"] . "';")) {
+                                        if($incremento_retardos <= 2) {
+                                            $resultado = 8;
+                                        }
+                                        else {
+                                            $resultado = 9;
+                                        }
+                                    }
+                                    else {
+                                        $resultado = 2;
+                                    }
+                                }
+                                else {
+                                    $resultado = 1;
+                                }
                             } 
                             else {
                                 $resultado = 2;
@@ -65,7 +87,13 @@
 
                                 if($conexion_base->query("UPDATE chequeo SET hora_final = '$hora_chequeo'
                                 WHERE fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "';")) {
-                                    $resultado = 4;
+                                    # Verificar si los retardos del colaborador ya fueron excedidos.
+                                    if((int)$datos_colaborador[6] > 2) {
+                                        $resultado = 10;
+                                    }  
+                                    else {
+                                        $resultado = 4;
+                                    }
                                 } 
                                 else {
                                     $resultado = 6;
@@ -83,9 +111,6 @@
                         $resultado = 5;
                     }
                     @$verificacion_chequeo->close();
-
-
-                    # Actualizar el chequeo del día actual.
                 break;
 
                 default:
@@ -95,7 +120,7 @@
             }
         }
         else {
-            $resultado = 8;
+            $resultado = 12;
         }
         @$colaborador->close();
     }
@@ -174,7 +199,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Chequeo de entrada ya realizado',
-                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya hizo el chequeo de entrada de la fecha actual (" . date("d-m-Y") . "). </p> \\n"
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya hizo el chequeo de entrada de la fecha actual (" . date("d-m-Y") . "): </p> \\n"
                             . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
                             . "<p class='mb-0'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \"" ?>
                         }).then((resultado) => {
@@ -203,7 +228,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Chequeo de entrada no realizado',
-                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador no ha hecho el chequeo de entrada de la fecha actual (" . date("d-m-Y") . "). </p> \\n"
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador no ha hecho el chequeo de entrada de la fecha actual (" . date("d-m-Y") . "): </p> \\n"
                             . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
                             . "<p class='mb-0'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \"" ?>
                         }).then((resultado) => {
@@ -233,7 +258,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Chequeo de salida ya realizado',
-                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya hizo el chequeo de salida de la fecha actual (" . date("d-m-Y") . "). </p> \\n"
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya hizo el chequeo de salida de la fecha actual (" . date("d-m-Y") . "): </p> \\n"
                             . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
                             . "<p class='mb-0'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \"" ?>
                         }).then((resultado) => {
@@ -243,6 +268,56 @@
                 break;
 
                 case 8:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Éxito de chequeo de entrada con retardo",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya acumuló " . @$incremento_retardos . " retardo" . (((int)@$incremento_retardos > 1) ? "s;" : ";")
+                            . " el máximo permitido es de 2. Chequeo del día " . date("d-m-Y") . ": </p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
+                            . "<p class='mb-0'> <b> Hora de chequeo de entrada: </b>" . date("h:i:s A", strtotime(@$hora_registro)) . " </p>\""
+                            ?>
+                        }).then((resultado) => {
+                            location.href="../index.php";
+                        });
+                    });
+                break;
+
+                case 9:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Chequeo de entrada con retardos excedidos",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya acumuló " . @$incremento_retardos . " retardo" . (((int)@$incremento_retardos > 1) ? "s" : "") .
+                            ", excediendo los 2 permitidos, debido a lo cual los próximos chequeos se bloquearán. Para solucionar el problema se debe hablar con algún coordinador. Chequeo del día " . date("d-m-Y") . ": </p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
+                            . "<p class='mb-0'> <b> Hora de chequeo de entrada: </b>" . date("h:i:s A", strtotime(@$hora_registro)) . " </p>\""
+                            ?>
+                        }).then((resultado) => {
+                            location.href="../index.php";
+                        });
+                    });
+                break;
+
+                case 10:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Éxito de chequeo de salida con retardos excedidos",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ha excedido los dos retardos permitidos, debido a lo cual los chequeos posteriores se han bloqueado. Chequeo del día " . date("d-m-Y") . ": </p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
+                            . "<p class='mb-0'> <b> Hora de chequeo de salida: </b>" . date("h:i:s A", strtotime(@$hora_chequeo)) . " </p>\""
+                            ?>
+                        }).then((resultado) => {
+                            location.href="../index.php";
+                        });
+                    });
+                break;
+
+                case 11:
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: 'error',

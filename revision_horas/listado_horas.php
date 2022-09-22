@@ -67,7 +67,7 @@
             # el colaborador, respetando el rango de fechas.
             $chequeos = $conexion_base->query("SELECT chequeo.fecha_chequeo, chequeo.hora_inicial, 
             chequeo.hora_final, chequeo.tiempo_total, contingencia.tiempo_total AS tiempo_contingencia, 
-            chequeo.desbloqueo FROM chequeo LEFT JOIN contingencia ON chequeo.fecha_chequeo = contingencia.fecha
+            chequeo.bloqueo_registro FROM chequeo LEFT JOIN contingencia ON chequeo.fecha_chequeo = contingencia.fecha
             WHERE chequeo.ID_colaborador = '" . @$_GET["ID-colaborador"] . "'
             AND chequeo.fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final';");
 
@@ -132,24 +132,24 @@
                 }
                 @$horas_contingencias->close();
 
-                # Obtener la cantidad de desbloqueos
+                # Obtener la cantidad de bloqueos
                 # del colaborador correspondiente.
-                $cantidad_desbloqueos = $conexion_base->query("SELECT SUM(desbloqueo) FROM chequeo 
+                $cantidad_bloqueos = $conexion_base->query("SELECT SUM(bloqueo_registro) FROM chequeo 
                 WHERE ID_colaborador = '$ID_colaborador' AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final';");
 
-                if(isset($cantidad_desbloqueos) && $cantidad_desbloqueos->num_rows > 0) {
-                    $resultado = $cantidad_desbloqueos->fetch_row();
+                if(isset($cantidad_bloqueos) && $cantidad_bloqueos->num_rows > 0) {
+                    $resultado = $cantidad_bloqueos->fetch_row();
                     if(!empty($resultado[0]) && $resultado[0] > 0) {
-                        $veces_desbloqueos = $resultado[0];
+                        $veces_bloqueos = $resultado[0];
                     }
                     else {
-                        $veces_desbloqueos = "N/A";
+                        $veces_bloqueos = "N/A";
                     }
                 }
                 else {
-                    $veces_desbloqueos = "N/A";
+                    $veces_bloqueos = "N/A";
                 }
-                @$cantidad_desbloqueos->close();
+                @$cantidad_bloqueos->close();
             }
         } 
         $usuario->close();
@@ -274,7 +274,7 @@
                                                 <tr">
                                                     <th scope="col"> Fecha de registro </th>
                                                     <th scope="col"> Contingencia </th>
-                                                    <th scope="col"> Desbloqueo </th>
+                                                    <th scope="col"> Bloqueo </th>
                                                     <th scope="col"> Día de registro </th>
                                                     <th scope="col"> Hora de entrada </th>
                                                     <th scope="col"> Hora de salida </th>
@@ -321,7 +321,7 @@
                                                                     <th scope="col"> Horas totales </th>
                                                                     <th scope="col"> Horas de servicio </th>
                                                                     <th scope="col"> Tiempo total de contingencias </th>
-                                                                    <th scope="col"> Cantidad de desbloqueos </th>
+                                                                    <th scope="col"> Cantidad de bloqueos </th>
                                                                 </tr>
                                                             </thead>
 
@@ -330,7 +330,7 @@
                                                                     <td> <?php echo $horas_totales ?> </td>
                                                                     <td> <?php echo $horas_servicio ?> </td>
                                                                     <td> <?php echo $tiempo_contingencias ?> </td>
-                                                                    <td> <?php echo $veces_desbloqueos ?> </td>
+                                                                    <td> <?php echo $veces_bloqueos ?> </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -354,7 +354,7 @@
                                                     <th scope="col"> Horas totales </th>
                                                     <th scope="col"> Horas de servicio </th>
                                                     <th scope="col"> Tiempo total de contingencias </th>
-                                                    <th scope="col"> Cantidad de desbloqueos </th>
+                                                    <th scope="col"> Cantidad de bloqueos </th>
                                                 </tr>
                                             </thead>
 
@@ -366,7 +366,7 @@
                                                     <td> <?php echo $horas_totales ?> </td>
                                                     <td> <?php echo $horas_servicio ?> </td>
                                                     <td> <?php echo $tiempo_contingencias ?> </td>
-                                                    <td> <?php echo $veces_desbloqueos ?> </td>
+                                                    <td> <?php echo $veces_bloqueos ?> </td>
                                                 </tr>
                                                 <?php
                                                 }
