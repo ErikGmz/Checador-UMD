@@ -1,0 +1,3 @@
+ALTER TABLE contingencia ADD CONSTRAINT CK_Contingencia_Horas CHECK (hora_inicial <= hora_final);
+ALTER TABLE chequeo ADD CONSTRAINT CK_Chequeo_Horas CHECK (hora_inicial <= hora_final);
+ALTER TABLE horario ADD CONSTRAINT CK_Horario_Horas CHECK (hora_inicial <= hora_final);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-09-2022 a las 05:16:05
+-- Tiempo de generación: 23-09-2022 a las 21:44:04
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -2898,24 +2898,6 @@ CREATE TRIGGER `calculoHorasTotalesActualizacion` BEFORE UPDATE ON `chequeo` FOR
 	END
 $$
 DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `validarHorasChequeos` BEFORE INSERT ON `chequeo` FOR EACH ROW BEGIN
-		IF NEW.hora_inicial > NEW.hora_final THEN
-			SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'La hora inicial no puede ser mayor a la final.';
-		END IF;
-	END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `validarHorasChequeosActualizacion` BEFORE UPDATE ON `chequeo` FOR EACH ROW BEGIN
-		IF NEW.hora_inicial > NEW.hora_final THEN
-			SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'La hora inicial no puede ser mayor a la final.';
-		END IF;
-	END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -3030,24 +3012,6 @@ CREATE TRIGGER `calculoHorasContingenciaActualizacion` BEFORE UPDATE ON `conting
 	END
 $$
 DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `validarHorasContingencias` BEFORE INSERT ON `contingencia` FOR EACH ROW BEGIN
-		IF NEW.hora_inicial > NEW.hora_final THEN
-			SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'La hora inicial no puede ser mayor a la final.';
-		END IF;
-	END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `validarHorasContingenciasActualizacion` BEFORE UPDATE ON `contingencia` FOR EACH ROW BEGIN
-		IF NEW.hora_inicial > NEW.hora_final THEN
-			SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'La hora inicial no puede ser mayor a la final.';
-		END IF;
-	END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -3083,7 +3047,7 @@ CREATE TABLE `horario` (
   `hora_inicial` time NOT NULL,
   `hora_final` time NOT NULL,
   `ID_turno` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Volcado de datos para la tabla `horario`
@@ -3119,28 +3083,6 @@ INSERT INTO `horario` (`ID`, `hora_inicial`, `hora_final`, `ID_turno`) VALUES
 (27, '09:00:00', '14:00:00', 1),
 (28, '10:00:00', '15:00:00', 3),
 (29, '15:00:00', '18:50:00', 3);
-
---
--- Disparadores `horario`
---
-DELIMITER $$
-CREATE TRIGGER `validarHorasHorarios` BEFORE INSERT ON `horario` FOR EACH ROW BEGIN
-		IF NEW.hora_inicial > NEW.hora_final THEN
-			SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'La hora inicial no puede ser mayor a la final.';
-		END IF;
-	END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `validarHorasHorariosActualizacion` BEFORE UPDATE ON `horario` FOR EACH ROW BEGIN
-		IF NEW.hora_inicial > NEW.hora_final THEN
-			SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'La hora inicial no puede ser mayor a la final.';
-		END IF;
-	END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -3273,7 +3215,7 @@ ALTER TABLE `coordinador`
 -- AUTO_INCREMENT de la tabla `horario`
 --
 ALTER TABLE `horario`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `modalidad_colaborador`
