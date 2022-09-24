@@ -1,4 +1,13 @@
 <?php
+    session_start();
+
+    # Verificar si algún administrador ya 
+    # inició su correspondiente sesión.
+    if(isset($_SESSION["ID_administrador"])) {
+        header("location: ../administrador/menu_administrador.php");
+        die();
+    }
+
     # Iniciar y verificar la conexión
     # con la base de datos.
     $conexion_base = new mysqli("localhost", "root", "", "checadorumd");

@@ -1,3 +1,14 @@
+<?php
+    session_start();
+
+    # Verificar si algún administrador ya 
+    # inició su correspondiente sesión.
+    if(isset($_SESSION["ID_administrador"])) {
+        header("location: ../administrador/menu_administrador.php");
+        die();
+    }
+?>
+
 <!--Código HTML del archivo-->
 <html lang="es">
     <!--Cabecera de la página-->
@@ -128,6 +139,8 @@
             // Seleccionar automáticamente el recuadro
             // del identificador del colaborador al
             // escoger el tipo de revisión.
+            enfocarRecuadro("ID-colaborador");
+            
             document.getElementById("resumidas").addEventListener("click", () => {
                 enfocarRecuadro("ID-colaborador");
             });

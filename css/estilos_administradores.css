@@ -1,0 +1,21 @@
+@media screen and (max-width: 575px) {
+    #logouaa-umd {
+        content: url(../img/iconoUMD.png);
+    }
+}
+
+@media screen and (min-width: 576px) {
+    #logouaa-umd {
+        content: url(../img/logoUMD-reducido.png);
+    }
+}
+
+.active {
+    cursor: default;
+}
+
+.jumbotron {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: .3rem;  
+}

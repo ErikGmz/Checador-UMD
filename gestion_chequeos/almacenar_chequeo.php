@@ -168,7 +168,6 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"> </script>
         <script type="text/javascript"> 
             let estadoChequeo = <?php echo $resultado?>;
-            console.log(estadoChequeo);
             switch(estadoChequeo) {
                 case 1:
                     window.addEventListener("load", () => {
@@ -330,6 +329,18 @@
                             icon: 'error',
                             title: 'Error de autenticación',
                             text: 'El colaborador especificado es inexistente'
+                        }).then((resultado) => {
+                            location.href="../index.php";
+                        });
+                    });
+                break;
+
+                default:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error desconocido',
+                            text: 'Ocurrió un error al realizar el chequeo'
                         }).then((resultado) => {
                             location.href="../index.php";
                         });

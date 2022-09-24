@@ -28,6 +28,10 @@ body {
     background-color: rgb(255, 143, 161);
 }
 
+.fondo-pantone-verde-muy-oscuro {
+    background-color: rgb(0, 95, 36);
+}
+
 .fondo-pantone-verde-oscuro {
     background-color: rgb(1, 145, 56);
 }
