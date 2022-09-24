@@ -5,6 +5,10 @@ DELIMITER $$
 	BEGIN
 		IF NEW.hora_final IS NOT NULL THEN
 			SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
+		ELSE
+			IF NEW.tiempo_total IS NOT NULL THEN
+				SET NEW.hora_final = SEC_TO_TIME(TIME_TO_SEC(NEW.hora_inicial) + TIME_TO_SEC(NEW.tiempo_total));
+			END IF;
 		END IF;
 	END$$    
 DELIMITER ;
@@ -16,6 +20,10 @@ DELIMITER $$
 	BEGIN
 		IF NEW.hora_final IS NOT NULL THEN
 			SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
+		ELSE
+			IF NEW.tiempo_total IS NOT NULL THEN
+				SET NEW.hora_final = SEC_TO_TIME(TIME_TO_SEC(NEW.hora_inicial) + TIME_TO_SEC(NEW.tiempo_total));
+			END IF;
 		END IF;
 	END$$    
 DELIMITER ;
