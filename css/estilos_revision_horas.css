@@ -1,0 +1,45 @@
+#logouaa-claro {
+    content: url(../img/logouaa-reducido-claro.png) !important;
+}
+
+#emblemauaa {
+    content: url(../img/emblemauaa.png);
+    max-height: 70px;
+}
+
+.contenedor {
+    max-width: 1050px;
+}
+
+.recuadro {
+    max-width: clamp(100px, 100%, 500px);
+}
+
+@media screen and (max-width: 349px) {
+    .table-responsive {
+        max-width: 150px;
+    }
+}
+
+@media screen and (min-width: 350px) and (max-width: 410px) {
+    .table-responsive {
+        max-width: 220px;
+    }
+}
+
+@media screen and (min-width: 411px) and (max-width: 575px) {
+    .table-responsive {
+        max-width: 280px;
+    }
+}
+
+
+@media screen and (min-width: 992px) {
+    .botones {
+        width: 45%;
+    }
+}
+
+.remarcado-inferior {
+    border-bottom: 2px solid currentcolor !important;
+}

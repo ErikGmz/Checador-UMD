@@ -1,0 +1,54 @@
+@media screen and (max-width: 991px) {
+    #logouaa-claro {
+        content: url(../img/logouaa-reducido-claro.png);
+    }
+}
+
+@media screen and (min-width: 992px) {
+    #logouaa-claro {
+        content: url(../img/logouaa-claro.png);
+    }
+
+    .row.interfaz {
+        height: 100%;
+        max-height: 645px;
+    }
+
+    img {
+        max-width: 270px !important;
+    }
+}
+
+#logoUMD {
+    content: url(../img/logoUMD.png);
+}
+
+@media screen and (min-width: 1200px) {
+    img {
+        max-width: 350px !important;
+    }
+}
+
+@media screen and (min-width: 576px) and (max-width: 768px) {
+    .botones {
+        width: 90%;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    .botones {
+        width: 75%;
+    }
+}
+
+.contenido {
+    width: min(100%, 600px);
+}
+
+.recuadro {
+    max-width: clamp(100px, 100%, 500px);
+}
+
+#ID-colaborador {
+    max-width: clamp(100px, 100%, 250px);
+}
