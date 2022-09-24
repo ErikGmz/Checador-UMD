@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-09-2022 a las 21:44:04
+-- Tiempo de generación: 23-09-2022 a las 22:30:06
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -2886,6 +2886,10 @@ DELIMITER $$
 CREATE TRIGGER `calculoHorasTotales` BEFORE INSERT ON `chequeo` FOR EACH ROW BEGIN
 		IF NEW.hora_final IS NOT NULL THEN
 			SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
+		ELSE
+			IF NEW.tiempo_total IS NOT NULL THEN
+				SET NEW.hora_final = SEC_TO_TIME(TIME_TO_SEC(NEW.hora_inicial) + TIME_TO_SEC(NEW.tiempo_total));
+			END IF;
 		END IF;
 	END
 $$
@@ -2894,6 +2898,10 @@ DELIMITER $$
 CREATE TRIGGER `calculoHorasTotalesActualizacion` BEFORE UPDATE ON `chequeo` FOR EACH ROW BEGIN
 		IF NEW.hora_final IS NOT NULL THEN
 			SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
+		ELSE
+			IF NEW.tiempo_total IS NOT NULL THEN
+				SET NEW.hora_final = SEC_TO_TIME(TIME_TO_SEC(NEW.hora_inicial) + TIME_TO_SEC(NEW.tiempo_total));
+			END IF;
 		END IF;
 	END
 $$
