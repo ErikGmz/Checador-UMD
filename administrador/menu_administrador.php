@@ -3,7 +3,7 @@
 
     # Verificar si algún administrador no
     # ha iniciado su correspondiente sesión.
-    if(!isset($_SESSION["ID-administrador"])) {
+    if(!isset($_SESSION["ID_administrador"])) {
         header("location: ../index.php");
         die();
     }
@@ -49,13 +49,14 @@
             <div class="container my-5 px-0 px-lg-5">
                 <div class="jumbotron fondo-pantone-azul-claro">
                     <h1 class="fs-2 fw-semibold"> 
-                        Bienvenido, administrador no. <?php echo $_SESSION["ID-administrador"]; ?>
+                        Bienvenido, administrador no. <?php echo $_SESSION["ID_administrador"]; ?>
                     </h1>
+
                     <p class="lead">
                         Este es el sistema de administración del checador para colaboradores
                         de la Unidad Médico Didáctica de la Universidad Autónoma de Aguascalientes.
                     </p>
-                    <hr class="my-4">
+                    <hr class="my-4 border border-1 border-dark">
 
                     <p class="fw-semibold">
                         Con los colaboradores se pueden realizar las siguientes operaciones:

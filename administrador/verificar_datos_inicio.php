@@ -24,7 +24,7 @@
             if($resultado->num_rows > 0) {
                 # Cargar los datos de inicio de sesión y
                 # redigir al menú principal de administradores.
-                $_SESSION["ID-administrador"] = $_POST["ID-administrador"];
+                $_SESSION["ID_administrador"] = $_POST["ID-administrador"];
                 $resultado = 2;
             }
             else {
@@ -33,6 +33,7 @@
                 # de registros de chequeos.
                 $resultado = 1;
             }
+            $resultados->close();
         }
         else {
             # Los datos de inicio de sesión no fueron
@@ -40,6 +41,9 @@
             # de registros de chequeos.
             $resultado = 1;
         }   
+
+        # Cerrar la conexión con la base de datos.
+        $conexion_base->close();
     }
     else {
         header("location: ../index.php");
@@ -96,7 +100,7 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Inicio de sesión exitoso',
-                            text: "Bienvenido al sistema de administración, usuario no. " + <?php echo "'" . @$_SESSION["ID-administrador"] . "'" ?>
+                            text: "Bienvenido al sistema de administración, usuario no. " + <?php echo "'" . @$_SESSION["ID_administrador"] . "'" ?>
                         }).then((resultado) => {
                             location.href="menu_administrador.php";
                         });

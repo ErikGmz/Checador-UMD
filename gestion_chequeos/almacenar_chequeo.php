@@ -130,6 +130,9 @@
             $resultado = 12;
         }
         @$colaborador->close();
+        
+        # Cerrar la conexión con la base de datos.
+        $conexion_base->close();
     }
     else {
         header("location: ../index.php");

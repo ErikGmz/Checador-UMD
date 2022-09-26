@@ -47,36 +47,37 @@
                     || basename($_SERVER['SCRIPT_FILENAME']) == "modificacion_colaborador.php"
                     || basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_colaborador.php"
                     || basename($_SERVER['SCRIPT_FILENAME']) == "desbloqueo_ID.php"
-                    || basename($_SERVER['SCRIPT_FILENAME']) == "reporte_horas.php")?>" 
+                    || basename($_SERVER['SCRIPT_FILENAME']) == "reporte_horas.php")
+                    echo "active"?>" 
                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Colaboradores
                     </a>
 
                     <ul class="dropdown-menu">
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "listado_colaboradores.php") 
-                        echo "fw-semibold"; else echo "\" href=\"listado_colaboradores.php"?>"> 
+                        echo "fw-semibold active"; else echo "\" href=\"listado_colaboradores.php"?>"> 
                         Listado de colaboradores </a> </li>
                         
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "adicion_colaborador.php") 
-                        echo "fw-semibold"; else echo "\" href=\"adicion_colaborador.php"?>"> 
+                        echo "fw-semibold active"; else echo "\" href=\"adicion_colaborador.php"?>"> 
                         Adición de colaborador </a> </li>
 
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "modificacion_colaborador.php") 
-                        echo "fw-semibold"; else echo "\" href=\"adicion_colaborador.php"?>"> 
+                        echo "fw-semibold active"; else echo "\" href=\"modificacion_colaborador.php"?>"> 
                         Modificación de colaborador </a> </li>
 
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_colaborador.php") 
-                        echo "fw-semibold"; else echo "\" href=\"eliminacion_colaborador.php"?>"> 
+                        echo "fw-semibold active"; else echo "\" href=\"eliminacion_colaborador.php"?>"> 
                         Eliminación de colaborador </a> </li>
 
                         <li> <hr class="dropdown-divider"> </li>
                         
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "desbloqueo_ID.php") 
-                        echo "fw-semibold"; else echo "\" href=\"desbloqueo_ID.php"?>"> 
+                        echo "fw-semibold active"; else echo "\" href=\"desbloqueo_ID.php"?>"> 
                         Desbloqueo de ID </a> </li>
 
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "reporte_horas.php") 
-                        echo "fw-semibold"; else echo "\" href=\"reporte_horas.php"?>"> Reporte de horas </a> </li>
+                        echo "fw-semibold active"; else echo "\" href=\"reporte_horas.php"?>"> Reporte de horas </a> </li>
                     </ul>
                 </li>
 
@@ -87,19 +88,19 @@
 
                     <ul class="dropdown-menu">
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "listado_contingencias.php") 
-                        echo "fw-semibold"; else echo "\" href=\"listado_contingencias.php"?>">  
+                        echo "fw-semibold active"; else echo "\" href=\"listado_contingencias.php"?>">  
                         Listado de contingencias </a> </li>
 
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "adicion_contingencia.php") 
-                        echo "fw-semibold"; else echo "\" href=\"adicion_contingencia.php"?>">  
+                        echo "fw-semibold active"; else echo "\" href=\"adicion_contingencia.php"?>">  
                         Adición de contingencia </a> </li>
 
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "modificacion_contingencia.php") 
-                        echo "fw-semibold"; else echo "\" href=\"modificacion_contingencia.php"?>">   
+                        echo "fw-semibold active"; else echo "\" href=\"modificacion_contingencia.php"?>">   
                         Modificación de contingencia </a> </li>
 
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_contingencia.php") 
-                        echo "fw-semibold"; else echo "\" href=\"eliminacion_contingencia.php"?>">
+                        echo "fw-semibold active"; else echo "\" href=\"eliminacion_contingencia.php"?>">
                         Eliminación de contingencia </a> </li>
                     </ul>
                 </li>

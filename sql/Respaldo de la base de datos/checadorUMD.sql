@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-09-2022 a las 22:30:06
+-- Tiempo de generación: 26-09-2022 a las 06:40:46
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -2966,7 +2966,7 @@ INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_matern
 (255033, 'Ximena ', 'Sánchez', 'Acuña', 0, 52, 1, 21),
 (256086, 'Eric Martín', 'Díaz De León', 'Lara', 1, 38, 1, 23),
 (256431, 'Andrés Antonio', 'Alonzo', 'Luna', 0, 52, 1, 24),
-(256732, 'Daniela', 'López', 'Rico', 1, 29, 1, 8),
+(256732, 'Daniela', 'López', 'Rizo', 1, 29, 1, 8),
 (259189, 'Héctor Eduardo', 'González', 'De Anda', 0, 36, 1, 1),
 (262376, 'Ángela Geanine', 'De Lira', 'Ávila', 1, 71, 1, 23),
 (269686, 'Erik Alejandro', 'Gómez', 'Martínez', 0, 61, 1, 23),
@@ -3029,20 +3029,20 @@ DELIMITER ;
 
 CREATE TABLE `coordinador` (
   `ID` int(10) UNSIGNED NOT NULL,
-  `clave` varchar(100) NOT NULL,
-  `tipo` int(11) NOT NULL DEFAULT 0
+  `clave` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `coordinador`
 --
 
-INSERT INTO `coordinador` (`ID`, `clave`, `tipo`) VALUES
-(1, '4d186321c1a7f0f354b297e8914ab240', 1),
-(1779, '9e7943eb52bca7ebfc95eec5957ce815', 1),
-(2017, '36f7f55508bcfdaf2a352482fba71333', 0),
-(13462, '3a6931139bc6aff8025ac0b9d2aec882', 1),
-(23285, '15ff4b702874029b0994e98005370013', 1);
+INSERT INTO `coordinador` (`ID`, `clave`) VALUES
+(1, '4d186321c1a7f0f354b297e8914ab240'),
+(1779, '9e7943eb52bca7ebfc95eec5957ce815'),
+(2017, '36f7f55508bcfdaf2a352482fba71333'),
+(13462, '3a6931139bc6aff8025ac0b9d2aec882'),
+(23285, '15ff4b702874029b0994e98005370013'),
+(269686, 'b2b6b35751eed845a6b0ed2ddd6ce6ea');
 
 -- --------------------------------------------------------
 
@@ -3085,12 +3085,44 @@ INSERT INTO `horario` (`ID`, `hora_inicial`, `hora_final`, `ID_turno`) VALUES
 (21, '10:00:00', '14:00:00', 1),
 (22, '09:30:00', '15:30:00', 1),
 (23, '15:00:00', '19:00:00', 2),
-(24, '14:00:00', '22:00:00', 2),
+(24, '14:00:00', '21:00:00', 2),
 (25, '14:30:00', '17:30:00', 2),
 (26, '18:00:00', '19:00:00', 2),
 (27, '09:00:00', '14:00:00', 1),
 (28, '10:00:00', '15:00:00', 3),
 (29, '15:00:00', '18:50:00', 3);
+
+--
+-- Disparadores `horario`
+--
+DELIMITER $$
+CREATE TRIGGER `calculoTurnoHorario` BEFORE INSERT ON `horario` FOR EACH ROW BEGIN
+		IF NEW.hora_inicial < "14:00:00" AND NEW.hora_final > "14:00:00" THEN
+			SET NEW.ID_turno = 3;
+		ELSE
+			IF NEW.hora_inicial >= "14:00:00" AND NEW.hora_final <= "21:00:00" THEN
+				SET NEW.ID_turno = 2;
+			ELSE
+				SET NEW.ID_turno = 1;
+			END IF;
+		END IF;
+	END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `calculoTurnoHorarioActualizacion` BEFORE UPDATE ON `horario` FOR EACH ROW BEGIN
+		IF NEW.hora_inicial < "14:00:00" AND NEW.hora_final > "14:00:00" THEN
+			SET NEW.ID_turno = 3;
+		ELSE
+			IF NEW.hora_inicial >= "14:00:00" AND NEW.hora_final <= "21:00:00" THEN
+				SET NEW.ID_turno = 2;
+			ELSE
+				SET NEW.ID_turno = 1;
+			END IF;
+		END IF;
+	END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -3217,7 +3249,7 @@ ALTER TABLE `contingencia`
 -- AUTO_INCREMENT de la tabla `coordinador`
 --
 ALTER TABLE `coordinador`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23286;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=269687;
 
 --
 -- AUTO_INCREMENT de la tabla `horario`

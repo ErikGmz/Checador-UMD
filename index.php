@@ -121,7 +121,7 @@
             // del identificador del colaborador al
             // escoger el tipo de registro.
             enfocarRecuadro("ID-colaborador");
-            
+
             document.getElementById("opcion-entrada").addEventListener("click", () => {
                 enfocarRecuadro("ID-colaborador");
             });
