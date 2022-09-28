@@ -160,7 +160,7 @@
                             <div class="col-12 col-md-6 mb-4 mb-md-0">
                                 <label for="hora-entrada" class="form-label fw-semibold"> Hora de entrada (*) </label>
                                 <input type="text" class="form-control mayusculas-iniciales" id="hora-entrada" 
-                                autocomplete="OFF" required name="hora-entrada" placeholder="08:00"
+                                autocomplete="OFF" required name="hora-entrada" placeholder="08:00" value="08:00"
                                 pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida', 1)">
                                 <div class="form-text"> 
@@ -171,7 +171,7 @@
                             <div class="col-12 col-md-6">
                                 <label for="hora-salida" class="form-label fw-semibold"> Hora de salida (*) </label>
                                 <input type="text" class="form-control mayusculas-iniciales" id="hora-salida" 
-                                autocomplete="OFF" required name="hora-salida" placeholder="12:00"
+                                autocomplete="OFF" required name="hora-salida" placeholder="12:00" value="12:00"
                                 pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida', 2)">
                                 <div class="form-text"> 

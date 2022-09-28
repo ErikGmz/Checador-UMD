@@ -3,14 +3,17 @@
 
     # Verificar si algún administrador ya
     # inició su correspondiente sesión.
-    if(isset($_SESSION["ID_administrador"])) {
+    if(!isset($_SESSION["ID_administrador"])) {
         header("location: ../menu_principal/menu_administrador.php");
         die();
     }
 
+    # Definir la zona horaria.
+    date_default_timezone_set('America/Mexico_City');
+
     # Verificar que se haya enviado un
     # formulario de inicio de sesión.
-    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-administrador"], $_POST["clave-administrador"])) {
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -18,33 +21,43 @@
             die("Hubo un error al conectar con la base de datos. " . $conexion_base->connect_error);
         }
 
-        # Verificar si los datos de inicio de sesión son correctos.
+        # Verificar si el ID especificado sí
+        # está registrado en en el sistema.
         try {
-            if($resultados = $conexion_base->query("SELECT ID FROM coordinador WHERE ID = '" . $_POST["ID-administrador"]
-            . "' AND clave = '" . md5($_POST["clave-administrador"]) . "';")) {
-                if($resultados->num_rows > 0) {
-                    # Cargar los datos de inicio de sesión y
-                    # redigir al menú principal de administradores.
-                    $_SESSION["ID_administrador"] = $_POST["ID-administrador"];
+            if($resultados = $conexion_base->query("SELECT * FROM colaborador WHERE ID = '" 
+            . $_POST["ID-colaborador"] . "';")) {
+                if($resultados->num_rows <= 0) {
                     $resultado = 2;
                 }
                 else {
-                    # Los datos de inicio de sesión no fueron
-                    # válidos, así que se retornará a la página
-                    # de registros de chequeos.
-                    $resultado = 1;
+                    # Eliminar al colaborador de la base de datos.
+                    try {
+                        if($conexion_base->query("DELETE FROM colaborador WHERE ID = '"
+                        . $_POST["ID-colaborador"] . "';")) {
+                            $auxiliar = $resultados->fetch_row();
+
+                            $nombres = $auxiliar[1];
+                            $apellido_paterno = $auxiliar[2];
+                            $apellido_materno = $auxiliar[3];
+                            $resultado = 3;
+                        }
+                        else {
+                            $resultado = 1;
+                        }
+                    }
+                    catch(mysqli_sql_exception $e) {
+                        echo $e->getMessage();
+                        $resultado = 1;
+                    }    
                 }
                 $resultados->close();
             }
             else {
-                # Los datos de inicio de sesión no fueron
-                # válidos, así que se retornará a la página
-                # de registros de chequeos.
                 $resultado = 1;
             }   
         }
         catch(Exception $e) {
-            $resultado = 3;
+            $resultado = 1;
         }
         finally {
             # Cerrar la conexión con la base de datos.
@@ -52,7 +65,7 @@
         }
     }
     else {
-        header("location: ../../index.php");
+        header("location: ../menu_principal/menu_administrador.php");
         die();
     }
 ?>
@@ -70,7 +83,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
         <!--Título de la página-->
-        <title> Resultado del inicio de sesión </title>
+        <title> Resultado de la modificación del colaborador </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -93,10 +106,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Inicio no exitoso de sesión",
-                            text: "El ID del administrador y/o contraseña introducidos son incorrectos"
+                            title: "Eliminación no exitosa de colaborador",
+                            text: "Ocurrió un error al tratar de eliminar al colaborador"
                         }).then((resultado) => {
-                            location.href="inicio_sesion.php";
+                            location.href="eliminacion_colaborador.php";
                         });
                     });
                 break;
@@ -104,11 +117,26 @@
                 case 2:
                     window.addEventListener("load", () => {
                         Swal.fire({
-                            icon: 'success',
-                            title: 'Inicio de sesión exitoso',
-                            text: "Bienvenido al sistema de administración, usuario no. " + <?php echo "'" . @$_SESSION["ID_administrador"] . "'" ?>
+                            icon: "error",
+                            title: "Identificador de colaborador inexistente",
+                            text: "El ID especificado no está registrado en el sistema"
                         }).then((resultado) => {
-                            location.href="../menu_principal/menu_administrador.php";
+                            location.href="eliminacion_colaborador.php";
+                        });
+                    });
+                break;
+
+                case 3:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Eliminación exitosa de colaborador",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador fue exitosamente eliminado del sistema: </p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$nombres . " " . @$apellido_paterno . " " . @$apellido_materno . " </p> \\n"
+                            . "<p class='mb-2'> <b> ID: </b> " . @$_POST["ID-colaborador"] . "</p>\""
+                            ?>
+                        }).then((resultado) => {
+                            location.href="eliminacion_colaborador.php";
                         });
                     });
                 break;
@@ -118,9 +146,9 @@
                         Swal.fire({
                             icon: "error",
                             title: "Error desconocido",
-                            text: "Ocurrió un error al tratar de iniciar la sesión"
+                            text: "Ocurrió un error al tratar de eliminar el colaborador"
                         }).then((resultado) => {
-                            location.href="inicio_sesion.php";
+                            location.href="eliminacion_colaborador.php";
                         });
                     });
                 break;

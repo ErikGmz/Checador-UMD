@@ -45,9 +45,9 @@
                         if(isset($_POST["segundo-apellido"])) $segundo_nombre = trim($_POST["segundo-nombre"]);
                         else $segundo_nombre= "";
                         $nombres = ucwords(strtolower(trim($_POST["primer-nombre"]))) . " " . ucwords(strtolower(trim($segundo_nombre)));
-                        
-                        $apellido_paterno = trim($_POST["primer-apellido"]);
-                        if(isset($_POST["segundo-apellido"])) $apellido_materno = trim($_POST["segundo-apellido"]);
+
+                        $apellido_paterno = ucwords(strtolower(trim($_POST["primer-apellido"])));
+                        if(isset($_POST["segundo-apellido"])) $apellido_materno = ucwords(strtolower(trim($_POST["segundo-apellido"])));
                         else $apellido_materno = "";
 
                         # Verificar si el horario introducido ya existe en la base de datos.

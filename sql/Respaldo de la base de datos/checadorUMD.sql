@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-09-2022 a las 05:16:15
+-- Tiempo de generación: 28-09-2022 a las 22:26:05
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -2945,7 +2945,7 @@ INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_matern
 (188658, 'Omar Alejandro', 'Reyes', 'Dittrich', 0, 39, 1, 9),
 (189270, 'Estefanía', 'Aguilar', 'De Santiago', 1, 29, 1, 10),
 (189468, 'Vanessa', 'Álvarez', 'Rodríguez', 2, 39, 2, 1),
-(202782, 'Ricardo de Jesús', 'Díaz ', 'Acevedo', 2, 31, 1, 11),
+(202782, 'Ricardo De Jesús', 'Díaz ', 'Acevedo', 2, 31, 1, 11),
 (204444, 'Rodrigo', 'Nava', 'Rodríguez', 1, 31, 1, 9),
 (210806, 'Irela', 'Ramírez', 'Barrón', 2, 29, 1, 12),
 (210857, 'Ana Sofi', 'Ruiz Esparza', 'Cardona', 2, 29, 1, 12),
@@ -2976,6 +2976,7 @@ INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_matern
 (272244, 'Juan Emmanuel', 'Martínez', 'Rodríguez', 0, 52, 1, 25),
 (272807, 'José Alonso', 'Gallegos', 'Santoyo', 0, 71, 1, 26),
 (272962, 'Gloria', 'Ruvalcaba', 'Rodríguez', 2, 52, 1, 15),
+(273525, 'Carmen Guadalupe', 'Fuentes', 'Alba', 0, 61, 3, 32),
 (275244, 'María Aracely', 'Cruz', 'Rivera', 1, 52, 1, 13),
 (275992, 'María Fernanda', 'Velasco', 'Esparza', 0, 52, 1, 27),
 (276489, 'María Guadalupe', 'Torres', 'Rodríguez', 0, 52, 1, 28),
@@ -3090,7 +3091,8 @@ INSERT INTO `horario` (`ID`, `hora_inicial`, `hora_final`, `ID_turno`) VALUES
 (26, '18:00:00', '19:00:00', 2),
 (27, '09:00:00', '14:00:00', 1),
 (28, '10:00:00', '15:00:00', 3),
-(29, '15:00:00', '18:50:00', 3);
+(29, '15:00:00', '18:50:00', 3),
+(32, '12:00:00', '12:05:00', 1);
 
 --
 -- Disparadores `horario`

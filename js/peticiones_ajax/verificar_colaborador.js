@@ -16,7 +16,6 @@ function verificarColaborador(IDColaborador, IDCampo, tipoComportamiento) {
                     }
                 break;
                 
-                case "false":
                 default:
                     switch(tipoComportamiento) {
                         case 1:
@@ -33,7 +32,7 @@ function verificarColaborador(IDColaborador, IDCampo, tipoComportamiento) {
             }
         }
     }
-    const url = "../funciones_adicionales/verificar_colaborador.php" +
+    const url = "../../funciones_adicionales/verificar_colaborador.php" +
     "?ID-colaborador=" + IDColaborador;
 
     xhttp.open("GET", url, true);
