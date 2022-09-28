@@ -4,9 +4,20 @@
     # Verificar si algún administrador no
     # ha iniciado su correspondiente sesión.
     if(!isset($_SESSION["ID_administrador"])) {
-        header("location: inicio_sesion.php");
+        header("location: ../menu_principal/menu_administrador.php");
         die();
     }
+
+    # Iniciar y verificar la conexión
+    # con la base de datos.
+    $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
+    if($conexion_base->connect_error) {
+        die("Hubo un error al conectar con la base de datos. " . $conexion_base->connect_error);
+    }
+
+    # Obtener todos los colaboradores registrados y bloqueados.
+    $colaboradores = $conexion_base->query("SELECT ID, CONCAT_WS(' ', nombres, apellido_paterno, apellido_materno) 
+    AS nombre_completo FROM `colaborador` WHERE numero_retardos > 2;");
 ?>
 
 <!--Código HTML del archivo-->
@@ -20,12 +31,14 @@
 
         <!--Estilos de la página-->
         <link rel="stylesheet" href="../../css/clases_globales.css">
+        <link rel="stylesheet" href="../../css/desplazamiento_instantaneo.css">
         <link rel="stylesheet" href="../../css/estilos_administradores.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-
+        <link rel="stylesheet" href="../../css/dselect.min.css">
+        
         <!--Título de la página-->
-        <title> Menú de administrador </title>
+        <title> Desbloqueo de ID de colaborador </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -45,55 +58,42 @@
         ?>
 
         <!--Recuadro principal-->
-        <div class="mx-2 mx-md-0 px-2 px-lg-0">
-            <div class="container my-5 px-0 px-lg-5">
+        <div class="mx-2 mx-md-0">
+            <div class="container-xl my-5">
                 <div class="jumbotron fondo-pantone-azul-claro">
-                    <h1 class="fs-2 fw-semibold"> 
-                        Bienvenido, administrador no. <?php echo $_SESSION["ID_administrador"]; ?>
+                    <h1 class="fs-2 fw-semibold text-center"> 
+                        Desbloqueo de ID de colaborador del sistema
                     </h1>
-
-                    <p class="lead">
-                        Este es el sistema de administración del checador para colaboradores
-                        de la Unidad Médico Didáctica de la Universidad Autónoma de Aguascalientes.
-                    </p>
                     <hr class="my-4 border border-1 border-dark">
 
-                    <p class="fw-semibold">
-                        Con los colaboradores se pueden realizar las siguientes operaciones:
-                    </p>
+                    <!--Formulario de selección del ID de un colaborador registrado-->
+                    <form method="POST" action="procesar_desbloquear_ID.php" 
+                    class="mb-0 px-0 px-md-5" id="desbloqueo-ID">
+                        <h5 class="text-center mb-3"> Selección del colaborador  </h5>
+                        <select class="form-select mb-4" name="ID-colaborador" id="colaboradores" required>
+                            <?php
+                                if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                                    while($colaborador = $colaboradores->fetch_row()) {
+                                        echo "<option value='" . $colaborador[0] . "'> " 
+                                        . $colaborador[0] . " - " . $colaborador[1] . " </option> ";
+                                    }
+                                }
+                            ?>
+                        </select>
 
-                    <ul class="ps-4 mb-4">
-                        <li class="mb-1"> Consultar los colaboradores actualmente registrados. </li>
-                        <li class="mb-1"> Agregar colaboradores nuevos. </li>
-                        <li class="mb-1"> Modificar la información de colaboradores existentes. </li>
-                        <li class="mb-1"> Eliminar colaboradores del sistema. </li>
-                        <li class="mb-1"> Desbloquear y/o bloquear los ID's de colaboradores. </li>
-                        <li class="mb-1"> Revisar la actividad de los colaboradores. </li>
-                    </ul>
-
-                    <p class="fw-semibold">
-                        Con las contingencias se pueden realizar las siguientes operaciones:
-                    </p>
-
-                    <ul class="ps-4 mb-4">
-                        <li class="mb-1"> Consultar las contingencias existentes. </li>
-                        <li class="mb-1"> Agregar contingencias nuevas. </li>
-                        <li class="mb-1"> Modificar contingencias existentes. </li>
-                        <li> Eliminar contingencias. </li>
-                    </ul>
-
-                    <p class="fw-semibold">
-                        Con los administradores se pueden realizar las siguientes operaciones:
-                    </p>
-
-                    <ul class="ps-4 mb-0">
-                        <li class="mb-1"> Consultar los administradores actualmente registrados. </li>
-                        <li class="mb-1"> Agregar administradores nuevos. </li>
-                        <li class="mb-1"> Modificar la información de administradores existentes. </li>
-                        <li class="mb-1"> Eliminar administradores del sistema. </li>
-                    </ul>
+                        <div class="text-center">
+                            <button class="btn btn-primary">
+                                Desbloquear ID del colaborador
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
+
+            <?php
+                # Cerrar la conexión con la base de datos.
+                $conexion_base->close();
+            ?>
         </div>
 
         <!--Scripts de la página-->
@@ -102,11 +102,15 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+        <script src="../../js/dselect.min.js"> </script>
         <script type="text/javascript">
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });
+            dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
+
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
+            document.getElementById("desbloqueo-ID").addEventListener("submit", confirmarDesbloqueoColaborador);
         </script>
     </body>
 </html>

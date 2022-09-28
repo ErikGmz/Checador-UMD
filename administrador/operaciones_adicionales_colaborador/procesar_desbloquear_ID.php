@@ -22,18 +22,22 @@
         }
 
         # Verificar si el ID especificado sí
-        # está registrado en en el sistema.
+        # está registrado en en el sistema y
+        # se encuentra bajo un bloqueo.
         try {
             if($resultados = $conexion_base->query("SELECT * FROM colaborador WHERE ID = '" 
-            . $_POST["ID-colaborador"] . "';")) {
+            . $_POST["ID-colaborador"] . "' AND numero_retardos > 2;")) {
                 if($resultados->num_rows <= 0) {
                     $resultado = 2;
                 }
                 else {
-                    # Eliminar al colaborador de la base de datos.
+                    # Desbloquear al colaborador registrado
+                    # en la base de datos.
                     try {
-                        if($conexion_base->query("DELETE FROM colaborador WHERE ID = '"
-                        . $_POST["ID-colaborador"] . "';")) {
+                        if($conexion_base->multi_query("UPDATE colaborador SET numero_retardos = '0'
+                        WHERE ID = '" . $_POST["ID-colaborador"] . "'; 
+                        UPDATE chequeo SET bloqueo_registro = 0 WHERE ID_colaborador = '"
+                        . $_POST["ID-colaborador"] . "' AND fecha_chequeo = CURDATE();")) {
                             $auxiliar = $resultados->fetch_row();
 
                             $nombres = $auxiliar[1];
@@ -83,7 +87,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
         <!--Título de la página-->
-        <title> Resultado de la eliminación del colaborador </title>
+        <title> Resultado del desbloqueo del colaborador </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -106,10 +110,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Eliminación no exitosa de colaborador",
-                            text: "Ocurrió un error al tratar de eliminar al colaborador"
+                            title: "Desbloqueo no exitoso de colaborador",
+                            text: "Ocurrió un error al tratar de desbloquear al colaborador"
                         }).then((resultado) => {
-                            location.href="eliminacion_colaborador.php";
+                            location.href="desbloquear_ID.php";
                         });
                     });
                 break;
@@ -118,10 +122,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Identificador de colaborador inexistente",
-                            text: "El ID especificado no está registrado en el sistema"
+                            title: "Identificador de colaborador inexistente o no bloqueado",
+                            text: "El ID especificado no puede desbloquearse en este momento"
                         }).then((resultado) => {
-                            location.href="eliminacion_colaborador.php";
+                            location.href="desbloquear_ID.php";
                         });
                     });
                 break;
@@ -130,13 +134,13 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "success",
-                            title: "Eliminación exitosa de colaborador",
-                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador fue exitosamente eliminado del sistema: </p> \\n"
+                            title: "Desbloqueo exitoso de colaborador",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador fue exitosamente desbloqueado: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$nombres . " " . @$apellido_paterno . " " . @$apellido_materno . " </p> \\n"
                             . "<p class='mb-2'> <b> ID: </b> " . @$_POST["ID-colaborador"] . "</p>\""
                             ?>
                         }).then((resultado) => {
-                            location.href="eliminacion_colaborador.php";
+                            location.href="desbloquear_ID.php";
                         });
                     });
                 break;
@@ -146,9 +150,9 @@
                         Swal.fire({
                             icon: "error",
                             title: "Error desconocido",
-                            text: "Ocurrió un error al tratar de eliminar el colaborador"
+                            text: "Ocurrió un error al tratar de desbloquear el colaborador"
                         }).then((resultado) => {
-                            location.href="eliminacion_colaborador.php";
+                            location.href="desbloquear_ID.php";
                         });
                     });
                 break;

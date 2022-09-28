@@ -73,3 +73,41 @@ function confirmarEliminacionColaborador(evento) {
         }
     });
 }
+
+// Función para confirmar el
+// desbloqueo de un colaborador.
+function confirmarDesbloqueoColaborador(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Desbloqueo de un colaborador",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea desbloquear el ID del colaborador?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}
+
+// Función para confirmar el
+// bloqueo de un colaborador.
+function confirmarBloqueoColaborador(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Bloqueo de un colaborador",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea bloquear el ID del colaborador?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}

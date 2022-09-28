@@ -26,7 +26,7 @@
     # Verificar si el usuario especificado
     # existe en la base de datos.
     if($usuario = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
-    colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad
+    colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad, colaborador.numero_retardos
     FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
     JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
     WHERE colaborador.ID = '" . @$_GET["ID-colaborador"] . "' LIMIT 1;")) {
@@ -37,6 +37,7 @@
             $nombre_colaborador = $resultados[1] . " " . $resultados[2] . " " . $resultados[3];
             $carrera = $resultados[4];
             $modalidad = $resultados[5];
+            $numero_retardos = $resultados[6];
 
             # Comprobar si se indicaron horas de becario.
             if(isset($_GET["horas-becario"]) && is_numeric(@$_GET["horas-becario"])) {
@@ -246,6 +247,10 @@
 
                                             <p class="fw-semibold mb-2">
                                                 Modalidad: <?php echo $modalidad ?>
+                                            </p>
+
+                                            <p class="fw-semibold mb-2">
+                                                Número de retardos: <?php echo $numero_retardos ?>
                                             </p>
 
                                             <p class="fw-semibold mb-2">
