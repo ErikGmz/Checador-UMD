@@ -4,7 +4,7 @@
     # Verificar si algún administrador no
     # ha iniciado su correspondiente sesión.
     if(!isset($_SESSION["ID_administrador"])) {
-        header("location: ../index.php");
+        header("location: ../menu_principal/menu_administrador.php");
         die();
     }
 
@@ -12,11 +12,11 @@
     # para cerrar sesión de administrador.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["cierre-sesion"])) {
         session_destroy();
-        header("location: ../index.php");
+        header("location: ../../index.php");
         die();
     }
     else {
-        header("location: menu_administrador.php");
+        header("location: ../menu_principal/menu_administrador.php");
         die();
     }
 ?>

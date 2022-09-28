@@ -12,127 +12,132 @@
         date_default_timezone_set('America/Mexico_City');
 
         # Verificar si el colaborador indicado existe.
-        $colaborador = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
-        colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad,
-        colaborador.numero_retardos, horario.hora_inicial FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
-        JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
-        JOIN horario ON colaborador.ID_horario = horario.ID
-        WHERE colaborador.ID = '" . $_POST["ID"] . "' LIMIT 1;");
-        if(isset($colaborador) && $colaborador->num_rows > 0) {
-            $datos_colaborador = $colaborador->fetch_row();
+        try {
+            $colaborador = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
+            colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad,
+            colaborador.numero_retardos, horario.hora_inicial FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
+            JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
+            JOIN horario ON colaborador.ID_horario = horario.ID
+            WHERE colaborador.ID = '" . $_POST["ID"] . "' LIMIT 1;");
+            if(isset($colaborador) && $colaborador->num_rows > 0) {
+                $datos_colaborador = $colaborador->fetch_row();
 
-            # Verificar el tipo de chequeo.
-            switch($_POST["chequeo"]) {
-                case "entrada":
-                    # Verificar si ya se había hecho el chequeo de entrada.
-                    $verificacion_chequeo = $conexion_base->query("SELECT * FROM chequeo
-                    WHERE ID_colaborador = '" . $_POST["ID"] . "' AND fecha_chequeo = '" . date("Y-m-d") . "';");
+                # Verificar el tipo de chequeo.
+                switch($_POST["chequeo"]) {
+                    case "entrada":
+                        # Verificar si ya se había hecho el chequeo de entrada.
+                        $verificacion_chequeo = $conexion_base->query("SELECT * FROM chequeo
+                        WHERE ID_colaborador = '" . $_POST["ID"] . "' AND fecha_chequeo = '" . date("Y-m-d") . "';");
 
-                    if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
-                        $resultado = 3;
-                    }
-                    else {
-                        # Registrar el chequeo de entrada.
-                        $hora_registro = date("H:i:s");
-                        
-                        try {
-                            if($conexion_base->query("INSERT INTO chequeo(fecha_chequeo, hora_inicial, ID_colaborador)
-                            VALUES('" . date("Y-m-d") . "', '$hora_registro', '" . $_POST["ID"] . "');")) {
-                                # Verificar si se llegó 15 minutos después de
-                                # la hora inicial (esquema de retardos).
-                                if(strtotime("1970-01-01 $hora_registro UTC") - strtotime("1970-01-01 " . $datos_colaborador[7] . " UTC") >= strtotime("1970-01-01 00:15:00 UTC")) {
-                                    $incremento_retardos = (int)$datos_colaborador[6] + 1;
+                        if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
+                            $resultado = 3;
+                        }
+                        else {
+                            # Registrar el chequeo de entrada.
+                            $hora_registro = date("H:i:s");
+                            
+                            try {
+                                if($conexion_base->query("INSERT INTO chequeo(fecha_chequeo, hora_inicial, ID_colaborador)
+                                VALUES('" . date("Y-m-d") . "', '$hora_registro', '" . $_POST["ID"] . "');")) {
+                                    # Verificar si se llegó 15 minutos después de
+                                    # la hora inicial (esquema de retardos).
+                                    if(strtotime("1970-01-01 $hora_registro UTC") - strtotime("1970-01-01 " . $datos_colaborador[7] . " UTC") >= strtotime("1970-01-01 00:15:00 UTC")) {
+                                        $incremento_retardos = (int)$datos_colaborador[6] + 1;
 
-                                    # Actualizar los retardos en los datos del colaborador.
-                                    if($conexion_base->query("UPDATE colaborador SET numero_retardos = '$incremento_retardos'
-                                    WHERE ID = '" . $_POST["ID"] . "';")) {
-                                        if($incremento_retardos <= 2) {
-                                            $resultado = 8;
-                                        }
-                                        else {
-                                            # Definir como bloqueado al chequeo.
-                                            if($conexion_base->query("UPDATE chequeo SET bloqueo_registro = '1' WHERE
-                                            fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "';")) {
-                                                $resultado = 9;
+                                        # Actualizar los retardos en los datos del colaborador.
+                                        if($conexion_base->query("UPDATE colaborador SET numero_retardos = '$incremento_retardos'
+                                        WHERE ID = '" . $_POST["ID"] . "';")) {
+                                            if($incremento_retardos <= 2) {
+                                                $resultado = 8;
                                             }
                                             else {
-                                                $resultado = 2;
+                                                # Definir como bloqueado al chequeo.
+                                                if($conexion_base->query("UPDATE chequeo SET bloqueo_registro = '1' WHERE
+                                                fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "';")) {
+                                                    $resultado = 9;
+                                                }
+                                                else {
+                                                    $resultado = 2;
+                                                }
                                             }
+                                        }
+                                        else {
+                                            $resultado = 2;
                                         }
                                     }
                                     else {
-                                        $resultado = 2;
-                                    }
-                                }
-                                else {
-                                    $resultado = 1;
-                                }
-                            } 
-                            else {
-                                $resultado = 2;
-                            }
-                        }
-                        catch(Exception $e) {
-                            $resultado = 2;
-                        }
-                    }
-                    @$verificacion_chequeo->close();
-                break;
-
-                case "salida":
-                    # Verificar si el chequeo de entrada
-                    # del día actual ya fue realizado.
-                    $verificacion_chequeo = $conexion_base->query("SELECT * FROM chequeo
-                    WHERE ID_colaborador = '" . $_POST["ID"] . "' AND fecha_chequeo = '" . date("Y-m-d") . "' LIMIT 1;");
-                    
-                    if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
-                        # Verificar si no se ha hecho el chequeo de salida.
-                        if(is_null($verificacion_chequeo->fetch_row()[2])) {
-                            try {
-                                # Registrar el chequeo de salida.
-                                $hora_chequeo = date("H:i:s");
-
-                                if($conexion_base->query("UPDATE chequeo SET hora_final = '$hora_chequeo'
-                                WHERE fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "';")) {
-                                    # Verificar si los retardos del colaborador ya fueron excedidos.
-                                    if((int)$datos_colaborador[6] > 2) {
-                                        $resultado = 10;
-                                    }  
-                                    else {
-                                        $resultado = 4;
+                                        $resultado = 1;
                                     }
                                 } 
                                 else {
-                                    $resultado = 6;
+                                    $resultado = 2;
                                 }
                             }
                             catch(Exception $e) {
-                                $resultado = 6;
+                                $resultado = 2;
+                            }
+                        }
+                        @$verificacion_chequeo->close();
+                    break;
+
+                    case "salida":
+                        # Verificar si el chequeo de entrada
+                        # del día actual ya fue realizado.
+                        $verificacion_chequeo = $conexion_base->query("SELECT * FROM chequeo
+                        WHERE ID_colaborador = '" . $_POST["ID"] . "' AND fecha_chequeo = '" . date("Y-m-d") . "' LIMIT 1;");
+                        
+                        if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
+                            # Verificar si no se ha hecho el chequeo de salida.
+                            if(is_null($verificacion_chequeo->fetch_row()[2])) {
+                                try {
+                                    # Registrar el chequeo de salida.
+                                    $hora_chequeo = date("H:i:s");
+
+                                    if($conexion_base->query("UPDATE chequeo SET hora_final = '$hora_chequeo'
+                                    WHERE fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "';")) {
+                                        # Verificar si los retardos del colaborador ya fueron excedidos.
+                                        if((int)$datos_colaborador[6] > 2) {
+                                            $resultado = 10;
+                                        }  
+                                        else {
+                                            $resultado = 4;
+                                        }
+                                    } 
+                                    else {
+                                        $resultado = 6;
+                                    }
+                                }
+                                catch(Exception $e) {
+                                    $resultado = 6;
+                                }
+                            }
+                            else {
+                                $resultado = 7;
                             }
                         }
                         else {
-                            $resultado = 7;
+                            $resultado = 5;
                         }
-                    }
-                    else {
-                        $resultado = 5;
-                    }
-                    @$verificacion_chequeo->close();
-                break;
+                        @$verificacion_chequeo->close();
+                    break;
 
-                default:
-                    header("location: ../index.php");
-                    die();
-                break;
+                    default:
+                        header("location: ../index.php");
+                        die();
+                    break;
+                }
+            }
+            else {
+                $resultado = 12;
             }
         }
-        else {
+        catch(Exception $e) {
             $resultado = 12;
         }
-        @$colaborador->close();
-        
-        # Cerrar la conexión con la base de datos.
-        $conexion_base->close();
+        finally {
+            # Cerrar la conexión con la base de datos.
+            $conexion_base->close();
+        }
     }
     else {
         header("location: ../index.php");

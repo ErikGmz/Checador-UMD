@@ -4,7 +4,7 @@
     # Verificar si algún administrador ya 
     # inició su correspondiente sesión.
     if(isset($_SESSION["ID_administrador"])) {
-        header("location: administrador/menu_administrador.php");
+        header("location: administrador/menu_principal/menu_administrador.php");
         die();
     }
 ?>

@@ -4,7 +4,7 @@
     # Verificar si algún administrador ya
     # inició su correspondiente sesión.
     if(isset($_SESSION["ID_administrador"])) {
-        header("location: menu_administrador.php");
+        header("location: ../menu_principal/menu_administrador.php");
         die();
     }
 
@@ -19,34 +19,40 @@
         }
 
         # Verificar si los datos de inicio de sesión son correctos.
-        if($resultado = $conexion_base->query("SELECT ID FROM coordinador WHERE ID = '" . $_POST["ID-administrador"]
-        . "' AND clave = '" . md5($_POST["clave-administrador"]) . "';")) {
-            if($resultado->num_rows > 0) {
-                # Cargar los datos de inicio de sesión y
-                # redigir al menú principal de administradores.
-                $_SESSION["ID_administrador"] = $_POST["ID-administrador"];
-                $resultado = 2;
+        try {
+            if($resultados = $conexion_base->query("SELECT ID FROM coordinador WHERE ID = '" . $_POST["ID-administrador"]
+            . "' AND clave = '" . md5($_POST["clave-administrador"]) . "';")) {
+                if($resultados->num_rows > 0) {
+                    # Cargar los datos de inicio de sesión y
+                    # redigir al menú principal de administradores.
+                    $_SESSION["ID_administrador"] = $_POST["ID-administrador"];
+                    $resultado = 2;
+                }
+                else {
+                    # Los datos de inicio de sesión no fueron
+                    # válidos, así que se retornará a la página
+                    # de registros de chequeos.
+                    $resultado = 1;
+                }
+                $resultados->close();
             }
             else {
                 # Los datos de inicio de sesión no fueron
                 # válidos, así que se retornará a la página
                 # de registros de chequeos.
                 $resultado = 1;
-            }
-            $resultados->close();
+            }   
         }
-        else {
-            # Los datos de inicio de sesión no fueron
-            # válidos, así que se retornará a la página
-            # de registros de chequeos.
-            $resultado = 1;
-        }   
-
-        # Cerrar la conexión con la base de datos.
-        $conexion_base->close();
+        catch(Exception $e) {
+            $resultado = 3;
+        }
+        finally {
+            # Cerrar la conexión con la base de datos.
+            $conexion_base->close();
+        }
     }
     else {
-        header("location: ../index.php");
+        header("location: ../../index.php");
         die();
     }
 ?>
@@ -67,11 +73,11 @@
         <title> Resultado del inicio de sesión </title>
 
         <!--Ícono de la página-->
-        <link rel="apple-touch-icon" sizes="76x76" href="../favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
-        <link rel="manifest" href="../site.webmanifest">
-        <link rel="mask-icon" href="../favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../favicon/favicon-16x16.png">
+        <link rel="manifest" href="../../site.webmanifest">
+        <link rel="mask-icon" href="../../favicon/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
     </head>

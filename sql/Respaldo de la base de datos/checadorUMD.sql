@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-09-2022 a las 06:40:46
+-- Tiempo de generación: 28-09-2022 a las 05:16:15
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -3277,7 +3277,7 @@ ALTER TABLE `turno`
 -- Filtros para la tabla `chequeo`
 --
 ALTER TABLE `chequeo`
-  ADD CONSTRAINT `fk_Chequeo_Colaborador1` FOREIGN KEY (`ID_colaborador`) REFERENCES `colaborador` (`ID`);
+  ADD CONSTRAINT `fk_Chequeo_Colaborador1` FOREIGN KEY (`ID_colaborador`) REFERENCES `colaborador` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `colaborador`
@@ -3291,7 +3291,7 @@ ALTER TABLE `colaborador`
 -- Filtros para la tabla `contingencia`
 --
 ALTER TABLE `contingencia`
-  ADD CONSTRAINT `fk_Contingencia_Colaborador1` FOREIGN KEY (`ID_colaborador`) REFERENCES `colaborador` (`ID`);
+  ADD CONSTRAINT `fk_Contingencia_Colaborador1` FOREIGN KEY (`ID_colaborador`) REFERENCES `colaborador` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `horario`

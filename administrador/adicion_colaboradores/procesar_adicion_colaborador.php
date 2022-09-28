@@ -4,7 +4,7 @@
     # Verificar si algún administrador ya
     # inició su correspondiente sesión.
     if(!isset($_SESSION["ID_administrador"])) {
-        header("location: menu_administrador.php");
+        header("location: ../menu_principal/menu_administrador.php");
         die();
     }
 
@@ -24,74 +24,91 @@
 
         # Verificar si el ID especificado no corresponde
         # a un colaborador ya existente en el sistema.
-        if($resultados = $conexion_base->query("SELECT * FROM colaborador WHERE ID = '" 
-        . $_POST["ID-colaborador"] . "';")) {
-            if($resultados->num_rows > 0) {
-                $resultado = 2;
-            }
-            else {
-                $tiempo_entrada = date("1970-01-01 " . $_POST["hora-entrada"] . ":00");
-                $tiempo_salida = date("1970-01-01 " . $_POST["hora-salida"] . ":00");
-                if($tiempo_salida <= $tiempo_entrada || $tiempo_entrada > date("1970-01-01 21:00")
-                || $tiempo_entrada < date("1970-01-01 08:00") || $tiempo_salida < date("1970-01-01 08:00")
-                || $tiempo_salida > date("1970-01-01 21:00")) {
-                    $resultado = 3;
+        try {
+            if($resultados = $conexion_base->query("SELECT * FROM colaborador WHERE ID = '" 
+            . $_POST["ID-colaborador"] . "';")) {
+                if($resultados->num_rows > 0) {
+                    $resultado = 2;
                 }
                 else {
-                    # Eliminar los espacios en los extremos
-                    # de cada uno de los nombres del colaborador.
-                    if(isset($_POST["segundo-apellido"])) $segundo_nombre = trim($_POST["segundo-nombre"]);
-                    else $segundo_nombre= "";
-                    $nombres = trim($_POST["primer-nombre"]) . trim($segundo_nombre);
+                    $tiempo_entrada = date("1970-01-01 " . $_POST["hora-entrada"] . ":00");
+                    $tiempo_salida = date("1970-01-01 " . $_POST["hora-salida"] . ":00");
+                    if($tiempo_salida <= $tiempo_entrada || $tiempo_entrada > date("1970-01-01 21:00")
+                    || $tiempo_entrada < date("1970-01-01 08:00") || $tiempo_salida < date("1970-01-01 08:00")
+                    || $tiempo_salida > date("1970-01-01 21:00")) {
+                        $resultado = 3;
+                    }
+                    else {
+                        # Eliminar los espacios en los extremos
+                        # de cada uno de los nombres del colaborador.
+                        if(isset($_POST["segundo-apellido"])) $segundo_nombre = trim($_POST["segundo-nombre"]);
+                        else $segundo_nombre= "";
+                        $nombres = ucwords(strtolower(trim($_POST["primer-nombre"]))) . " " . ucwords(strtolower(trim($segundo_nombre)));
 
-                    $apellido_paterno = trim($_POST["primer-apellido"]);
-                    if(isset($_POST["segundo-apellido"])) $apellido_materno = trim($_POST["segundo-apellido"]);
-                    else $apellido_materno = "";
+                        $apellido_paterno = trim($_POST["primer-apellido"]);
+                        if(isset($_POST["segundo-apellido"])) $apellido_materno = trim($_POST["segundo-apellido"]);
+                        else $apellido_materno = "";
 
-                    # Verificar si el horario introducido ya existe en la base de datos.
-                    if($horarios = $conexion_base->query("SELECT ID from horario WHERE hora_inicial = 
-                    '" . $_POST["hora-entrada"] . "' AND hora_final = '" . $_POST["hora-salida"] . "';")) {
-                        if($horarios->num_rows > 0) {
-                            $ID_horario = $horarios->fetch_row()[0];
-                        }
-                        else {
-                            # Agregar a la base de datos el nuevo horario.
-                            if($conexion_base->query("INSERT INTO horario(hora_inicial, hora_final)
-                            VALUES('" . $_POST["hora-entrada"] . "', '" . $_POST["hora-salida"] . "');")) {
-                                $ID_horario = $conexion_base->insert_id;
-                            }   
-                            else {
-                                $resultado = 1;
+                        # Verificar si el horario introducido ya existe en la base de datos.
+                        if($horarios = $conexion_base->query("SELECT ID from horario WHERE hora_inicial = 
+                        '" . $_POST["hora-entrada"] . "' AND hora_final = '" . $_POST["hora-salida"] . "';")) {
+                            $conexion_base->query("START TRANSACTION;");
+
+                            if($horarios->num_rows > 0) {
+                                $ID_horario = $horarios->fetch_row()[0];
                             }
-                        }
-                        $horarios->close();
+                            else {
+                                # Agregar a la base de datos el nuevo horario.
+                                if($conexion_base->query("INSERT INTO horario(hora_inicial, hora_final)
+                                VALUES('" . $_POST["hora-entrada"] . "', '" . $_POST["hora-salida"] . "');")) {
+                                    $ID_horario = $conexion_base->insert_id;
+                                }   
+                                else {
+                                    $resultado = 1;
+                                }
+                            }
+                            $horarios->close();
 
-                        # Agregar al colaborador a la base de datos.
-                        if($conexion_base->query("INSERT INTO colaborador(ID, nombres, apellido_paterno, apellido_materno, 
-                        ID_carrera, ID_modalidad, ID_horario) VALUES('" . $_POST["ID-colaborador"] . "', '$nombres', '$apellido_paterno', '$apellido_materno', '" 
-                        . $_POST["carrera"] . "', '" . $_POST["modalidad"] . "', '$ID_horario');")) {
-                            $resultado = 4;
-                        }
+                            # Agregar al colaborador a la base de datos.
+                            try {
+                                if($conexion_base->query("INSERT INTO colaborador(ID, nombres, apellido_paterno, apellido_materno, 
+                                ID_carrera, ID_modalidad, ID_horario) VALUES('" . $_POST["ID-colaborador"] . "', '$nombres', '$apellido_paterno', '$apellido_materno', '" 
+                                . $_POST["carrera"] . "', '" . $_POST["modalidad"] . "', '$ID_horario');")) {
+                                    $resultado = 4;
+                                    $conexion_base->query("COMMIT;");
+                                }
+                                else {
+                                    $resultado = 1;
+                                    $conexion_base->query("ROLLBACK;");
+                                }
+                            }
+                            catch(Exception $e) {
+                                $resultado = 1;
+                                $conexion_base->query("ROLLBACK;");
+                            }
+                        } 
                         else {
                             $resultado = 1;
                         }
-                    } 
-                    else {
-                        $resultado = 1;
                     }
                 }
+                $resultados->close();
             }
-            $resultados->close();
+            else {
+                $resultado = 1;
+            }   
         }
-        else {
+        catch(Exception $e) {
             $resultado = 1;
-        }   
-
-        # Cerrar la conexión con la base de datos.
-        $conexion_base->close();
+        }
+        finally {
+            # Cerrar la conexión con la base de datos.
+            $conexion_base->close();
+        }
+        
     }
     else {
-        header("location: menu_administrador.php");
+        header("location: ../menu_principal/menu_administrador.php");
         die();
     }
 ?>
@@ -112,11 +129,11 @@
         <title> Resultado de la adición del colaborador </title>
 
         <!--Ícono de la página-->
-        <link rel="apple-touch-icon" sizes="76x76" href="../favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
-        <link rel="manifest" href="../site.webmanifest">
-        <link rel="mask-icon" href="../favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../favicon/favicon-16x16.png">
+        <link rel="manifest" href="../../site.webmanifest">
+        <link rel="mask-icon" href="../../favicon/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
     </head>
@@ -133,7 +150,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Adición no exitosa de colaborador",
-                            text: "Ocurrió un error al tratar de añadir al colaborador."
+                            text: "Ocurrió un error al tratar de añadir al colaborador"
                         }).then((resultado) => {
                             location.href="adicion_colaborador.php";
                         });

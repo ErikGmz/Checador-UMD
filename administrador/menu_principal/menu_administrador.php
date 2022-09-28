@@ -4,7 +4,7 @@
     # Verificar si algún administrador no
     # ha iniciado su correspondiente sesión.
     if(!isset($_SESSION["ID_administrador"])) {
-        header("location: ../index.php");
+        header("location: inicio_sesion.php");
         die();
     }
 ?>
@@ -19,8 +19,8 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
         <!--Estilos de la página-->
-        <link rel="stylesheet" href="../css/clases_globales.css">
-        <link rel="stylesheet" href="../css/estilos_administradores.css">
+        <link rel="stylesheet" href="../../css/clases_globales.css">
+        <link rel="stylesheet" href="../../css/estilos_administradores.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
@@ -28,10 +28,10 @@
         <title> Menú de administrador </title>
 
         <!--Ícono de la página-->
-        <link rel="apple-touch-icon" sizes="76x76" href="../favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
-        <link rel="manifest" href="../site.webmanifest">
+        <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../../favicon/favicon-16x16.png">
+        <link rel="manifest" href="../../site.webmanifest">
         <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
@@ -41,7 +41,7 @@
     <body class="fondo-pantone-azul-oscuro">
         <!--Barra de navegación-->
         <?php
-            include("componentes_paginas/barra_navegacion.php");
+            include("../componentes_paginas/barra_navegacion.php");
         ?>
 
         <!--Recuadro principal-->
@@ -87,7 +87,7 @@
 
         <!--Scripts de la página-->
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"> </script>
-        <script src="../js/confirmar_cierre_sesion.js"> </script>
+        <script src="../../js/confirmar_operaciones.js"> </script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>

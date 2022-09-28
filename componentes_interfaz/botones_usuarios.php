@@ -31,7 +31,7 @@
             </div>
 
             <div class="col-12 col-sm-6 col-lg-12 centrado-flex">
-                <button class="btn btn-light text-muted" onclick="location.href = '../administrador/inicio_sesion.php'"> 
+                <button class="btn btn-light text-muted" onclick="location.href = '../administrador/gestion_sesion/inicio_sesion.php'"> 
                     <span class="fs-6 fw-semibold"> <i class="bi bi-key-fill me-1"> </i> Modo administrador </span>
                 </button>
             </div>
@@ -47,7 +47,7 @@
             </div>
 
             <div class="col-12 col-sm-6 col-lg-12 centrado-flex">
-                <button class="btn btn-light text-muted" onclick="location.href = 'administrador/inicio_sesion.php'"> 
+                <button class="btn btn-light text-muted" onclick="location.href = 'administrador/gestion_sesion/inicio_sesion.php'"> 
                     <span class="fs-6 fw-semibold"> <i class="bi bi-key-fill me-1"> </i> Modo administrador </span>
                 </button>
             </div>
@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="col-12 col-sm-6 col-lg-12 centrado-flex">
-                            <button class="btn btn-light text-muted" onclick="location.href = '../administrador/inicio_sesion.php'"> 
+                            <button class="btn btn-light text-muted" onclick="location.href = '../administrador/gestion_sesion/inicio_sesion.php'"> 
                                 <span class="fs-6 fw-semibold"> <i class="bi bi-key-fill me-1"> </i> Modo administrador </span>
                             </button>
                         </div>

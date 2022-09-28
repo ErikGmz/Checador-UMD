@@ -14,6 +14,13 @@ function verificarRangosHoras(horaEntrada, horaSalida, campoActual) {
     if(referenciaEntrada >= referenciaSalida) {
         campoEntrada.setCustomValidity("La hora de entrada no puede ser mayor o igual a la de salida.");
         campoSalida.setCustomValidity("La hora de salida no puede ser menor o igual a la de salida.");
+        campoEntrada
+        if(campoActual == 1) {
+            campoEntrada.reportValidity();
+        }
+        else {
+            campoSalida.reportValidity();
+        }
     }
     else {
         campoEntrada.setCustomValidity("");
