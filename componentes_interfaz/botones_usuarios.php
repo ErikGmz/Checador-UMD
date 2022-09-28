@@ -57,13 +57,13 @@
                 if(basename($_SERVER['SCRIPT_FILENAME']) == "inicio_sesion.php") {
                     ?>
                         <div class="mb-3 mb-sm-0 col-12 col-sm-6 mb-lg-4 col-lg-12 centrado-flex">
-                            <button class="btn btn-light text-muted" onclick="location.href = '../index.php'"> 
+                            <button class="btn btn-light text-muted" onclick="location.href = '../../index.php'"> 
                                 <span class="fs-6 fw-semibold"> <i class="bi bi-clock-fill me-1"> </i> Registrar actividad </span>
                             </button>
                         </div>
 
                         <div class="col-12 col-sm-6 col-lg-12 centrado-flex">
-                            <button class="btn btn-light text-muted" onclick="location.href = '../revision_horas/solicitud_usuario.php'"> 
+                            <button class="btn btn-light text-muted" onclick="location.href = '../../revision_horas/solicitud_usuario.php'"> 
                                 <span class="fs-6 fw-semibold"> <i class="bi bi-calendar-date-fill me-1"> </i> Consultar horas </span>
                             </button>
                         </div>

@@ -371,7 +371,7 @@
                                                     <th scope="col"> Horas totales </th>
                                                     <th scope="col"> Horas de servicio </th>
                                                     <th scope="col"> Tiempo total de contingencias </th>
-                                                    <th scope="col"> Cantidad de bloqueos </th>
+                                                    <th scope="col"> Tiempo total de bloqueos </th>
                                                 </tr>
                                             </thead>
 
@@ -380,10 +380,10 @@
                                                 if(isset($chequeos) && $chequeos->num_rows > 0) {
                                                 ?>
                                                 <tr>
-                                                    <td> <?php echo $horas_totales ?> </td>
-                                                    <td> <?php echo $horas_servicio ?> </td>
-                                                    <td> <?php echo $tiempo_contingencias ?> </td>
-                                                    <td> <?php echo $veces_bloqueos ?> </td>
+                                                    <td class="py-3"> <?php echo $horas_totales ?> </td>
+                                                    <td class="py-3"> <?php echo $horas_servicio ?> </td>
+                                                    <td class="py-3"> <?php echo $tiempo_contingencias ?> </td>
+                                                    <td class="py-3"> <?php echo $tiempo_bloqueo ?> </td>
                                                 </tr>
                                                 <?php
                                                 }

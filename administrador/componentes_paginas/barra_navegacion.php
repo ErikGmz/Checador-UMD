@@ -79,7 +79,7 @@
                         Desbloquear ID </a> </li>
 
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "bloquear_ID.php") 
-                        echo "fw-semibold active"; else echo "\" href=\"../operaciones_adicionales_colaborador/desbloquear_ID.php"?>"> 
+                        echo "fw-semibold active"; else echo "\" href=\"../operaciones_adicionales_colaborador/bloquear_ID.php"?>"> 
                         Bloquear ID </a> </li>
 
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "reporte_horas.php") 

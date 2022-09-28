@@ -15,9 +15,9 @@
         die("Hubo un error al conectar con la base de datos. " . $conexion_base->connect_error);
     }
 
-    # Obtener todos los colaboradores registrados.
+    # Obtener todos los colaboradores registrados y no bloqueados.
     $colaboradores = $conexion_base->query("SELECT ID, CONCAT_WS(' ', nombres, apellido_paterno, apellido_materno) 
-    AS nombre_completo FROM `colaborador`;");
+    AS nombre_completo FROM `colaborador` WHERE numero_retardos <= 2;");
 ?>
 
 <!--Código HTML del archivo-->
@@ -37,7 +37,7 @@
         <link rel="stylesheet" href="../../css/dselect.min.css">
         
         <!--Título de la página-->
-        <title> Eliminación de colaborador </title>
+        <title> Bloqueo de ID de colaborador </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -61,14 +61,14 @@
             <div class="container-xl my-5">
                 <div class="jumbotron fondo-pantone-azul-claro">
                     <h1 class="fs-2 fw-semibold text-center"> 
-                        Eliminación de colaborador del sistema
+                        Bloqueo de ID de colaborador del sistema
                     </h1>
                     <hr class="my-4 border border-1 border-dark">
 
                     <!--Formulario de selección del ID de un colaborador registrado-->
-                    <form method="POST" action="procesar_eliminar_colaborador.php" 
-                    class="mb-0 px-0 px-md-5" id="eliminacion-colaborador">
-                        <h5 class="text-center mb-3"> Selección del colaborador a eliminar </h5>
+                    <form method="POST" action="procesar_bloquear_ID.php" 
+                    class="mb-0 px-0 px-md-5" id="bloqueo-ID">
+                        <h5 class="text-center mb-3"> Selección del colaborador  </h5>
                         <select class="form-select mb-4" name="ID-colaborador" id="colaboradores" required>
                             <?php
                                 if(isset($colaboradores) && $colaboradores->num_rows > 0) {
@@ -82,7 +82,7 @@
 
                         <div class="text-center">
                             <button class="btn btn-primary">
-                                Eliminar colaborador
+                                Bloquear ID del colaborador
                             </button>
                         </div>
                     </form>
@@ -109,7 +109,7 @@
             dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
 
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
-            document.getElementById("eliminacion-colaborador").addEventListener("submit", confirmarEliminacionColaborador);
+            document.getElementById("bloqueo-ID").addEventListener("submit", confirmarBloqueoColaborador);
         </script>
     </body>
 </html>
