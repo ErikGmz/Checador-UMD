@@ -32,6 +32,10 @@
     max-width: min(100%, 700px);
 }
 
+.recuadro {
+    max-width: clamp(100px, 100%, 500px);
+}
+
 @media screen and (min-width: 768px) {
     .recuadro-ID {
         margin: auto auto;

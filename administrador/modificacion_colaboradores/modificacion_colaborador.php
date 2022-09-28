@@ -30,7 +30,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="d-none invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -307,6 +307,15 @@
         <script src="../../js/peticiones_ajax/verificar_colaborador.js"> </script>
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script type="text/javascript">
+            // Mostrar el contenido una vez que la
+            // página se cargue por completo.
+            window.onload = () => {
+                document.querySelector("html").classList.remove("d-none");
+                setTimeout(() => {
+                    document.querySelector("html").classList.remove("invisible");
+                }, 20);
+            }
+
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });

@@ -21,7 +21,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="d-none invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -103,6 +103,15 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
         <script src="../../js/dselect.min.js"> </script>
         <script type="text/javascript">
+            // Mostrar el contenido una vez que la
+            // página se cargue por completo.
+            window.onload = () => {
+                document.querySelector("html").classList.remove("d-none");
+                setTimeout(() => {
+                    document.querySelector("html").classList.remove("invisible");
+                }, 20);
+            }
+
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });

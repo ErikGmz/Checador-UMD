@@ -24,7 +24,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="d-none invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -42,10 +42,10 @@
         <title> Listado de colaboradores </title>
 
         <!--Ícono de la página-->
-        <link rel="apple-touch-icon" sizes="76x76" href="../favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../../favicon/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
-        <link rel="manifest" href="../site.webmanifest">
+        <link rel="manifest" href="../../site.webmanifest">
         <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
@@ -70,7 +70,7 @@
                     <?php
                     if(isset($colaboradores) && @$colaboradores->num_rows > 0) {
                     ?>
-                    <div class="table-responsive">
+                    <div class="table-responsive fondo-pantone-azul-intermedio rounded p-3">
                         <table class="table table-striped mb-0">
                             <thead>
                                 <tr">
@@ -127,6 +127,15 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
         <script type="text/javascript">
+            // Mostrar el contenido una vez que la
+            // página se cargue por completo.
+            window.onload = () => {
+                document.querySelector("html").classList.remove("d-none");
+                setTimeout(() => {
+                    document.querySelector("html").classList.remove("invisible");
+                }, 20);
+            }
+            
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });

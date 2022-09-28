@@ -7,7 +7,7 @@
         case "eliminacion_colaborador.php":
         case "desbloquear_ID.php":
         case "bloquear_ID.php":
-        case "reportes_horas.php":
+        case "reporte_horas.php":
         case "listado_contingencias.php":
         case "adicion_contingencia.php":
         case "modificacion_contingencia.php":
