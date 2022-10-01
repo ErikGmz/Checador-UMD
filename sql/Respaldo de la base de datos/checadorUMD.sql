@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-10-2022 a las 21:08:31
+-- Tiempo de generación: 01-10-2022 a las 23:46:17
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -2987,6 +2987,18 @@ INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_matern
 (336738, 'Andrés', 'Torres', 'Sandoval', 0, 52, 1, 16),
 (338403, 'Yael Quetzalli', 'Arellano', 'Márquez', 2, 18, 1, 21),
 (1619201, 'Ana', 'Flores', 'Chávez', 0, 32, 2, 29);
+
+--
+-- Disparadores `colaborador`
+--
+DELIMITER $$
+CREATE TRIGGER `eliminadoHorarioNoUtilizado` AFTER DELETE ON `colaborador` FOR EACH ROW BEGIN
+		IF (SELECT COUNT(ID_horario) FROM `colaborador` WHERE ID_horario = OLD.ID_horario) <= 0 THEN		
+			DELETE FROM `horario` WHERE (ID = OLD.ID_horario);
+		END IF;
+	END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 

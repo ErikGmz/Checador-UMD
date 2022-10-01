@@ -5,36 +5,30 @@ function verificarContingencia(IDColaborador, fechaRegistro, IDCampo, tipoCompor
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = () => {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
-            console.log(xhttp.response);
-            
             switch(xhttp.responseText) {
                 case "true":
                     if(tipoComportamiento == 1) {
                         document.getElementById(IDCampo).setCustomValidity("Ya existe una contingencia para el colaborador en la fecha especificada.");
                     }
                     else {
-                        document.getElementById(IDCampo).setCustomValidity("");
+                        if(document.getElementById("anterior-ID-colaborador").value == IDColaborador 
+                        && document.getElementById("fecha-anterior").value == fechaRegistro) {
+                            document.getElementById(IDCampo).setCustomValidity("");
+                        }
+                        else {
+                            document.getElementById(IDCampo).setCustomValidity("Ya existe una contingencia para el colaborador en la fecha especificada.");
+                        }
                     }
                 break;
-                
+
                 default:
-                    switch(tipoComportamiento) {
-                        case 1:
-                            document.getElementById(IDCampo).setCustomValidity("");
-                        break;  
-                        
-                        case 2:
-                        default:
-                            document.getElementById(IDCampo).setCustomValidity("La contingencia del colaborador y fechas especificados es inexistente.");
-                        break;
-                    }
+                    document.getElementById(IDCampo).setCustomValidity("");
                 break;
             }
         }
     }
     const url = "../../funciones_adicionales/verificar_contingencia.php" +
     "?ID-colaborador=" + IDColaborador + "&fecha-registro=" + fechaRegistro;
-    console.log(url);
 
     xhttp.open("GET", url, true);
     xhttp.send();

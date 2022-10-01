@@ -130,3 +130,22 @@ function confirmarRegistroContingencia(evento) {
         }
     });
 }
+
+// Función para confirmar la
+// modificación de una contingencia.
+function confirmarModificacionContingencia(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Modificación de una contingencia",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea modificar la contingencia?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}
