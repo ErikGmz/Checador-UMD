@@ -12,6 +12,10 @@
         case "adicion_contingencia.php":
         case "modificacion_contingencia.php":
         case "eliminacion_contingencia.php":
+        case "listado_administradores.php":
+        case "adicion_administrador.php":
+        case "modificacion_administrador.php":
+        case "eliminacion_administrador.php":
         break;
 
         default:
@@ -88,7 +92,13 @@
                 </li>
 
                 <li class="nav-item dropdown me-0 me-lg-2">
-                    <a class="nav-link dropdown-toggle fw-semibold" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle fw-semibold
+                    <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "listado_contingencias.php"
+                    || basename($_SERVER['SCRIPT_FILENAME']) == "adicion_contingencia.php"
+                    || basename($_SERVER['SCRIPT_FILENAME']) == "modificacion_contingencia.php"
+                    || basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_contingencia.php")
+                    echo "active"?>" 
+                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Contingencias
                     </a>
 
@@ -108,6 +118,30 @@
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_contingencia.php") 
                         echo "fw-semibold active"; else echo "\" href=\"../eliminacion_contingencias/eliminacion_contingencia.php"?>">
                         Eliminación de contingencia </a> </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown me-0 me-lg-2">
+                    <a class="nav-link dropdown-toggle fw-semibold" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Administradores
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == ".listado_administradores.php") 
+                        echo "fw-semibold active"; else echo "\" href=\"../consulta_administradores/listado_administradores.php"?>">  
+                        Listado de administradores </a> </li>
+
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "/adicion_administrador.php") 
+                        echo "fw-semibold active"; else echo "\" href=\"../adicion_administradores/adicion_administrador.php"?>">  
+                        Adición de administrador </a> </li>
+
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "modificacion_administrador.php") 
+                        echo "fw-semibold active"; else echo "\" href=\"../modificacion_administradores/modificacion_administrador.php"?>">   
+                        Modificación de administrador </a> </li>
+
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_administrador.php") 
+                        echo "fw-semibold active"; else echo "\" href=\"../eliminacion_administradores/eliminacion_administrador.php"?>">
+                        Eliminación de administrador </a> </li>
                     </ul>
                 </li>
 

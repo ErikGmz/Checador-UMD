@@ -142,8 +142,8 @@
                     document.querySelector("html").classList.remove("invisible");
                 }, 20);
             }
-
             document.getElementById("fecha-final").value = new Date().toISOString().substring(0, 10);
+
             // Seleccionar automáticamente el recuadro
             // del identificador del colaborador al
             // escoger el tipo de revisión.

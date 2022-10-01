@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-09-2022 a las 22:26:05
+-- Tiempo de generación: 01-10-2022 a las 21:08:31
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -2969,14 +2969,13 @@ INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_matern
 (256732, 'Daniela', 'López', 'Rizo', 1, 29, 1, 8),
 (259189, 'Héctor Eduardo', 'González', 'De Anda', 0, 36, 1, 1),
 (262376, 'Ángela Geanine', 'De Lira', 'Ávila', 1, 71, 1, 23),
-(269686, 'Erik Alejandro', 'Gómez', 'Martínez', 0, 61, 1, 23),
+(269686, 'Erik Alejandro', 'Gómez', 'Martínez', 1, 61, 1, 23),
 (270128, 'Andrea', 'García', 'Martínez', 0, 52, 1, 16),
 (271448, 'Gibrán', 'Repizo', 'Gómez', 1, 71, 1, 1),
 (272124, 'Andrea Jaqueline', 'Gámez', 'Ruiz', 1, 52, 1, 21),
 (272244, 'Juan Emmanuel', 'Martínez', 'Rodríguez', 0, 52, 1, 25),
 (272807, 'José Alonso', 'Gallegos', 'Santoyo', 0, 71, 1, 26),
 (272962, 'Gloria', 'Ruvalcaba', 'Rodríguez', 2, 52, 1, 15),
-(273525, 'Carmen Guadalupe', 'Fuentes', 'Alba', 0, 61, 3, 32),
 (275244, 'María Aracely', 'Cruz', 'Rivera', 1, 52, 1, 13),
 (275992, 'María Fernanda', 'Velasco', 'Esparza', 0, 52, 1, 27),
 (276489, 'María Guadalupe', 'Torres', 'Rodríguez', 0, 52, 1, 28),
@@ -2996,13 +2995,11 @@ INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_matern
 --
 
 CREATE TABLE `contingencia` (
-  `ID` int(10) UNSIGNED NOT NULL,
   `fecha` date NOT NULL,
   `hora_inicial` time NOT NULL,
   `hora_final` time NOT NULL,
   `tiempo_total` time NOT NULL,
   `observaciones` text NOT NULL,
-  `tipo_contingencia` int(11) NOT NULL DEFAULT 0,
   `ID_colaborador` int(10) UNSIGNED NOT NULL
 ) ;
 
@@ -3197,7 +3194,7 @@ ALTER TABLE `colaborador`
 -- Indices de la tabla `contingencia`
 --
 ALTER TABLE `contingencia`
-  ADD PRIMARY KEY (`ID`),
+  ADD PRIMARY KEY (`fecha`,`ID_colaborador`),
   ADD KEY `fk_Contingencia_Colaborador1_idx` (`ID_colaborador`);
 
 --
@@ -3239,13 +3236,7 @@ ALTER TABLE `carrera`
 -- AUTO_INCREMENT de la tabla `colaborador`
 --
 ALTER TABLE `colaborador`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1619202;
-
---
--- AUTO_INCREMENT de la tabla `contingencia`
---
-ALTER TABLE `contingencia`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89999824;
 
 --
 -- AUTO_INCREMENT de la tabla `coordinador`

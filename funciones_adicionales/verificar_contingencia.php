@@ -10,7 +10,7 @@
         die();
     }
 
-    if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["ID-colaborador"])) {
+    if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["ID-colaborador"], $_GET["fecha-registro"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -19,9 +19,9 @@
             die();
         }
 
-        # Verificar si el colaborador está registrado.
-        if($colaborador = $conexion_base->query("SELECT * FROM colaborador WHERE 
-        ID = '" . $_GET["ID-colaborador"] . "';")) {
+        # Verificar si la contingencia está registrado.
+        if($colaborador = $conexion_base->query("SELECT * FROM contingencia WHERE 
+        ID_colaborador = '" . $_GET["ID-colaborador"] . "' AND fecha = '" . $_GET["fecha-registro"] . "';")) {
             if($colaborador->num_rows > 0) {
                 echo "true";
             }

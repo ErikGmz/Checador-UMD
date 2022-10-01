@@ -4,7 +4,7 @@
     # Verificar si algún administrador no
     # ha iniciado su correspondiente sesión.
     if(!isset($_SESSION["ID_administrador"])) {
-        header("location: inicio_sesion.php");
+        header("location: ../gestion_sesion/inicio_sesion.php");
         die();
     }
 ?>

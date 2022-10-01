@@ -111,3 +111,22 @@ function confirmarBloqueoColaborador(evento) {
         }
     });
 }
+
+// Función para confirmar el
+// registro de una contingencia.
+function confirmarRegistroContingencia(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Registro de una contingencia",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea registrar la contingencia?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}
