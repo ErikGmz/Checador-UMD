@@ -12,7 +12,7 @@
     date_default_timezone_set('America/Mexico_City');
 
     # Verificar que se haya enviado un
-    # formulario de inicio de sesión.
+    # formulario de modificación de contingencia.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-registro"], $_POST["fecha-anterior"],
     $_POST["hora-inicial"], $_POST["hora-final"], $_POST["observaciones"], $_POST["anterior-ID-colaborador"])) {
         # Iniciar y verificar la conexión
@@ -44,7 +44,7 @@
                         strtotime($_POST["fecha-registro"]) <= strtotime("2030-12-30")) {
                             # Actualizar la contingencia en la base de datos.
                             try {
-                                if($conexion_base->query("UPDATE contingencia set fecha = '" . $_POST["fecha-registro"] . "', hora_inicial = '"
+                                if($conexion_base->query("UPDATE contingencia SET fecha = '" . $_POST["fecha-registro"] . "', hora_inicial = '"
                                 . date("H:i:s", strtotime($tiempo_inicial)) . "', hora_final = '" . date("H:i:s", strtotime($tiempo_final)) . "', 
                                 observaciones = '" . $_POST["observaciones"] . "', ID_colaborador = '" . $_POST["ID-colaborador"] . "' WHERE
                                 ID_colaborador = '" . $_POST["anterior-ID-colaborador"] . "' AND fecha = '" . $_POST["fecha-anterior"] . "';"))  {
@@ -132,7 +132,7 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Contingencia ineexistente",
+                            title: "Contingencia inexistente",
                             html: <?php echo "\"<p class='mb-4'> La siguiente contingencia es inexistente en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""

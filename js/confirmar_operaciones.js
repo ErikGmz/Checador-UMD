@@ -149,3 +149,22 @@ function confirmarModificacionContingencia(evento) {
         }
     });
 }
+
+// Función para confirmar la
+// eliminación de una contingencia.
+function confirmarEliminacionContingencia(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Eliminación de una contingencia",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea eliminar la contingencia?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}

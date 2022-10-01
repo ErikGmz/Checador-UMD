@@ -12,9 +12,8 @@
     date_default_timezone_set('America/Mexico_City');
 
     # Verificar que se haya enviado un
-    # formulario de adición de contingencia.
-    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-registro"], 
-    $_POST["hora-inicial"], $_POST["hora-final"], $_POST["observaciones"])) {
+    # formulario de eliminación de contingencia.
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-registro"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -22,44 +21,33 @@
             die("Hubo un error al conectar con la base de datos. " . $conexion_base->connect_error);
         }
 
-        # Verificar si los datos especificados no corresponden
-        # a una contingencia ya existente en el sistema.
+        # Verificar si los datos especificados corresponden
+        # a una contingencia existente en el sistema.
         try {
             if($resultados = $conexion_base->query("SELECT * FROM contingencia WHERE 
             ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha = '" . $_POST["fecha-registro"] . "';")) {
-                if($resultados->num_rows > 0) {
+                if($resultados->num_rows <= 0) {
                     $resultado = 2;
                 }
                 else {
-                    $tiempo_inicial = date("1970-01-01 " . $_POST["hora-inicial"] . ":00");
-                    $tiempo_final = date("1970-01-01 " . $_POST["hora-final"] . ":00");
-                    if($tiempo_final <= $tiempo_inicial || $tiempo_inicial > date("1970-01-01 21:00")
-                    || $tiempo_inicial < date("1970-01-01 08:00") || $tiempo_final < date("1970-01-01 08:00")
-                    || $tiempo_final > date("1970-01-01 21:00")) {
-                        $resultado = 3;
-                    }
-                    else {
-                        if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01") &&
-                        strtotime($_POST["fecha-registro"]) <= strtotime("2030-12-30")) {
-                            # Agregar la contingencia a la base de datos.
-                            try {
-                                if($conexion_base->query("INSERT INTO contingencia(fecha, hora_inicial, hora_final, observaciones, ID_colaborador) "
-                                . "VALUES('" . $_POST["fecha-registro"] . "', '" . date("H:i:s", strtotime($tiempo_inicial)) . "', 
-                                '" . date("H:i:s", strtotime($tiempo_final)) . "', '" . $_POST["observaciones"] . "', '"
-                                . $_POST["ID-colaborador"] . "');"))  {
-                                    $resultado = 5;
-                                }
-                                else {
-                                    $resultado = 1;
-                                }
+                    if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01") &&
+                    strtotime($_POST["fecha-registro"]) <= strtotime("2030-12-30")) {
+                        # Borrar la contingencia en la base de datos.
+                        try {
+                            if($conexion_base->query("DELETE FROM contingencia WHERE fecha = '" . $_POST["fecha-registro"]
+                            . "' AND ID_colaborador = '" . $_POST["ID-colaborador"] . "';"))  {
+                                $resultado = 4;
                             }
-                            catch(Exception $e) {
+                            else {
                                 $resultado = 1;
                             }
                         }
-                        else {
-                            $resultado = 4;
+                        catch(Exception $e) {
+                            $resultado = 1;
                         }
+                    }
+                    else {
+                        $resultado = 3;
                     }
                 }
                 $resultados->close();
@@ -96,7 +84,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
         <!--Título de la página-->
-        <title> Resultado de la adición de la contingencia </title>
+        <title> Resultado de la modificación de la contingencia </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -119,10 +107,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Adición no exitosa de contingencia",
-                            text: "Ocurrió un error al tratar de añadir la contingencia"
+                            title: "Eliminación no exitosa de contingencia",
+                            text: "Ocurrió un error al tratar de eliminar la contingencia"
                         }).then((resultado) => {
-                            location.href="adicion_contingencia.php";
+                            location.href="eliminacion_contingencia.php";
                         });
                     });
                 break;
@@ -131,13 +119,13 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Contingencia ya existente",
-                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia ya existe en el sistema: </p> \\n"
+                            title: "Contingencia inexistente",
+                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia es inexistente en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""
                             ?>
                         }).then((resultado) => {
-                            location.href="adicion_contingencia.php";
+                            location.href="eliminacion_contingencia.php";
                         });
                     });
                 break;
@@ -146,10 +134,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Rango de horario incorrecto",
-                            text: "Las horas inicial y final indicadas no son válidas"
+                            title: "Fecha de registro no válida",
+                            text: "La fecha de registro no corresponde al rango de fechas permitido"
                         }).then((resultado) => {
-                            location.href="adicion_contingencia.php";
+                            location.href="eliminacion_contingencia.php";
                         });
                     });
                 break;
@@ -157,26 +145,14 @@
                 case 4:
                     window.addEventListener("load", () => {
                         Swal.fire({
-                            icon: "error",
-                            title: "Fecha de registro no válida",
-                            text: "La fecha de registro no corresponde al rango de fechas permitido"
-                        }).then((resultado) => {
-                            location.href="adicion_contingencia.php";
-                        });
-                    });
-                break;
-
-                case 5:
-                    window.addEventListener("load", () => {
-                        Swal.fire({
                             icon: "success",
-                            title: "Adición exitosa de contingencia",
-                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia fue exitosamente registrada en el sistema: </p> \\n"
+                            title: "Eliminación exitosa de contingencia",
+                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia fue exitosamente eliminada del sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""
                             ?>
                         }).then((resultado) => {
-                            location.href="adicion_contingencia.php";
+                            location.href="eliminacion_contingencia.php";
                         });
                     });
                 break;
@@ -186,9 +162,9 @@
                         Swal.fire({
                             icon: "error",
                             title: "Error desconocido",
-                            text: "Ocurrió un error al tratar de añadir la contingencia"
+                            text: "Ocurrió un error al tratar de eliminar la contingencia"
                         }).then((resultado) => {
-                            location.href="adicion_contingencia.php";
+                            location.href="eliminacion_contingencia.php";
                         });
                     });
                 break;

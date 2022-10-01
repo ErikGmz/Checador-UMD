@@ -12,7 +12,7 @@
     date_default_timezone_set('America/Mexico_City');
 
     # Verificar que se haya enviado un
-    # formulario de inicio de sesión.
+    # formulario de adición de colaborador.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["primer-nombre"], 
     $_POST["primer-apellido"], $_POST["carrera"], $_POST["modalidad"], $_POST["hora-entrada"], $_POST["hora-salida"])) {
         # Iniciar y verificar la conexión

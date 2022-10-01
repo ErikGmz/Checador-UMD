@@ -102,12 +102,12 @@
                 document.querySelector("html").classList.remove("d-none");
                 setTimeout(() => {
                     document.querySelector("html").classList.remove("invisible");
+
+                    // Seleccionar automáticamente el recuadro
+                    // del identificador del administrador.
+                    enfocarRecuadro("ID-administrador");
                 }, 20);
             }
-
-            // Seleccionar automáticamente el recuadro
-            // del identificador del administrador.
-            enfocarRecuadro("ID-administrador");
         </script>
     </body>
 </html>

@@ -12,7 +12,7 @@
     date_default_timezone_set('America/Mexico_City');
 
     # Verificar que se haya enviado un
-    # formulario de inicio de sesión.
+    # formulario de desbloqueo de ID.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.

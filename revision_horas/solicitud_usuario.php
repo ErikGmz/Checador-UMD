@@ -140,15 +140,15 @@
                 document.querySelector("html").classList.remove("d-none");
                 setTimeout(() => {
                     document.querySelector("html").classList.remove("invisible");
+
+                    // Seleccionar automáticamente el recuadro
+                    // del identificador del colaborador al
+                    // escoger el tipo de registro.
+                    enfocarRecuadro("ID-colaborador");
                 }, 20);
             }
             document.getElementById("fecha-final").value = new Date().toISOString().substring(0, 10);
 
-            // Seleccionar automáticamente el recuadro
-            // del identificador del colaborador al
-            // escoger el tipo de revisión.
-            enfocarRecuadro("ID-colaborador");
-            
             document.getElementById("resumidas").addEventListener("click", () => {
                 enfocarRecuadro("ID-colaborador");
             });

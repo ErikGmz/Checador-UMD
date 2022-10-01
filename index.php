@@ -123,13 +123,13 @@
                 document.querySelector("html").classList.remove("d-none");
                 setTimeout(() => {
                     document.querySelector("html").classList.remove("invisible");
+                    
+                    // Seleccionar automáticamente el recuadro
+                    // del identificador del colaborador al
+                    // escoger el tipo de registro.
+                    enfocarRecuadro("ID-colaborador");
                 }, 20);
             }
-
-            // Seleccionar automáticamente el recuadro
-            // del identificador del colaborador al
-            // escoger el tipo de registro.
-            enfocarRecuadro("ID-colaborador");
 
             document.getElementById("opcion-entrada").addEventListener("click", () => {
                 enfocarRecuadro("ID-colaborador");
