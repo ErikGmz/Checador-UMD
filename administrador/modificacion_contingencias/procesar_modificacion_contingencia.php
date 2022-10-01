@@ -47,7 +47,7 @@
                                 if($conexion_base->query("UPDATE contingencia set fecha = '" . $_POST["fecha-registro"] . "', hora_inicial = '"
                                 . date("H:i:s", strtotime($tiempo_inicial)) . "', hora_final = '" . date("H:i:s", strtotime($tiempo_final)) . "', 
                                 observaciones = '" . $_POST["observaciones"] . "', ID_colaborador = '" . $_POST["ID-colaborador"] . "' WHERE
-                                ID_colaborador = '" . $_POST["anterior-ID-colaborador"] . "' AND fecha = '" . $_POST["fecha-anterior"] . ";"))  {
+                                ID_colaborador = '" . $_POST["anterior-ID-colaborador"] . "' AND fecha = '" . $_POST["fecha-anterior"] . "';"))  {
                                     $resultado = 5;
                                 }
                                 else {
