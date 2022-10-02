@@ -25,7 +25,7 @@
     if(isset($_GET["ID-colaborador"])) {
         if($usuario = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
         colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad, colaborador.numero_retardos,
-        horario.hora_inicial, horario.hora_final
+        horario.hora_inicial, horario.hora_final, colaborador.numero_desbloqueos
         FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
         JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
         JOIN horario ON colaborador.ID_horario = horario.ID
@@ -38,6 +38,7 @@
                 $carrera = $resultados[4];
                 $modalidad = $resultados[5];
                 $numero_retardos = $resultados[6];
+                $numero_desbloqueos = $resultados[9];
                 $hora_inicial = $resultados[7];
                 $hora_final = $resultados[8];
 
@@ -227,6 +228,10 @@
 
                                             <p class="fw-semibold mb-2">
                                                 Número de retardos: <?php echo $numero_retardos ?>
+                                            </p>
+
+                                            <p class="fw-semibold mb-2">
+                                                Número de desbloqueos: <?php echo $numero_desbloqueos ?>
                                             </p>
 
                                             <p class="fw-semibold mb-2">

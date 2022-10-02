@@ -1,0 +1,1 @@
+SELECT ID_colaborador, COUNT(*) AS numero_desbloqueos FROM chequeo WHERE bloqueo_registro = 1 GROUP BY ID_colaborador;
