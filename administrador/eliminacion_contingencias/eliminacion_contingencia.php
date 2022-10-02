@@ -67,6 +67,9 @@
                     <hr class="my-4 border border-1 border-dark">
 
                     <!--Formulario de selección de la contingencia registrada-->
+                    <?php
+                    if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                    ?>
                     <form method="POST" action="procesar_eliminacion_contingencia.php" id="eliminacion-contingencia" class="mb-0">
                         <h4 class="mb-4 text-center"> Datos de la contingencia </h4>
                         <div class="row">
@@ -109,6 +112,18 @@
                             </button>
                         </div>
                     </form>
+                    <?php
+                    }
+                    else {
+                    ?>
+                        <h4 class="text-center mt-4">
+                            <span class="badge bg-danger py-3">
+                                No hay contingencias a eliminar si no existen colaboradores registrados
+                            </span>
+                        </h4>
+                    <?php
+                    }
+                    ?>
                 </div>
             </div>
         </div>
@@ -130,8 +145,14 @@
                 setTimeout(() => {
                     document.querySelector("html").classList.remove("invisible");
 
-                    verificarContingencia(document.getElementById('colaboradores').value, 
-                    document.getElementById('fecha-registro').value, 'fecha-registro', 3);
+                    <?php
+                        if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                        ?>
+                            verificarContingencia(document.getElementById('colaboradores').value, 
+                            document.getElementById('fecha-registro').value, 'fecha-registro', 3);
+                        <?php
+                        }
+                    ?>
                 }, 20);
             }
 
@@ -139,9 +160,16 @@
                 document.getElementById("formulario").requestSubmit();
             });
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
-            document.getElementById("fecha-registro").value = new Date().toISOString().substring(0, 10);
-            document.getElementById("eliminacion-contingencia").addEventListener("submit", confirmarEliminacionContingencia);
-            dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
+
+            <?php
+                if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                ?>
+                    document.getElementById("fecha-registro").value = new Date().toISOString().substring(0, 10);
+                    document.getElementById("eliminacion-contingencia").addEventListener("submit", confirmarEliminacionContingencia);
+                    dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
+                <?php
+                }
+            ?>
         </script>
     </body>
 </html>

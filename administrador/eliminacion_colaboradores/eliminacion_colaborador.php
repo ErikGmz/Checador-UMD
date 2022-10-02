@@ -66,6 +66,9 @@
                     <hr class="my-4 border border-1 border-dark">
 
                     <!--Formulario de selección del ID de un colaborador registrado-->
+                    <?php
+                    if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                    ?>
                     <form method="POST" action="procesar_eliminar_colaborador.php" 
                     class="mb-0 px-0 px-md-5" id="eliminacion-colaborador">
                         <h5 class="text-center mb-3"> Selección del colaborador a eliminar </h5>
@@ -86,6 +89,18 @@
                             </button>
                         </div>
                     </form>
+                    <?php
+                    }
+                    else {
+                    ?>
+                        <h4 class="text-center mt-4">
+                            <span class="badge bg-danger py-3">
+                                No hay colaboradores a eliminar
+                            </span>
+                        </h4>
+                    <?php
+                    }
+                    ?>
                 </div>
             </div>
 
@@ -115,10 +130,16 @@
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });
-            dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
-
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
-            document.getElementById("eliminacion-colaborador").addEventListener("submit", confirmarEliminacionColaborador);
+
+            <?php
+                if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                ?>
+                    dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
+                    document.getElementById("eliminacion-colaborador").addEventListener("submit", confirmarEliminacionColaborador);
+                <?php
+                }
+            ?>
         </script>
     </body>
 </html>

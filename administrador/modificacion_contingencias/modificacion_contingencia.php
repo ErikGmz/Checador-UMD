@@ -67,6 +67,9 @@
                     <hr class="my-4 border border-1 border-dark">
 
                     <!--Formulario de selección de la contingencia registrada-->
+                    <?php
+                    if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                    ?>
                     <form method="GET" action="<?=$_SERVER['PHP_SELF']?>" class="mb-0">
                         <h4 class="mb-4 text-center"> Datos de la contingencia </h4>
                         <div class="row">
@@ -221,6 +224,17 @@
                         <input type="hidden" id="fecha-anterior" name="fecha-anterior" value="<?=$_GET["fecha-registro"]?>">
                     </form>
                     <?php
+                                }
+                                else {
+                                    ?>
+                                        <hr class="my-4 border border-1 border-dark">
+                                        <h4 class="text-center mt-4">
+                                            <span class="badge bg-danger py-3">
+                                                La contingencia no fue encontrada
+                                            </span>
+                                        </h4>
+                                    <?php
+                                }
                             }
                             else {
                                 ?>
@@ -232,18 +246,17 @@
                                     </h4>
                                 <?php
                             }
+                            @$contingencia->close();
                         }
-                        else {
-                            ?>
-                                <hr class="my-4 border border-1 border-dark">
-                                <h4 class="text-center mt-4">
-                                    <span class="badge bg-danger py-3">
-                                        La contingencia no fue encontrada
-                                    </span>
-                                </h4>
-                            <?php
-                        }
-                        @$contingencia->close();
+                    }
+                    else {
+                    ?>
+                        <h4 class="text-center mt-4">
+                            <span class="badge bg-danger py-3">
+                                No hay contingencias a modificar si no existen colaboradores registrados
+                            </span>
+                        </h4>
+                    <?php
                     }
                     ?>
                 </div>
@@ -272,8 +285,14 @@
                 setTimeout(() => {
                     document.querySelector("html").classList.remove("invisible");
 
-                    verificarContingencia(document.getElementById('nuevos-colaboradores').value, 
-                    document.getElementById('nueva-fecha-registro').value, 'nueva-fecha-registro', 2)
+                    <?php
+                    if(isset($colaboradores, $_GET["ID-colaborador"], $valido) && $colaboradores->num_rows > 0 && @$valido) {
+                    ?>
+                        verificarContingencia(document.getElementById('nuevos-colaboradores').value, 
+                        document.getElementById('nueva-fecha-registro').value, 'nueva-fecha-registro', 2)
+                    <?php
+                    }
+                    ?>
                 }, 20);
             }
 
@@ -281,15 +300,19 @@
                 document.getElementById("formulario").requestSubmit();
             });
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
-            document.getElementById("fecha-registro").value = new Date().toISOString().substring(0, 10);
-            dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
 
             <?php
-            if(isset($_GET["ID-colaborador"], $_GET["fecha-registro"], $valido) && @$valido) {
+            if(isset($colaboradores) && $colaboradores->num_rows > 0) {
             ?>
-            document.getElementById("modificacion-contingencia").addEventListener("submit", confirmarModificacionContingencia);
-            dselect(document.getElementById("nuevos-colaboradores"), { search: true, maxHeight: "200px" });
+                document.getElementById("fecha-registro").value = new Date().toISOString().substring(0, 10);
+                dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
             <?php
+                if(isset($_GET["ID-colaborador"], $valido) && @$valido) {
+                ?>
+                    document.getElementById("modificacion-contingencia").addEventListener("submit", confirmarModificacionContingencia);
+                    dselect(document.getElementById("nuevos-colaboradores"), { search: true, maxHeight: "200px" });
+                <?php
+                }
             }
             ?>
         </script>

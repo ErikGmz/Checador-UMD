@@ -76,6 +76,9 @@
                     <hr class="my-4 border border-1 border-dark">
 
                     <!--Formulario de selección del ID de un colaborador registrado-->
+                    <?php
+                    if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                    ?>
                     <form method="GET" action="<?=$_SERVER['PHP_SELF']?>" class="mb-0 px-0 px-md-5">
                         <h5 class="text-center mb-3"> Selección del colaborador a modificar </h5>
                         <select class="form-select mb-4" name="ID-colaborador" id="colaboradores" required>
@@ -263,6 +266,17 @@
                         </div>
                     </form>
                     <?php
+                                }
+                                else {
+                                    ?>
+                                        <hr class="my-4 border border-1 border-dark">
+                                        <h4 class="text-center mt-4">
+                                            <span class="badge bg-danger py-3">
+                                                El colaborador no fue encontrado
+                                            </span>
+                                        </h4>
+                                    <?php
+                                }
                             }
                             else {
                                 ?>
@@ -274,18 +288,17 @@
                                     </h4>
                                 <?php
                             }
+                            @$usuario->close();
                         }
-                        else {
-                            ?>
-                                <hr class="my-4 border border-1 border-dark">
-                                <h4 class="text-center mt-4">
-                                    <span class="badge bg-danger py-3">
-                                        El colaborador no fue encontrado
-                                    </span>
-                                </h4>
-                            <?php
-                        }
-                        @$usuario->close();
+                    }
+                    else {
+                    ?>
+                        <h4 class="text-center mt-4">
+                            <span class="badge bg-danger py-3">
+                                No hay colaboradores a modificar
+                            </span>
+                        </h4>
+                    <?php
                     }
                     ?>
                 </div>
@@ -320,15 +333,19 @@
                 document.getElementById("formulario").requestSubmit();
             });
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
-            dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
 
             <?php
-            if(isset($_GET["ID-colaborador"], $valido) && @$valido) {
+            if(isset($colaboradores) && $colaboradores->num_rows > 0) {
             ?>
-            document.getElementById("modificacion-colaborador").addEventListener("submit", confirmarModificacionColaborador);
-            dselect(document.getElementById("carreras"), { search: true, maxHeight: "200px" });
-            dselect(document.getElementById("modalidades"), { search: false });
+                dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
             <?php
+                if(isset($_GET["ID-colaborador"], $valido) && @$valido) {
+                ?>
+                    document.getElementById("modificacion-colaborador").addEventListener("submit", confirmarModificacionColaborador);
+                    dselect(document.getElementById("carreras"), { search: true, maxHeight: "200px" });
+                    dselect(document.getElementById("modalidades"), { search: false });
+                <?php
+                }
             }
             ?>
         </script>

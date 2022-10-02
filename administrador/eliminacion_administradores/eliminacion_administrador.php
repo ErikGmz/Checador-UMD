@@ -66,6 +66,9 @@
                     <hr class="my-4 border border-1 border-dark">
 
                     <!--Formulario de selección del ID de un administrador registrado-->
+                    <?php
+                    if(isset($administradores) && $administradores->num_rows > 0) {
+                    ?>
                     <form method="POST" action="procesar_eliminacion_administrador.php" class="mb-0 px-0 px-md-5"
                     id="eliminacion-administrador">
                         <h5 class="text-center mb-3"> Selección del administrador a eliminar </h5>
@@ -98,6 +101,18 @@
                             </button>
                         </div>
                     </form>
+                    <?php
+                    }
+                    else {
+                    ?>
+                        <h4 class="text-center mt-4">
+                            <span class="badge bg-danger py-3">
+                                No hay administradores a eliminar
+                            </span>
+                        </h4>
+                    <?php
+                    }
+                    ?>
                 </div>
             </div>
 
@@ -128,7 +143,14 @@
                 document.getElementById("formulario").requestSubmit();
             });
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
-            document.getElementById("eliminacion-administrador").addEventListener("submit", confirmarEliminacionAdministrador);
+
+            <?php
+                if(isset($administradores) && $administradores->num_rows > 0) {
+                ?>
+                    document.getElementById("eliminacion-administrador").addEventListener("submit", confirmarEliminacionAdministrador);
+                <?php
+                }
+            ?>
         </script>
     </body>
 </html>

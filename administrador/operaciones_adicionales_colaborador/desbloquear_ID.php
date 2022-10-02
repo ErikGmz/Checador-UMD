@@ -65,6 +65,9 @@
                     </h1>
                     <hr class="my-4 border border-1 border-dark">
 
+                    <?php
+                    if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                    ?>
                     <!--Formulario de selección del ID de un colaborador registrado-->
                     <form method="POST" action="procesar_desbloquear_ID.php" 
                     class="mb-0 px-0 px-md-5" id="desbloqueo-ID">
@@ -86,6 +89,18 @@
                             </button>
                         </div>
                     </form>
+                    <?php
+                    }
+                    else {
+                    ?>
+                        <h4 class="text-center mt-4">
+                            <span class="badge bg-danger py-3">
+                                No hay colaboradores a desbloquear
+                            </span>
+                        </h4>
+                    <?php
+                    }
+                    ?>
                 </div>
             </div>
 
@@ -115,10 +130,16 @@
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });
-            dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
-
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
-            document.getElementById("desbloqueo-ID").addEventListener("submit", confirmarDesbloqueoColaborador);
+
+            <?php
+            if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+            ?>
+                dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
+                document.getElementById("desbloqueo-ID").addEventListener("submit", confirmarDesbloqueoColaborador);
+            <?php
+            }
+            ?>
         </script>
     </body>
 </html>

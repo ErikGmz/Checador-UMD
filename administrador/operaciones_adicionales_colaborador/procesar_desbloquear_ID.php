@@ -34,7 +34,7 @@
                     # Desbloquear al colaborador registrado
                     # en la base de datos.
                     try {
-                        if($conexion_base->multi_query("UPDATE colaborador SET numero_retardos = '0'
+                        if($conexion_base->multi_query("UPDATE colaborador SET numero_retardos = '0', numero_desbloqueos = numero_desbloqueos + 1
                         WHERE ID = '" . $_POST["ID-colaborador"] . "'; 
                         UPDATE chequeo SET bloqueo_registro = 0 WHERE ID_colaborador = '"
                         . $_POST["ID-colaborador"] . "' AND fecha_chequeo = CURDATE();")) {

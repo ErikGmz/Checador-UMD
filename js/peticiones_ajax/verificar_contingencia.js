@@ -5,7 +5,6 @@ function verificarContingencia(IDColaborador, fechaRegistro, IDCampo, tipoCompor
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = () => {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
-            console.log(xhttp.response);
             switch(xhttp.responseText) {
                 case "true":
                     switch(tipoComportamiento) {
@@ -46,7 +45,6 @@ function verificarContingencia(IDColaborador, fechaRegistro, IDCampo, tipoCompor
     }
     const url = "../../funciones_adicionales/verificar_contingencia.php" +
     "?ID-colaborador=" + IDColaborador + "&fecha-registro=" + fechaRegistro;
-    console.log(url);
 
     xhttp.open("GET", url, true);
     xhttp.send();

@@ -66,6 +66,9 @@
                     <hr class="my-4 border border-1 border-dark">
 
                     <!--Formulario de selección del ID de un administrador registrado-->
+                    <?php
+                    if(isset($administradores) && $administradores->num_rows > 0) {
+                    ?>
                     <form method="GET" action="<?=$_SERVER['PHP_SELF']?>" class="mb-0 px-0 px-md-5">
                         <h5 class="text-center mb-3"> Selección del administrador a modificar </h5>
                         <select class="form-select mb-4" name="ID-administrador" id="administradores" required>
@@ -164,6 +167,17 @@
                         </div>
                     </form>
                     <?php
+                                }
+                                else {
+                                    ?>
+                                        <hr class="my-4 border border-1 border-dark">
+                                        <h4 class="text-center mt-4">
+                                            <span class="badge bg-danger py-3">
+                                                El administrador no fue encontrado
+                                            </span>
+                                        </h4>
+                                    <?php
+                                }
                             }
                             else {
                                 ?>
@@ -175,18 +189,17 @@
                                     </h4>
                                 <?php
                             }
+                            @$administrador->close();
                         }
-                        else {
-                            ?>
-                                <hr class="my-4 border border-1 border-dark">
-                                <h4 class="text-center mt-4">
-                                    <span class="badge bg-danger py-3">
-                                        El administrador no fue encontrado
-                                    </span>
-                                </h4>
-                            <?php
-                        }
-                        @$administrador->close();
+                    }
+                    else {
+                    ?>
+                        <h4 class="text-center mt-4">
+                            <span class="badge bg-danger py-3">
+                                No hay administradores a modificar
+                            </span>
+                        </h4>
+                    <?php
                     }
                     ?>
                 </div>
@@ -217,7 +230,7 @@
                 setTimeout(() => {
                     document.querySelector("html").classList.remove("invisible");
                     <?php
-                        if(isset($_GET["ID-administrador"], $valido) && @$valido) {
+                        if(isset($administradores, $_GET["ID-administrador"], $valido) && $administradores->num_rows > 0 && @$valido) {
                             echo "onchange=verificarClaveOriginal(document.getElementById('clave-original').value, 'clave-original', '"
                             . $_GET["ID-administrador"] . "')"; 
                         }
@@ -229,13 +242,17 @@
                 document.getElementById("formulario").requestSubmit();
             });
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
-            dselect(document.getElementById("administradores"), { search: true, maxHeight: "200px" });
-
+            
             <?php
-            if(isset($_GET["ID-administrador"], $valido) && @$valido) {
+            if(isset($administradores) && $administradores->num_rows > 0) {
             ?>
-            document.getElementById("modificacion-administrador").addEventListener("submit", confirmarModificacionAdministrador);
+                dselect(document.getElementById("administradores"), { search: true, maxHeight: "200px" });
             <?php
+                if(isset($_GET["ID-administrador"], $valido) && @$valido) {
+                ?>
+                    document.getElementById("modificacion-administrador").addEventListener("submit", confirmarModificacionAdministrador);
+                <?php
+                }
             }
             ?>
         </script>
