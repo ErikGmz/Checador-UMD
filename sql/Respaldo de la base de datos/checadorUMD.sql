@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-10-2022 a las 10:04:28
+-- Tiempo de generación: 02-10-2022 a las 10:10:32
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.0.10
 
@@ -2969,7 +2969,7 @@ INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_matern
 (256732, 'Daniela', 'López', 'Rizo', 1, 29, 1, 8),
 (259189, 'Héctor Eduardo', 'González', 'De Anda', 0, 36, 1, 1),
 (262376, 'Ángela Geanine', 'De Lira', 'Ávila', 1, 71, 1, 23),
-(269686, 'Erik Alejandro', 'Gómez', 'Martínez', 1, 61, 1, 23),
+(269686, 'Erik Alejandro', 'Gómez', 'Martínez', 0, 61, 1, 23),
 (270128, 'Andrea', 'García', 'Martínez', 0, 52, 1, 16),
 (271448, 'Gibrán', 'Repizo', 'Gómez', 1, 71, 1, 1),
 (272124, 'Andrea Jaqueline', 'Gámez', 'Ruiz', 1, 52, 1, 21),
