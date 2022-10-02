@@ -206,3 +206,22 @@ function confirmarModificacionAdministrador(evento) {
         }
     });
 }
+
+// Función para confirmar la
+// eliminación de un administrador.
+function confirmarEliminacionAdministrador(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Eliminación de un administrador",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea eliminar al administrador?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}

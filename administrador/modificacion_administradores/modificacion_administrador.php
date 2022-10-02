@@ -15,7 +15,7 @@
         die("Hubo un error al conectar con la base de datos. " . $conexion_base->connect_error);
     }
 
-    # Obtener todos los administradores egistrados.
+    # Obtener todos los administradores registrados.
     $administradores = $conexion_base->query("SELECT * FROM coordinador;");
 ?>
 

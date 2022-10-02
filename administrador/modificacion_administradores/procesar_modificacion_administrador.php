@@ -46,7 +46,7 @@
                                     $resultado = 4;
                                 }
                                 else {
-                                    # Agregar el administrador a la base de datos.
+                                    # Actualizar el administrador en la base de datos.
                                     try {
                                         if($conexion_base->query("UPDATE coordinador SET ID = '" . $_POST["ID-administrador"] . "', "
                                         . "clave = MD5('" . $_POST["clave-nueva"] . "') WHERE ID = '" 
@@ -105,7 +105,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
         <!--Título de la página-->
-        <title> Resultado de la adición del administrador </title>
+        <title> Resultado de la modificación del administrador </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -193,7 +193,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Error desconocido",
-                            text: "Ocurrió un error al tratar de añadir al administrador"
+                            text: "Ocurrió un error al tratar de modificar al administrador"
                         }).then((resultado) => {
                             location.href="modificacion_administrador.php";
                         });
