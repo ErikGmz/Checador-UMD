@@ -1,6 +1,6 @@
 <?php
-    # Código para verificar si una contingencia 
-    # ya se encuentra registrada o no.
+    # Código para verificar si la contraseña de un
+    # administrador es correcta o no.
     session_start();
 
     # Verificar si algún administrador no
@@ -10,7 +10,7 @@
         die();
     }
 
-    if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["ID-colaborador"], $_GET["fecha-registro"])) {
+    if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["ID-administrador"], $_GET["clave-original"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -19,10 +19,10 @@
             die();
         }
 
-        # Verificar si la contingencia está registrado.
-        if($colaborador = $conexion_base->query("SELECT * FROM contingencia WHERE 
-        ID_colaborador = '" . $_GET["ID-colaborador"] . "' AND fecha = '" . $_GET["fecha-registro"] . "';")) {
-            if($colaborador->num_rows > 0) {
+        # Verificar si la contraseña es correcta.
+        if($administrador = $conexion_base->query("SELECT * FROM coordinador WHERE 
+        ID = '" . $_GET["ID-administrador"] . "' AND clave = MD5('" . $_GET["clave-original"] . "');")) {
+            if($administrador->num_rows > 0) {
                 echo "true";
             }
             else {

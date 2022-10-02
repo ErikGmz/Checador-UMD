@@ -168,3 +168,41 @@ function confirmarEliminacionContingencia(evento) {
         }
     });
 }
+
+// Función para confirmar la
+// adición de un administrador.
+function confirmarRegistroAdministrador(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Adición de un administrador",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea agregar al administrador?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}
+
+// Función para confirmar la
+// modificación de un administrador.
+function confirmarModificacionAdministrador(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Modificación de un administrador",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea modificar al administrador?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}

@@ -1,7 +1,7 @@
 // Función para verificar si el ID de un
-// colaborador ya está registrado 
+// administrador ya está registrado 
 // en la base de datos.
-function verificarColaborador(IDColaborador, IDCampo, tipoComportamiento) {
+function verificarAdministrador(IDAdministrador, IDCampo, tipoComportamiento) {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = () => {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
@@ -13,7 +13,7 @@ function verificarColaborador(IDColaborador, IDCampo, tipoComportamiento) {
                         break;
                 
                         case 2:
-                            if(document.getElementById("anterior-ID-colaborador").value == IDColaborador) {
+                            if(document.getElementById("anterior-ID-administrador").value == IDAdministrador) {
                                 document.getElementById(IDCampo).setCustomValidity("");
                             }
                             else {
@@ -42,8 +42,8 @@ function verificarColaborador(IDColaborador, IDCampo, tipoComportamiento) {
             }
         }
     }
-    const url = "../../funciones_adicionales/verificar_colaborador.php" +
-    "?ID-colaborador=" + IDColaborador;
+    const url = "../../funciones_adicionales/verificar_administrador.php" +
+    "?ID-administrador=" + IDAdministrador;
 
     xhttp.open("GET", url, true);
     xhttp.send();

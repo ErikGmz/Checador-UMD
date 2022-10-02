@@ -127,7 +127,7 @@
                     <form method="POST" action="procesar_modificacion_colaborador.php" 
                     class="mb-0" id="modificacion-colaborador">
                         <div class="row mb-2">
-                            <!--Datos iniciales del colaborador-->
+                            <!--Datos nuevos del colaborador-->
                             <div class="col-12 text-center mb-4">
                                 <h4 class="mb-0"> Datos nuevos del colaborador </h4>
                             </div>
@@ -135,7 +135,7 @@
                             <div class="col-12 mb-4 texto-colaborador">
                                 <label for="ID-colaborador" class="form-label fw-semibold"> ID del colaborador (*) </label>
                                 <input type="text" class="form-control recuadro-ID" id="ID-colaborador" 
-                                onchange="verificarColaborador(document.getElementById('ID-colaborador').value, 'ID-colaborador', 3)" 
+                                onchange="verificarColaborador(document.getElementById('ID-colaborador').value, 'ID-colaborador', 2)" 
                                 autocomplete="OFF" autofocus="ON" required name="ID-colaborador" pattern="[0-9]{1,10}"
                                 value="<?=$_GET['ID-colaborador']?>">
                                 <div class="form-text"> Campo obligatorio. Solo se admite un número de máximo 10 dígitos. </div>
@@ -231,7 +231,7 @@
                                 autocomplete="OFF" required name="hora-entrada" placeholder="08:00"
                                 pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
                                 value="<?=$datos_usuario[6]?>"
-                                oninput="verificarRangosHoras('hora-entrada', 'hora-salida', 1)">
+                                oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
                                     Formato de 08:00 a 21:00 horas.
                                 </div>
@@ -243,7 +243,7 @@
                                 autocomplete="OFF" required name="hora-salida" placeholder="12:00"
                                 pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
                                 value="<?=$datos_usuario[7]?>"
-                                oninput="verificarRangosHoras('hora-entrada', 'hora-salida', 2)">
+                                oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
                                     Formato de 08:00 a 21:00 horas.
                                 </div>
@@ -253,7 +253,7 @@
                                 <hr class="mb-0 border border-1 border-dark">
                             </div>
                         </div>
-                        <input type="hidden" name="anterior-ID-colaborador" value="<?=$_GET["ID-colaborador"]?>">
+                        <input type="hidden" id="anterior-ID-colaborador" name="anterior-ID-colaborador" value="<?=$_GET["ID-colaborador"]?>">
 
                         <!--Botón de registro de colaborador-->
                         <div class="text-center">
