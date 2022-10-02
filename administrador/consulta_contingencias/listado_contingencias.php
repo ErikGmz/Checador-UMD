@@ -77,25 +77,25 @@
                                     <th scope="col"> ID </th>
                                     <th scope="col"> Nombre completo </th>
                                     <th scope="col"> Fecha de contingencia </th>
-                                    <th scope="col"> Modalidad </th>
                                     <th scope="col"> Hora inicial </th>
                                     <th scope="col"> Hora final </th>
-                                    <th scope="col"> Retardos </th>
+                                    <th scope="col"> Tiempo total </th>
+                                    <th scope="col"> Observaciones </th>
                                 </tr>
                             </thead>
 
                             <tbody class="table-group-divider">
                                 <tr>
                                     <?php
-                                    while($colaborador = $colaboradores->fetch_row()) {
+                                    while($contingencia = $contingencias->fetch_row()) {
                                         echo "<tr> ";
-                                        echo "<th scope='row' class='py-3'> " . $colaborador[0] . " </th> ";
-                                        echo "<td class='py-3'> " . $colaborador[1] .  " </td> ";
-                                        echo "<td class='py-3'> " . $colaborador[3] .  " </td> ";
-                                        echo "<td class='py-3'> " . $colaborador[4] . " </td> ";
-                                        echo "<td class='py-3'> " . date("h:i A", strtotime($colaborador[5])) . " </td> ";
-                                        echo "<td class='py-3'> " . date("h:i A", strtotime($colaborador[6])) . " </td>";
-                                        echo "<td class='py-3'> " . $colaborador[2] . " </td>";
+                                        echo "<th scope='row' class='py-3'> " . $contingencia[0] . " </th> ";
+                                        echo "<td class='py-3'> " . $contingencia[1] .  " " . $contingencia[2] . " " . $contingencia[3] . " </td> ";
+                                        echo "<td class='py-3'> " . date("d-m-Y", strtotime($contingencia[4])) .  " </td> ";
+                                        echo "<td class='py-3'> " . date("h:i A", strtotime($contingencia[5])) . " </td> ";
+                                        echo "<td class='py-3'> " . date("h:i A", strtotime($contingencia[6])) . " </td>";
+                                        echo "<td class='py-3'> " . $contingencia[7] . " </td>";
+                                        echo "<td class='py-3'> " . $contingencia[8] . " </td>";
                                         echo " </tr>";
                                     }
                                     ?>
@@ -107,7 +107,7 @@
                         else {
                         ?>
                             <p class="mb-0 fs-5 fw-semibold py-3 text-center"> 
-                                No hay colaboradores registrados en el sistema
+                                No hay contingencias registradas en el sistema
                             </p>
                         <?php   
                         }
