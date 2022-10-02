@@ -17,7 +17,7 @@
 
     # Obtener todos los colaboradores del sistema.
     $colaboradores = $conexion_base->query("SELECT colaborador.ID, CONCAT_WS(' ', colaborador.nombres, colaborador.apellido_paterno, colaborador.apellido_materno) AS nombre_completo, colaborador.numero_retardos,
-    carrera.nombre, modalidad_colaborador.nombre, horario.hora_inicial, horario.hora_final 
+    carrera.nombre, modalidad_colaborador.nombre, horario.hora_inicial, horario.hora_final, colaborador.numero_desbloqueos 
     FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
     JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
     JOIN horario ON colaborador.ID_horario = horario.ID;");
@@ -81,6 +81,7 @@
                                     <th scope="col"> Hora de entrada </th>
                                     <th scope="col"> Hora de salida </th>
                                     <th scope="col"> Retardos </th>
+                                    <th scope="col"> Desbloqueos </th>
                                 </tr>
                             </thead>
 
@@ -96,6 +97,7 @@
                                         echo "<td class='py-3'> " . date("h:i A", strtotime($colaborador[5])) . " </td> ";
                                         echo "<td class='py-3'> " . date("h:i A", strtotime($colaborador[6])) . " </td>";
                                         echo "<td class='py-3'> " . $colaborador[2] . " </td>";
+                                        echo "<td class='py-3'> " . $colaborador[7] . " </td>";
                                         echo " </tr>";
                                     }
                                     ?>
