@@ -92,7 +92,7 @@
                 </li>
 
                 <li class="nav-item dropdown me-0 me-lg-2">
-                <a class="nav-link dropdown-toggle fw-semibold
+                    <a class="nav-link dropdown-toggle fw-semibold
                     <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "listado_contingencias.php"
                     || basename($_SERVER['SCRIPT_FILENAME']) == "adicion_contingencia.php"
                     || basename($_SERVER['SCRIPT_FILENAME']) == "modificacion_contingencia.php"
@@ -122,16 +122,22 @@
                 </li>
 
                 <li class="nav-item dropdown me-0 me-lg-2">
-                    <a class="nav-link dropdown-toggle fw-semibold" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle fw-semibold
+                    <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "listado_administradores.php"
+                    || basename($_SERVER['SCRIPT_FILENAME']) == "adicion_administrador.php"
+                    || basename($_SERVER['SCRIPT_FILENAME']) == "modificacion_administrador.php"
+                    || basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_administrador.php")
+                    echo "active"?>"
+                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Administradores
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == ".listado_administradores.php") 
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "listado_administradores.php") 
                         echo "fw-semibold active"; else echo "\" href=\"../consulta_administradores/listado_administradores.php"?>">  
                         Listado de administradores </a> </li>
 
-                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "/adicion_administrador.php") 
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "adicion_administrador.php") 
                         echo "fw-semibold active"; else echo "\" href=\"../adicion_administradores/adicion_administrador.php"?>">  
                         Adición de administrador </a> </li>
 
