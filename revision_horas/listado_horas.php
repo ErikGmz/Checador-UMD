@@ -1,4 +1,13 @@
 <?php
+    session_start();
+
+    # Verificar si algún administrador ya 
+    # inició su correspondiente sesión.
+    if(isset($_SESSION["ID_administrador"])) {
+        header("location: ../administrador/menu_principal/menu_administrador.php");
+        die();
+    }
+
     # Iniciar y verificar la conexión
     # con la base de datos.
     $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -17,9 +26,11 @@
     # Verificar si el usuario especificado
     # existe en la base de datos.
     if($usuario = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
-    colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad
+    colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad, colaborador.numero_retardos,
+    horario.hora_inicial, horario.hora_final
     FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
     JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
+    JOIN horario ON colaborador.ID_horario = horario.ID
     WHERE colaborador.ID = '" . @$_GET["ID-colaborador"] . "' LIMIT 1;")) {
         if($usuario->num_rows > 0) {
             # Definir los datos del usuario encontrado.
@@ -28,6 +39,9 @@
             $nombre_colaborador = $resultados[1] . " " . $resultados[2] . " " . $resultados[3];
             $carrera = $resultados[4];
             $modalidad = $resultados[5];
+            $numero_retardos = $resultados[6];
+            $hora_inicial = $resultados[7];
+            $hora_final = $resultados[8];
 
             # Comprobar si se indicaron horas de becario.
             if(isset($_GET["horas-becario"]) && is_numeric(@$_GET["horas-becario"])) {
@@ -160,7 +174,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="d-none invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -237,6 +251,18 @@
 
                                             <p class="fw-semibold mb-2">
                                                 Modalidad: <?php echo $modalidad ?>
+                                            </p>
+
+                                            <p class="fw-semibold mb-2">
+                                                Número de retardos: <?php echo $numero_retardos ?>
+                                            </p>
+
+                                            <p class="fw-semibold mb-2">
+                                                Hora de entrada: <?php echo date("h:i:s A", strtotime($hora_inicial)) ?>
+                                            </p>
+
+                                            <p class="fw-semibold mb-4">
+                                                Hora de salida: <?php echo date("h:i:s A", strtotime($hora_final)) ?>
                                             </p>
 
                                             <p class="fw-semibold mb-2">
@@ -357,7 +383,7 @@
                                                     <th scope="col"> Horas totales </th>
                                                     <th scope="col"> Horas de servicio </th>
                                                     <th scope="col"> Tiempo total de contingencias </th>
-                                                    <th scope="col"> Cantidad de bloqueos </th>
+                                                    <th scope="col"> Tiempo total de bloqueos </th>
                                                 </tr>
                                             </thead>
 
@@ -366,10 +392,10 @@
                                                 if(isset($chequeos) && $chequeos->num_rows > 0) {
                                                 ?>
                                                 <tr>
-                                                    <td> <?php echo $horas_totales ?> </td>
-                                                    <td> <?php echo $horas_servicio ?> </td>
-                                                    <td> <?php echo $tiempo_contingencias ?> </td>
-                                                    <td> <?php echo $veces_bloqueos ?> </td>
+                                                    <td class="py-3"> <?php echo $horas_totales ?> </td>
+                                                    <td class="py-3"> <?php echo $horas_servicio ?> </td>
+                                                    <td class="py-3"> <?php echo $tiempo_contingencias ?> </td>
+                                                    <td class="py-3"> <?php echo $tiempo_bloqueo ?> </td>
                                                 </tr>
                                                 <?php
                                                 }
@@ -397,5 +423,15 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            // Mostrar el contenido una vez que la
+            // página se cargue por completo.
+            window.onload = () => {
+                document.querySelector("html").classList.remove("d-none");
+                setTimeout(() => {
+                    document.querySelector("html").classList.remove("invisible");
+                }, 20);
+            }
+        </script> 
     </body>
 </html>

@@ -49,6 +49,6 @@
     max-width: clamp(100px, 100%, 500px);
 }
 
-#ID-colaborador {
+#ID-colaborador, #ID-administrador, #clave-administrador {
     max-width: clamp(100px, 100%, 250px);
 }

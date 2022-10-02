@@ -1,0 +1,33 @@
+DELIMITER $$
+	CREATE TRIGGER calculoTurnoHorario
+		BEFORE INSERT
+		ON horario FOR EACH ROW
+	BEGIN
+		IF NEW.hora_inicial < "14:00:00" AND NEW.hora_final > "14:00:00" THEN
+			SET NEW.ID_turno = 3;
+		ELSE
+			IF NEW.hora_inicial >= "14:00:00" AND NEW.hora_final <= "21:00:00" THEN
+				SET NEW.ID_turno = 2;
+			ELSE
+				SET NEW.ID_turno = 1;
+			END IF;
+		END IF;
+	END$$    
+DELIMITER ;
+
+DELIMITER $$
+	CREATE TRIGGER calculoTurnoHorarioActualizacion
+		BEFORE UPDATE
+		ON horario FOR EACH ROW
+	BEGIN
+		IF NEW.hora_inicial < "14:00:00" AND NEW.hora_final > "14:00:00" THEN
+			SET NEW.ID_turno = 3;
+		ELSE
+			IF NEW.hora_inicial >= "14:00:00" AND NEW.hora_final <= "21:00:00" THEN
+				SET NEW.ID_turno = 2;
+			ELSE
+				SET NEW.ID_turno = 1;
+			END IF;
+		END IF;
+	END$$ 
+DELIMITER ;

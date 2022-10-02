@@ -1,3 +1,18 @@
+<?php
+    switch(basename($_SERVER['SCRIPT_FILENAME'])) {
+        case "index.php":
+        case "solicitud_usuario.php":
+        case "listado_horas.php":
+        case "inicio_sesion.php":
+        break;
+
+        default:
+            header("location: ../index.php");
+            die();
+        break;
+    }
+?>
+
 <div class="logotipos col-12 mb-4">
     <div class="col-12">
         <div class="row">      

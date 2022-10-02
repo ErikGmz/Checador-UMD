@@ -1,5 +1,16 @@
+<?php
+    session_start();
+
+    # Verificar si algún administrador ya 
+    # inició su correspondiente sesión.
+    if(isset($_SESSION["ID_administrador"])) {
+        header("location: ../administrador/menu_principal/menu_administrador.php");
+        die();
+    }
+?>
+
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="d-none invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -123,11 +134,21 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
         <script src="../js/enfocar_recuadro.js"> </script>
         <script type="text/javascript">
+            // Mostrar el contenido una vez que la
+            // página se cargue por completo.
+            window.onload = () => {
+                document.querySelector("html").classList.remove("d-none");
+                setTimeout(() => {
+                    document.querySelector("html").classList.remove("invisible");
+
+                    // Seleccionar automáticamente el recuadro
+                    // del identificador del colaborador al
+                    // escoger el tipo de registro.
+                    enfocarRecuadro("ID-colaborador");
+                }, 20);
+            }
             document.getElementById("fecha-final").value = new Date().toISOString().substring(0, 10);
 
-            // Seleccionar automáticamente el recuadro
-            // del identificador del colaborador al
-            // escoger el tipo de revisión.
             document.getElementById("resumidas").addEventListener("click", () => {
                 enfocarRecuadro("ID-colaborador");
             });

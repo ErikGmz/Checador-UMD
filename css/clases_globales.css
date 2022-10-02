@@ -2,6 +2,7 @@ body {
     background-image: url("../img/iconouaa.png");
     background-repeat: repeat;
     background-size: clamp(50px, 7vw, 300px);
+    scroll-behavior: auto !important;
 }
 
 .fondo-pantone-azul-claro {
@@ -26,6 +27,10 @@ body {
 
 .fondo-pantone-rojo-claro {
     background-color: rgb(255, 143, 161);
+}
+
+.fondo-pantone-verde-muy-oscuro {
+    background-color: rgb(19, 110, 54);
 }
 
 .fondo-pantone-verde-oscuro {

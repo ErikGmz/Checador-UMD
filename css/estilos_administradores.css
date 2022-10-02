@@ -1,0 +1,49 @@
+@media screen and (max-width: 575px) {
+    #logouaa-umd {
+        content: url(../img/iconoUMD.png);
+    }
+}
+
+@media screen and (min-width: 576px) {
+    #logouaa-umd {
+        content: url(../img/logoUMD-reducido.png);
+    }
+}
+
+.active {
+    cursor: default;
+}
+
+.jumbotron {
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: .5rem;  
+}
+
+.mayusculas-iniciales {
+    text-transform: lowercase;
+}
+
+.mayusculas-iniciales::first-line {
+    text-transform: capitalize;
+}
+
+.recuadro-ID {
+    max-width: min(100%, 700px);
+}
+
+.recuadro {
+    max-width: clamp(100px, 100%, 500px);
+}
+
+@media screen and (min-width: 768px) {
+    .recuadro-ID {
+        margin: auto auto;
+        text-align: center;
+        max-width: 500px;
+    }
+
+    .texto-colaborador {
+        text-align: center;
+    }
+}
