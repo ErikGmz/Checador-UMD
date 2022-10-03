@@ -103,11 +103,11 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == ".listado_contingencias.php") 
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "listado_contingencias.php") 
                         echo "fw-semibold active"; else echo "\" href=\"../consulta_contingencias/listado_contingencias.php"?>">  
                         Listado de contingencias </a> </li>
 
-                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "/adicion_contingencia.php") 
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "adicion_contingencia.php") 
                         echo "fw-semibold active"; else echo "\" href=\"../adicion_contingencias/adicion_contingencia.php"?>">  
                         Adición de contingencia </a> </li>
 

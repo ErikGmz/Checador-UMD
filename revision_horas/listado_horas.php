@@ -175,7 +175,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es" class="d-none invisible">
+<html lang="es">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -187,8 +187,8 @@
         <link rel="stylesheet" href="../css/clases_globales.css">
         <link rel="stylesheet" href="../css/estilos_revision_horas.css">
         <link rel="stylesheet" href="../css/estilos_usuarios.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+        <link rel="stylesheet" href="../css/bootstrap/bootstrap-icons.css">
+        <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
 
         <!--Título de la página-->
         <title> Listado de horas de colaboración </title>
@@ -275,11 +275,11 @@
                                             </p>
 
                                             <p class="fw-semibold mb-2">
-                                                Fecha inicial: <?php echo date("d-m-Y", strtotime($fecha_inicial)); ?>
+                                                Fecha inicial de revisión: <?php echo date("d-m-Y", strtotime($fecha_inicial)); ?>
                                             </p>
 
                                             <p class="fw-semibold mb-2">
-                                                Fecha final: <?php echo date("d-m-Y", strtotime($fecha_final)); ?>
+                                                Fecha final de revisión: <?php echo date("d-m-Y", strtotime($fecha_final)); ?>
                                             </p>
 
                                             <p class="fw-semibold mb-0">
@@ -425,18 +425,7 @@
         ?>
 
         <!--Scripts de la página-->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
-        <script type="text/javascript">
-            // Mostrar el contenido una vez que la
-            // página se cargue por completo.
-            window.onload = () => {
-                document.querySelector("html").classList.remove("d-none");
-                setTimeout(() => {
-                    document.querySelector("html").classList.remove("invisible");
-                }, 20);
-            }
-        </script> 
+        <script src="../js/bootstrap/jquery-3.6.0.min.js"> </script>
+        <script src="../js/bootstrap/bootstrap.bundle.min.js"> </script>
     </body>
 </html>

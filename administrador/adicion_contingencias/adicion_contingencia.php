@@ -21,7 +21,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es" class="d-none invisible">
+<html lang="es">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -33,8 +33,8 @@
         <link rel="stylesheet" href="../../css/desplazamiento_instantaneo.css">
         <link rel="stylesheet" href="../../css/clases_globales.css">
         <link rel="stylesheet" href="../../css/estilos_administradores.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+        <link rel="stylesheet" href="../../css/bootstrap/bootstrap-icons.css">
+        <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
         <link rel="stylesheet" href="../../css/dselect.min.css">
         
         <!--Título de la página-->
@@ -167,7 +167,7 @@
                     }
                     else {
                     ?>
-                        <h4 class="text-center mt-4">
+                        <h4 class="text-center mt-4 mb-0">
                             <span class="badge bg-danger py-3">
                                 No se pueden añadir contingencias si no existen colaboradores registrados
                             </span>
@@ -185,32 +185,24 @@
         </div>
 
         <!--Scripts de la página-->
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"> </script>
         <script src="../../js/confirmar_operaciones.js"> </script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+        <script src="../../js/sweetalert2/sweetalert2@11.js"> </script>
+        <script src="../../js/bootstrap/jquery-3.6.0.min.js"> </script>
+        <script src="../../js/bootstrap/bootstrap.bundle.min.js"> </script>
         <script src="../../js/dselect.min.js"> </script>
         <script src="../../js/peticiones_ajax/verificar_contingencia.js"> </script>
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script type="text/javascript">
-            // Mostrar el contenido una vez que la
-            // página se cargue por completo.
-            window.onload = () => {
-                document.querySelector("html").classList.remove("d-none");
-                setTimeout(() => {
-                    document.querySelector("html").classList.remove("invisible");
-
-                    <?php
-                        if(isset($colaboradores) && $colaboradores->num_rows > 0) {
-                        ?>
-                            verificarContingencia(document.getElementById('colaboradores').value, 
-                            document.getElementById('fecha-registro').value, 'fecha-registro', 1)
-                        <?php
-                        }
-                    ?>
-                }, 20);
-            }
+            <?php
+                if(isset($colaboradores) && $colaboradores->num_rows > 0) {
+                ?>
+                    window.onload = () => {
+                        verificarContingencia(document.getElementById('colaboradores').value, 
+                        document.getElementById('fecha-registro').value, 'fecha-registro', 1)
+                    }
+                <?php
+                }
+            ?>
 
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
