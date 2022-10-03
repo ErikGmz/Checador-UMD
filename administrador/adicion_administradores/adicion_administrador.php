@@ -17,7 +17,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -124,11 +124,15 @@
         <script src="../../js/peticiones_ajax/verificar_administrador.js"> </script>
         <script src="../../js/verificar_claves.js"> </script>
         <script type="text/javascript">
-            // Seleccionar automáticamente el recuadro
-            // del identificador del administrador.
-            enfocarRecuadro("ID-administrador");
-            document.getElementById('ID-administrador').setCustomValidity("Completa este campo.");
+            document.body.onload = () => {
+                document.querySelector("html").classList.remove("invisible");
 
+                // Seleccionar automáticamente el recuadro
+                // del identificador del administrador.
+                enfocarRecuadro("ID-administrador");
+                document.getElementById('ID-administrador').setCustomValidity("Completa este campo.");
+            }
+            
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });

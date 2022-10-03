@@ -10,7 +10,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -96,9 +96,13 @@
         <script src="../../js/bootstrap/bootstrap.bundle.min.js"> </script>
         <script src="../../js/enfocar_recuadro.js"> </script>
         <script type="text/javascript">
-            // Seleccionar automáticamente el recuadro
-            // del identificador del administrador.
-            enfocarRecuadro("ID-administrador");
+            document.body.onload = () => {
+                document.querySelector("html").classList.remove("invisible");
+
+                // Seleccionar automáticamente el recuadro
+                // del identificador del administrador.
+                enfocarRecuadro("ID-administrador");
+            }
         </script>
     </body>
 </html>

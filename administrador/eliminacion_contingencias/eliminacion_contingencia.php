@@ -21,7 +21,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -140,9 +140,17 @@
             <?php
                 if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                 ?>
-                    window.onload = () => {
+                    document.body.onload = () => {
+                        document.querySelector("html").classList.remove("invisible");
                         verificarContingencia(document.getElementById('colaboradores').value, 
                         document.getElementById('fecha-registro').value, 'fecha-registro', 3);
+                    }
+                <?php
+                }
+                else {
+                ?>
+                    document.body.onload = () => {
+                        document.querySelector("html").classList.remove("invisible");
                     }
                 <?php
                 }

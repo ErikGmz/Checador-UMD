@@ -30,7 +30,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -319,6 +319,10 @@
         <script src="../../js/peticiones_ajax/verificar_colaborador.js"> </script>
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script type="text/javascript">
+            document.body.onload = () => {
+                document.querySelector("html").classList.remove("invisible");
+            }
+
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });

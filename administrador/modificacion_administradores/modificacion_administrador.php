@@ -20,7 +20,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -222,13 +222,17 @@
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script src="../../js/verificar_claves.js"> </script>
         <script type="text/javascript">
-            <?php
-                if(isset($administradores, $_GET["ID-administrador"], $valido) && $administradores->num_rows > 0 && @$valido) {
-                    echo "onchange=verificarClaveOriginal(document.getElementById('clave-original').value, 'clave-original', '"
-                    . $_GET["ID-administrador"] . "')"; 
-                }
-            ?>
+            document.body.onload = () => {
+                document.querySelector("html").classList.remove("invisible");
 
+                <?php
+                    if(isset($administradores, $_GET["ID-administrador"], $valido) && $administradores->num_rows > 0 && @$valido) {
+                        echo "onchange=verificarClaveOriginal(document.getElementById('clave-original').value, 'clave-original', '"
+                        . $_GET["ID-administrador"] . "')"; 
+                    }
+                ?>
+            }
+            
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });

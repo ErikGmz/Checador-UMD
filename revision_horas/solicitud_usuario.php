@@ -10,7 +10,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -133,10 +133,15 @@
         <script src="../js/bootstrap/bootstrap.bundle.min.js"> </script>
         <script src="../js/enfocar_recuadro.js"> </script>
         <script type="text/javascript">
-            // Seleccionar automáticamente el recuadro
-            // del identificador del colaborador al
-            // escoger el tipo de registro.
-            enfocarRecuadro("ID-colaborador");
+            document.body.onload = () => {
+                document.querySelector("html").classList.remove("invisible");
+
+                // Seleccionar automáticamente el recuadro
+                // del identificador del colaborador al
+                // escoger el tipo de registro.
+                enfocarRecuadro("ID-colaborador");
+            }
+
             document.getElementById("fecha-final").value = new Date().toISOString().substring(0, 10);
 
             document.getElementById("resumidas").addEventListener("click", () => {

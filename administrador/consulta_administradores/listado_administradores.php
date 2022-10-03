@@ -20,7 +20,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -113,6 +113,10 @@
         <script src="../../js/bootstrap/jquery-3.6.0.min.js"> </script>
         <script src="../../js/bootstrap/bootstrap.bundle.min.js"> </script>
         <script type="text/javascript">       
+            document.body.onload = () => {
+                document.querySelector("html").classList.remove("invisible");
+            }
+
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
             });

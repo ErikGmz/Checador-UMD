@@ -26,7 +26,7 @@
 ?>
 
 <!--Código HTML del archivo-->
-<html lang="es">
+<html lang="es" class="invisible">
     <!--Cabecera de la página-->
     <head>
         <!--Metadatos de la página-->
@@ -210,9 +210,13 @@
         <script src="../../js/peticiones_ajax/verificar_colaborador.js"> </script>
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script type="text/javascript">
-            // Seleccionar automáticamente el recuadro
-            // del identificador del colaborador.
-            enfocarRecuadro("ID-colaborador");
+            document.body.onload = () => {
+                document.querySelector("html").classList.remove("invisible");
+
+                // Seleccionar automáticamente el recuadro
+                // del identificador del colaborador.
+                enfocarRecuadro("ID-colaborador");
+            }
 
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
