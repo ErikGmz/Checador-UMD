@@ -66,7 +66,13 @@
                                         }
                                     }
                                     else {
-                                        $resultado = 1;
+                                        $incremento_retardos = (int)$datos_colaborador[6];
+                                        if($incremento_retardos <= 2) {
+                                            $resultado = 1;
+                                        }
+                                        else {
+                                            $resultado = 9;
+                                        }
                                     }
                                 } 
                                 else {
@@ -302,7 +308,7 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "warning",
-                            title: "Chequeo de entrada con retardos excedidos",
+                            title: "Éxito de chequeo de entrada con retardos excedidos",
                             html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya acumuló " . @$incremento_retardos . " retardo" . (((int)@$incremento_retardos > 1) ? "s" : "") .
                             ", excediendo los 2 permitidos, debido a lo cual los próximos chequeos se bloquearán. Para solucionar el problema se debe hablar con algún coordinador. Chequeo del día " . date("d-m-Y") . ": </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
