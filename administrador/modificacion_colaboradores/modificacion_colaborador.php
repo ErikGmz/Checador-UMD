@@ -121,7 +121,7 @@
                         colaborador.ID_carrera, colaborador.ID_modalidad, 
                         TIME_FORMAT(horario.hora_inicial, '%H:%i') AS hora_inicial,
                         TIME_FORMAT(horario.hora_final, '%H:%i') AS hora_final,
-                        colaborador.numero_retardos, colaborador.numero_desbloqueos
+                        colaborador.numero_retardos, colaborador.numero_desbloqueos, colaborador.fecha_nacimiento
                         FROM colaborador JOIN horario ON colaborador.ID_horario = horario.ID
                         WHERE colaborador.ID = '" . $_GET["ID-colaborador"] . "';")) {
                             if($usuario->num_rows > 0) {
@@ -180,18 +180,27 @@
                                 <div class="form-text"> Campo opcional. Se admiten apellidos adicionales. </div>
                             </div>
 
-                            <div class="col-12 col-lg-6 mb-3">
+                            <div class="col-12 col-lg-6 mb-4">
                                 <label for="numero-retardos" class="form-label fw-semibold"> Número de retardos (*) </label>
                                 <input type="number" name="numero-retardos" min="0" value="<?=$datos_usuario[8]?>"
                                 class="form-control" id="numero-retardos" autocomplete="OFF" required>
                                 <div class="form-text"> Campo obligatorio. </div>
                             </div>
 
-                            <div class="col-12 col-lg-6 mb-3">
+                            <div class="col-12 col-lg-6 mb-4">
                                 <label for="numero-desbloqueos" class="form-label fw-semibold"> Número de desbloqueos (*) </label>
                                 <input type="number" name="numero-desbloqueos" min="0" value="<?=$datos_usuario[9]?>"
                                 class="form-control" id="numero-desbloqueos" autocomplete="OFF" required>
                                 <div class="form-text"> Campo obligatorio. </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 mb-3">
+                                <label for="fecha-nacimiento" class="form-label fw-semibold"> Fecha de nacimiento </label>
+                                <input type="date" name="fecha-nacimiento" min="1900-01-01" value="<?=$datos_usuario[10]?>" class="form-control" id="fecha-nacimiento" autocomplete="OFF">
+                                <div class="form-text"> 
+                                    Campo opcional. Si no se desea especificar un valor, entonces dejar el 
+                                    campo en dd-mm-aaaa o borrarlo en el calendario correspondiente.
+                                </div>
                             </div>
 
                             <div class="col-12 my-4">
@@ -253,7 +262,7 @@
                                 value="<?=$datos_usuario[6]?>"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Campo obligatorio. Formato de 08:00 a 21:00 horas.
                                 </div>
                             </div>
 
@@ -265,7 +274,7 @@
                                 value="<?=$datos_usuario[7]?>"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Campo obligatorio. Formato de 08:00 a 21:00 horas.
                                 </div>
                             </div>
 
@@ -353,6 +362,7 @@
                 if(isset($_GET["ID-colaborador"], $valido) && @$valido) {
                 ?>
                     document.getElementById("modificacion-colaborador").addEventListener("submit", confirmarModificacionColaborador);
+                    document.getElementById("fecha-nacimiento").setAttribute("max", new Date().toLocaleDateString().split("/").reverse().join("-"));
                     dselect(document.getElementById("carreras"), { search: true, maxHeight: "200px" });
                     dselect(document.getElementById("modalidades"), { search: false });
                 <?php

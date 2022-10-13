@@ -186,7 +186,7 @@
                                 pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Campo obligatorio. Formato de 08:00 a 21:00 horas.
                                 </div>
                             </div>
 
@@ -198,7 +198,7 @@
                                 pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Campo obligatorio. Formato de 08:00 a 21:00 horas.
                                 </div>
                             </div>
 

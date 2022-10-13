@@ -186,7 +186,7 @@
                                 pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d|24:00:00$"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 
-                                    Formato de 00:00:00 a 24:00:00 horas.
+                                    Campo obligatorio. Formato de 00:00:00 a 24:00:00 horas.
                                 </div>
                             </div>
 
@@ -198,7 +198,7 @@
                                 pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d|24:00:00$"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 
-                                    Formato de 00:00:00 a 24:00:00 horas.
+                                    Campo opcional. Formato de 00:00:00 a 24:00:00 horas.
                                 </div>
                             </div>
 
@@ -246,7 +246,7 @@
                                     <hr class="my-4 border border-1 border-dark">
                                     <h4 class="text-center mt-4 mb-0">
                                         <span class="badge bg-danger py-3">
-                                            La chequeo no fue encontrado
+                                            El chequeo no fue encontrado
                                         </span>
                                     </h4>
                                 <?php

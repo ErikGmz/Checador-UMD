@@ -15,7 +15,7 @@
     # formulario de modificación de colaborador.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["primer-nombre"], 
     $_POST["primer-apellido"], $_POST["carrera"], $_POST["modalidad"], $_POST["hora-entrada"], $_POST["hora-salida"],
-    $_POST["anterior-ID-colaborador"], $_POST["numero-retardos"], $_POST["numero-desbloqueos"])) {
+    $_POST["anterior-ID-colaborador"], $_POST["numero-retardos"], $_POST["numero-desbloqueos"], $_POST["fecha-nacimiento"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -40,66 +40,81 @@
                         $resultado = 3;
                     }
                     else {
-                        # Verificar si las cantidades de retardos
-                        # y desbloqueos no son inválidas.
-                        if(((is_int($_POST["numero-retardos"]) || ctype_digit($_POST["numero-retardos"])) && (int)$_POST["numero-retardos"] >= 0) 
-                        && ((is_int($_POST["numero-desbloqueos"]) || ctype_digit($_POST["numero-desbloqueos"])) && (int)$_POST["numero-desbloqueos"] >= 0)) {
-                            # Eliminar los espacios en los extremos
-                            # de cada uno de los nombres del colaborador.
-                            if(isset($_POST["segundo-apellido"])) $segundo_nombre = trim($_POST["segundo-nombre"]);
-                            else $segundo_nombre= "";
-                            $nombres = ucwords(strtolower(trim($_POST["primer-nombre"]))) . " " . ucwords(strtolower(trim($segundo_nombre)));
+                        # Verificar si la fecha de nacimiento
+                        # entra en el rango válido.
+                        if(($_POST["fecha-nacimiento"] == "") || ($_POST["fecha-nacimiento"] != ""
+                        && strtotime($_POST["fecha-nacimiento"]) >= strtotime("1990-01-01") 
+                        && strtotime($_POST["fecha-nacimiento"]) <= strtotime(date("Y-m-d", time())))) {
+                            # Verificar si las cantidades de retardos
+                            # y desbloqueos no son inválidas.
+                            if(((is_int($_POST["numero-retardos"]) || ctype_digit($_POST["numero-retardos"])) && (int)$_POST["numero-retardos"] >= 0) 
+                            && ((is_int($_POST["numero-desbloqueos"]) || ctype_digit($_POST["numero-desbloqueos"])) && (int)$_POST["numero-desbloqueos"] >= 0)) {
+                                # Eliminar los espacios en los extremos
+                                # de cada uno de los nombres del colaborador.
+                                if(isset($_POST["segundo-apellido"])) $segundo_nombre = trim($_POST["segundo-nombre"]);
+                                else $segundo_nombre= "";
+                                $nombres = ucwords(strtolower(trim($_POST["primer-nombre"]))) . " " . ucwords(strtolower(trim($segundo_nombre)));
 
-                            $apellido_paterno = ucwords(strtolower(trim($_POST["primer-apellido"])));
-                            if(isset($_POST["segundo-apellido"])) $apellido_materno = ucwords(strtolower(trim($_POST["segundo-apellido"])));
-                            else $apellido_materno = "";
+                                $apellido_paterno = ucwords(strtolower(trim($_POST["primer-apellido"])));
+                                if(isset($_POST["segundo-apellido"])) $apellido_materno = ucwords(strtolower(trim($_POST["segundo-apellido"])));
+                                else $apellido_materno = "";
 
-                            # Verificar si el horario introducido ya existe en la base de datos.
-                            if($horarios = $conexion_base->query("SELECT ID from horario WHERE hora_inicial = 
-                            '" . $_POST["hora-entrada"] . "' AND hora_final = '" . $_POST["hora-salida"] . "';")) {
-                                $conexion_base->query("START TRANSACTION;");
+                                # Verificar si el horario introducido ya existe en la base de datos.
+                                if($horarios = $conexion_base->query("SELECT ID from horario WHERE hora_inicial = 
+                                '" . $_POST["hora-entrada"] . "' AND hora_final = '" . $_POST["hora-salida"] . "';")) {
+                                    $conexion_base->query("START TRANSACTION;");
 
-                                if($horarios->num_rows > 0) {
-                                    $ID_horario = $horarios->fetch_row()[0];
-                                }
-                                else {
-                                    # Agregar a la base de datos el nuevo horario.
-                                    if($conexion_base->query("INSERT INTO horario(hora_inicial, hora_final)
-                                    VALUES('" . $_POST["hora-entrada"] . "', '" . $_POST["hora-salida"] . "');")) {
-                                        $ID_horario = $conexion_base->insert_id;
-                                    }   
-                                    else {
-                                        $resultado = 1;
-                                    }
-                                }
-                                $horarios->close();
-
-                                # Agregar al colaborador a la base de datos.
-                                try {
-                                    if($conexion_base->query("UPDATE colaborador SET ID = '" . $_POST["ID-colaborador"] . "', nombres = '$nombres', apellido_paterno = '$apellido_paterno', "
-                                    . "apellido_materno = '$apellido_materno', ID_carrera = '" . $_POST["carrera"] . "', ID_modalidad = '" . $_POST["modalidad"] . "', "
-                                    . "ID_horario = '$ID_horario', numero_retardos = '" . $_POST["numero-retardos"] . "', numero_desbloqueos = '" . $_POST["numero-desbloqueos"]
-                                    . "' WHERE ID = " . $_POST["anterior-ID-colaborador"]) . ";") {
-                                        $resultado = 4;
-                                        $conexion_base->query("COMMIT;");
+                                    if($horarios->num_rows > 0) {
+                                        $ID_horario = $horarios->fetch_row()[0];
                                     }
                                     else {
+                                        # Agregar a la base de datos el nuevo horario.
+                                        if($conexion_base->query("INSERT INTO horario(hora_inicial, hora_final)
+                                        VALUES('" . $_POST["hora-entrada"] . "', '" . $_POST["hora-salida"] . "');")) {
+                                            $ID_horario = $conexion_base->insert_id;
+                                        }   
+                                        else {
+                                            $resultado = 1;
+                                        }
+                                    }
+                                    $horarios->close();
+
+                                    # Agregar al colaborador a la base de datos.
+                                    try {
+                                        if($_POST["fecha-nacimiento"] != "") {
+                                            $fecha_nacimiento = "'" . $_POST["fecha-nacimiento"] . "'";
+                                        }
+                                        else {
+                                            $fecha_nacimiento = "NULL";
+                                        }
+                                        if($conexion_base->query("UPDATE colaborador SET ID = '" . $_POST["ID-colaborador"] . "', nombres = '$nombres', apellido_paterno = '$apellido_paterno', "
+                                        . "apellido_materno = '$apellido_materno', ID_carrera = '" . $_POST["carrera"] . "', ID_modalidad = '" . $_POST["modalidad"] . "', "
+                                        . "ID_horario = '$ID_horario', numero_retardos = '" . $_POST["numero-retardos"] . "', numero_desbloqueos = '" . $_POST["numero-desbloqueos"]
+                                        . "', fecha_nacimiento = $fecha_nacimiento WHERE ID = " . $_POST["anterior-ID-colaborador"]) . ";") {
+                                            $resultado = 4;
+                                            $conexion_base->query("COMMIT;");
+                                        }
+                                        else {
+                                            $resultado = 1;
+                                            $conexion_base->query("ROLLBACK;");
+                                        }
+                                    }
+                                    catch(mysqli_sql_exception $e) {
+                                        echo $e->getMessage();
                                         $resultado = 1;
                                         $conexion_base->query("ROLLBACK;");
                                     }
-                                }
-                                catch(mysqli_sql_exception $e) {
-                                    echo $e->getMessage();
+                                } 
+                                else {
                                     $resultado = 1;
-                                    $conexion_base->query("ROLLBACK;");
-                                }
-                            } 
+                                }                               
+                            }
                             else {
-                                $resultado = 1;
-                            }                               
+                                $resultado = 5;
+                            }
                         }
                         else {
-                            $resultado = 5;
+                            $resultado = 6;
                         }
                     }
                 }
@@ -214,6 +229,18 @@
                             icon: "error",
                             title: "Cantidades de retardos y/o desbloqueos inválidas",
                             text: "Los números de retardos y/o desbloqueos deben ser enteros positivos"
+                        }).then((resultado) => {
+                            location.href="modificacion_colaborador.php";
+                        });
+                    });
+                break;
+
+                case 6:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Fecha de nacimiento inválida",
+                            text: "La fecha de nacimiento introducida debe encontrarse entre 01-01-1990 y el día actual"
                         }).then((resultado) => {
                             location.href="modificacion_colaborador.php";
                         });
