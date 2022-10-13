@@ -38,7 +38,7 @@
         <link rel="stylesheet" href="../../css/dselect.min.css">
         
         <!--Título de la página-->
-        <title> Eliminación de contingencia </title>
+        <title> Eliminación de chequeo </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -62,23 +62,23 @@
             <div class="container-xl my-5">
                 <div class="jumbotron fondo-pantone-azul-claro">
                     <h1 class="fs-2 fw-semibold text-center"> 
-                        Eliminación de contingencia del sistema
+                        Eliminación de chequeo del sistema
                     </h1>
                     <hr class="my-4 border border-1 border-dark">
 
-                    <!--Formulario de selección de la contingencia registrada-->
+                    <!--Formulario de selección del chequeo registrada-->
                     <?php
                     if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                     ?>
-                    <form method="POST" action="procesar_eliminacion_contingencia.php" id="eliminacion-contingencia" class="mb-0">
-                        <h4 class="mb-4 text-center"> Datos de la contingencia </h4>
+                    <form method="POST" action="procesar_eliminacion_chequeo.php" id="eliminacion-chequeo" class="mb-0">
+                        <h4 class="mb-4 text-center"> Datos del chequeo </h4>
                         <div class="row">
                             <!--Selección del colaborador-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="colaboradores" class="form-label fw-semibold"> Colaborador (*) </label>
                                 <select class="form-select" name="ID-colaborador" id="colaboradores" required
-                                onchange="verificarContingencia(document.getElementById('colaboradores').value, 
-                                document.getElementById('fecha-registro').value, 'fecha-registro', 3)">
+                                onchange="verificarChequeo(document.getElementById('colaboradores').value, 
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 3)">
                                     <?php
                                         if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                                             while($colaborador = $colaboradores->fetch_row()) {
@@ -96,19 +96,19 @@
                                 </select>
                             </div>
 
-                            <!--Selección de la fecha de contingencia-->
+                            <!--Selección de la fecha de chequeo-->
                             <div class="col-12 col-md-6 mb-4">
-                                <label for="fecha-registro" class="form-label fw-semibold"> Fecha de contingencia (*) </label>
-                                <input type="date" name="fecha-registro" value="2021-01-01" min="2021-01-01" max="2030-12-30" 
-                                class="form-control" id="fecha-registro" autocomplete="OFF" required
-                                onchange="verificarContingencia(document.getElementById('colaboradores').value, 
-                                document.getElementById('fecha-registro').value, 'fecha-registro', 3)">
+                                <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
+                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01" max="2030-12-30" 
+                                class="form-control" id="fecha-chequeo" autocomplete="OFF" required
+                                onchange="verificarChequeo(document.getElementById('colaboradores').value, 
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 3)">
                             </div>
                         </div>
 
                         <div class="text-center">
                             <button class="btn btn-primary">
-                                Eliminar contingencia
+                                Eliminar chequeo
                             </button>
                         </div>
                     </form>
@@ -118,7 +118,7 @@
                     ?>
                         <h4 class="text-center mt-4 mb-0">
                             <span class="badge bg-danger py-3">
-                                No hay contingencias a eliminar si no existen colaboradores registrados
+                                No hay chequeos a eliminar si no existen colaboradores registrados
                             </span>
                         </h4>
                     <?php
@@ -134,7 +134,7 @@
         <script src="../../js/bootstrap/jquery-3.6.0.min.js"> </script>
         <script src="../../js/bootstrap/bootstrap.bundle.min.js"> </script>
         <script src="../../js/dselect.min.js"> </script>
-        <script src="../../js/peticiones_ajax/verificar_contingencia.js"> </script>
+        <script src="../../js/peticiones_ajax/verificar_chequeo.js"> </script>
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script type="text/javascript">
             <?php
@@ -142,8 +142,8 @@
                 ?>
                     document.body.onload = () => {
                         document.querySelector("html").classList.remove("invisible");
-                        verificarContingencia(document.getElementById('colaboradores').value, 
-                        document.getElementById('fecha-registro').value, 'fecha-registro', 3);
+                        verificarChequeo(document.getElementById('colaboradores').value, 
+                        document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 3);
                     }
                 <?php
                 }
@@ -164,8 +164,8 @@
             <?php
                 if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                 ?>
-                    document.getElementById("fecha-registro").value = new Date().toISOString().substring(0, 10);
-                    document.getElementById("eliminacion-contingencia").addEventListener("submit", confirmarEliminacionContingencia);
+                    document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                    document.getElementById("eliminacion-chequeo").addEventListener("submit", confirmarEliminacionChequeo);
                     dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
                 <?php
                 }

@@ -13,7 +13,7 @@
 
     # Verificar que se haya enviado un
     # formulario de eliminación de contingencia.
-    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-registro"])) {
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-chequeo"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -22,19 +22,19 @@
         }
 
         # Verificar si los datos especificados corresponden
-        # a una contingencia existente en el sistema.
+        # a un chequeo existente en el sistema.
         try {
-            if($resultados = $conexion_base->query("SELECT * FROM contingencia WHERE 
-            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha = '" . $_POST["fecha-registro"] . "';")) {
+            if($resultados = $conexion_base->query("SELECT * FROM chequeo WHERE 
+            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-chequeo"] . "';")) {
                 if($resultados->num_rows <= 0) {
                     $resultado = 2;
                 }
                 else {
-                    if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01") &&
-                    strtotime($_POST["fecha-registro"]) <= strtotime("2030-12-30")) {
-                        # Borrar la contingencia en la base de datos.
+                    if(strtotime($_POST["fecha-chequeo"]) >= strtotime("2021-01-01") &&
+                    strtotime($_POST["fecha-chequeo"]) <= strtotime("2030-12-30")) {
+                        # Borrar el chequeo en la base de datos.
                         try {
-                            if($conexion_base->query("DELETE FROM contingencia WHERE fecha = '" . $_POST["fecha-registro"]
+                            if($conexion_base->query("DELETE FROM chequeo WHERE fecha_chequeo = '" . $_POST["fecha-chequeo"]
                             . "' AND ID_colaborador = '" . $_POST["ID-colaborador"] . "';"))  {
                                 $resultado = 4;
                             }
@@ -84,7 +84,7 @@
         <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
 
         <!--Título de la página-->
-        <title> Resultado de la modificación de la contingencia </title>
+        <title> Resultado de la eliminación del chequeo </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -107,10 +107,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Eliminación no exitosa de contingencia",
-                            text: "Ocurrió un error al tratar de eliminar la contingencia"
+                            title: "Eliminación no exitosa de chequeo",
+                            text: "Ocurrió un error al tratar de eliminar el chequeo"
                         }).then((resultado) => {
-                            location.href="eliminacion_contingencia.php";
+                            location.href="eliminacion_chequeo.php";
                         });
                     });
                 break;
@@ -119,13 +119,13 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Contingencia inexistente",
-                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia es inexistente en el sistema: </p> \\n"
+                            title: "Chequeo inexistente",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente chequeo es inexistente en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""
                             ?>
                         }).then((resultado) => {
-                            location.href="eliminacion_contingencia.php";
+                            location.href="eliminacion_chequeo.php";
                         });
                     });
                 break;
@@ -137,7 +137,7 @@
                             title: "Fecha de registro no válida",
                             text: "La fecha de registro no corresponde al rango de fechas permitido"
                         }).then((resultado) => {
-                            location.href="eliminacion_contingencia.php";
+                            location.href="eliminacion_chequeo.php";
                         });
                     });
                 break;
@@ -146,13 +146,13 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "success",
-                            title: "Eliminación exitosa de contingencia",
-                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia fue exitosamente eliminada del sistema: </p> \\n"
+                            title: "Eliminación exitosa de chequeo",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente chequeo fue exitosamente eliminado del sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""
                             ?>
                         }).then((resultado) => {
-                            location.href="eliminacion_contingencia.php";
+                            location.href="eliminacion_chequeo.php";
                         });
                     });
                 break;
@@ -162,9 +162,9 @@
                         Swal.fire({
                             icon: "error",
                             title: "Error desconocido",
-                            text: "Ocurrió un error al tratar de eliminar la contingencia"
+                            text: "Ocurrió un error al tratar de eliminar el chequeo"
                         }).then((resultado) => {
-                            location.href="eliminacion_contingencia.php";
+                            location.href="eliminacion_chequeo.php";
                         });
                     });
                 break;

@@ -246,7 +246,7 @@ function confirmarRegistroChequeo(evento) {
 }
 
 // Función para confirmar la
-// modificación de un administrador.
+// modificación de un chequeo.
 function confirmarModificacionChequeo(evento) {
     evento.preventDefault();
 
@@ -257,6 +257,25 @@ function confirmarModificacionChequeo(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea modificar el chequeo?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}
+
+// Función para confirmar la
+// eliminación de un chequeo.
+function confirmarEliminacionChequeo(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Eliminación de un chequeo",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea eliminar el chequeo?"
     }).then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();

@@ -36,7 +36,7 @@ function verificarChequeo(IDColaborador, fechaChequeo, IDCampo, tipoComportamien
                         break;
 
                         default:
-                            document.getElementById(IDCampo).setCustomValidity("La chequeo con el colaborador y fecha especificados es inexistente.");
+                            document.getElementById(IDCampo).setCustomValidity("El chequeo con el colaborador y fecha especificados es inexistente.");
                         break;
                     }
                 break;
