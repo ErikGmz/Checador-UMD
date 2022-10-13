@@ -122,8 +122,8 @@
                                 <label for="fecha-nacimiento" class="form-label fw-semibold"> Fecha de nacimiento </label>
                                 <input type="date" name="fecha-nacimiento" min="1900-01-01" class="form-control" id="fecha-nacimiento" autocomplete="OFF">
                                 <div class="form-text"> 
-                                    Campo opcional. La fecha introducida por defecto corresponde 
-                                    a 20 años anteriores al día actual del calendario del sistema operativo.
+                                    Campo opcional. Si no se desea especificar un valor, entonces dejar el 
+                                    campo en dd-mm-aaaa o borrarlo en el calendario correspondiente.
                                 </div>
                             </div>
 
@@ -234,11 +234,7 @@
             });
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
             document.getElementById("registro-colaborador").addEventListener("submit", confirmarRegistroColaborador);
-
-            let fechaActual = new Date();
-            document.getElementById("fecha-nacimiento").setAttribute("max", fechaActual.toLocaleDateString().split("/").reverse().join("-"));
-            fechaActual.setFullYear(fechaActual.getFullYear() - 21);
-            document.getElementById("fecha-nacimiento").value = fechaActual.toLocaleDateString().split("/").reverse().join("-");
+            document.getElementById("fecha-nacimiento").setAttribute("max", new Date().toLocaleDateString().split("/").reverse().join("-"));
 
             dselect(document.getElementById("carreras"), { search: true, maxHeight: "200px" });
             dselect(document.getElementById("modalidades"), { search: false });    

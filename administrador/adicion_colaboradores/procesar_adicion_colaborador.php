@@ -15,7 +15,7 @@
     # formulario de adición de colaborador.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["primer-nombre"], 
     $_POST["primer-apellido"], $_POST["carrera"], $_POST["modalidad"], $_POST["hora-entrada"], 
-    $_POST["hora-salida"])) {
+    $_POST["hora-salida"], $_POST["fecha-nacimiento"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -42,9 +42,9 @@
                     else {
                         # Verificar si la fecha de nacimiento
                         # entra en el rango válido.
-                        if(!isset($_POST["fecha-nacimiento"]) || (isset($_POST["fecha-nacimiento"])
-                        && strtotime($_POST["fecha-nacimiento"]) >= strtotime("1990-01-01") 
-                        && strtotime($_POST["fecha-nacimiento"]) <= date("Y-m-d", time()))) {
+                        if((@$_POST["fecha-nacimiento"] == "") || (@$_POST["fecha-nacimiento"] != ""
+                        && strtotime(@$_POST["fecha-nacimiento"]) >= strtotime("1990-01-01") 
+                        && strtotime(@$_POST["fecha-nacimiento"]) <= strtotime(date("Y-m-d", time())))) {
                             # Eliminar los espacios en los extremos
                             # de cada uno de los nombres del colaborador.
                             if(isset($_POST["segundo-apellido"])) $segundo_nombre = trim($_POST["segundo-nombre"]);
@@ -77,7 +77,7 @@
 
                                 # Agregar al colaborador a la base de datos.
                                 try {
-                                    if(isset($_POST["fecha-nacimiento"])) {
+                                    if($_POST["fecha-nacimiento"] != "") {
                                         $fecha_nacimiento = "'" . $_POST["fecha-nacimiento"] . "'";
                                     }
                                     else {
