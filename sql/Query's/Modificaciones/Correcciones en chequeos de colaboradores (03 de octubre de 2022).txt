@@ -1,0 +1,9 @@
+UPDATE chequeo SET hora_inicial = "09:03:12", hora_final = "15:59:07" WHERE ID_colaborador = 173612;
+UPDATE chequeo SET hora_inicial = "09:53:24", hora_final = "15:59:23" WHERE ID_colaborador = 204444;
+UPDATE chequeo SET hora_inicial = "09:54:26", hora_final = "16:54:42" WHERE ID_colaborador = 256431;
+UPDATE chequeo SET hora_inicial = "10:04:27", hora_final = "16:04:32" WHERE ID_colaborador = 188658;
+UPDATE chequeo SET hora_inicial = "10:06:40", hora_final = "15:59:18" WHERE ID_colaborador = 252929;
+UPDATE chequeo SET hora_inicial = "10:24:41", hora_final = "16:26:28" WHERE ID_colaborador = 272807;
+UPDATE chequeo SET hora_inicial = "10:24:55", hora_final = "16:16:56" WHERE ID_colaborador = 271448;
+UPDATE chequeo SET hora_inicial = "12:32:39", hora_final = "16:27:07" WHERE ID_colaborador = 188027;
+UPDATE chequeo SET hora_inicial = "12:56:44", hora_final = "16:01:38" WHERE ID_colaborador = 189270;

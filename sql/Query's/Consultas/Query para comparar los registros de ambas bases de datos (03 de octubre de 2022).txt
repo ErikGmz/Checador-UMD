@@ -1,0 +1,5 @@
+SELECT checadorumd.chequeo.ID_colaborador, checadorumd.chequeo.fecha_chequeo,
+checadorumd.chequeo.hora_inicial, checadorumd.chequeo.hora_final, checadorus.registros.hora_entrada,
+checadorus.registros.hora_salida
+FROM checadorumd.chequeo JOIN checadorus.registros ON checadorumd.chequeo.ID_colaborador = checadorus.registros.id_colaborador AND checadorumd.chequeo.fecha_chequeo = checadorus.registros.fecha AND
+checadorumd.chequeo.fecha_chequeo = "2022-10-03" AND (checadorumd.chequeo.hora_final IS NULL OR checadorumd.chequeo.hora_inicial IS NULL);

@@ -16,6 +16,9 @@
         case "adicion_administrador.php":
         case "modificacion_administrador.php":
         case "eliminacion_administrador.php":
+        case "adicion_chequeo.php":
+        case "modificacion_chequeo.php":
+        case "eliminacion_chequeo.php":
         break;
 
         default:
@@ -148,6 +151,31 @@
                         <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_administrador.php") 
                         echo "fw-semibold active"; else echo "\" href=\"../eliminacion_administradores/eliminacion_administrador.php"?>">
                         Eliminación de administrador </a> </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown me-0 me-lg-2">
+                    <a class="nav-link dropdown-toggle fw-semibold
+                    <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "adicion_chequeo.php"
+                    || basename($_SERVER['SCRIPT_FILENAME']) == "modificacion_chequeo.php"
+                    || basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_chequeo.php")
+                    echo "active"?>"
+                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Chequeos
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "adicion_chequeo.php") 
+                        echo "fw-semibold active"; else echo "\" href=\"../adicion_chequeos/adicion_chequeo.php"?>">  
+                        Adición de chequeo </a> </li>
+
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "modificacion_chequeo.php") 
+                        echo "fw-semibold active"; else echo "\" href=\"../modificacion_chequeos/modificacion_chequeo.php"?>">   
+                        Modificación de chequeo </a> </li>
+
+                        <li> <a class="dropdown-item <?php if(basename($_SERVER['SCRIPT_FILENAME']) == "eliminacion_chequeo.php") 
+                        echo "fw-semibold active"; else echo "\" href=\"../eliminacion_chequeos/eliminacion_chequeo.php"?>">
+                        Eliminación de chequeo </a> </li>
                     </ul>
                 </li>
 

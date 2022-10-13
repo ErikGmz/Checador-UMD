@@ -142,7 +142,7 @@
                 enfocarRecuadro("ID-colaborador");
             }
 
-            document.getElementById("fecha-final").value = new Date().toISOString().substring(0, 10);
+            document.getElementById("fecha-final").value = new Date().toLocaleDateString().split("/").reverse().join("-");;
 
             document.getElementById("resumidas").addEventListener("click", () => {
                 enfocarRecuadro("ID-colaborador");

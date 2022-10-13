@@ -8,9 +8,6 @@
         die();
     }
 
-    # Definir la zona horaria.
-    date_default_timezone_set('America/Mexico_City');
-
     # Verificar que se haya enviado un
     # formulario de adición de administrador.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-administrador"], $_POST["clave"], $_POST["confirmacion-clave"])) {

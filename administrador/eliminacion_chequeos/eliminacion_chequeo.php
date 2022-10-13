@@ -8,9 +8,6 @@
         die();
     }
 
-    # Definir la zona horaria.
-    date_default_timezone_set('America/Mexico_City');
-
     # Iniciar y verificar la conexión
     # con la base de datos.
     $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -33,15 +30,15 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
         <!--Estilos de la página-->
-        <link rel="stylesheet" href="../../css/desplazamiento_instantaneo.css">
         <link rel="stylesheet" href="../../css/clases_globales.css">
+        <link rel="stylesheet" href="../../css/desplazamiento_instantaneo.css">
         <link rel="stylesheet" href="../../css/estilos_administradores.css">
         <link rel="stylesheet" href="../../css/bootstrap/bootstrap-icons.css">
         <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
         <link rel="stylesheet" href="../../css/dselect.min.css">
         
         <!--Título de la página-->
-        <title> Adición de contingencia </title>
+        <title> Eliminación de chequeo </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -65,27 +62,23 @@
             <div class="container-xl my-5">
                 <div class="jumbotron fondo-pantone-azul-claro">
                     <h1 class="fs-2 fw-semibold text-center"> 
-                        Adición de contingencia de colaborador
+                        Eliminación de chequeo del sistema
                     </h1>
                     <hr class="my-4 border border-1 border-dark">
 
+                    <!--Formulario de selección del chequeo registrada-->
                     <?php
                     if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                     ?>
-                    <form method="POST" action="procesar_adicion_contingencia.php" 
-                    class="mb-0" id="registro-contingencia">
-                        <div class="row mb-2">
-                            <!--Datos de la contingencia-->
-                            <div class="col-12 text-center mb-4">
-                                <h4 class="mb-0"> Datos de la contingencia </h4>
-                            </div>
-
+                    <form method="POST" action="procesar_eliminacion_chequeo.php" id="eliminacion-chequeo" class="mb-0">
+                        <h4 class="mb-4 text-center"> Datos del chequeo </h4>
+                        <div class="row">
                             <!--Selección del colaborador-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="colaboradores" class="form-label fw-semibold"> Colaborador (*) </label>
-                                <select class="form-select" name="ID-colaborador" id="colaboradores" 
-                                onchange="verificarContingencia(document.getElementById('colaboradores').value, 
-                                document.getElementById('fecha-registro').value, 'fecha-registro', 1)" required>
+                                <select class="form-select" name="ID-colaborador" id="colaboradores" required
+                                onchange="verificarChequeo(document.getElementById('colaboradores').value, 
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 3)">
                                     <?php
                                         if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                                             while($colaborador = $colaboradores->fetch_row()) {
@@ -101,67 +94,21 @@
                                         }
                                     ?>
                                 </select>
-                                <div class="form-text"> 
-                                    Campo obligatorio.
-                                </div>
                             </div>
 
-                            <!--Selección de la fecha de contingencia-->
+                            <!--Selección de la fecha de chequeo-->
                             <div class="col-12 col-md-6 mb-4">
-                                <label for="fecha-registro" class="form-label fw-semibold"> Fecha de contingencia (*) </label>
-                                <input type="date" name="fecha-registro" value="2021-01-01" min="2021-01-01" max="2030-12-30" 
-                                class="form-control" id="fecha-registro" autocomplete="OFF" required
-                                onchange="verificarContingencia(document.getElementById('colaboradores').value, 
-                                document.getElementById('fecha-registro').value, 'fecha-registro', 1)">
-                                <div class="form-text"> 
-                                    Campo obligatorio. El rango de fechas admitido se encuentra
-                                    entre 01-01-2021 y 30-12-2030. Cada colaborador
-                                    puede tener máximo una contingencia por día.
-                                </div>
-                            </div>
-
-                            <!--Solicitud de hora inicial-->
-                            <div class="col-12 col-md-6 mb-4 mb-md-0">
-                                <label for="hora-inicial" class="form-label fw-semibold"> Hora de entrada (*) </label>
-                                <input type="text" class="form-control" id="hora-inicial" 
-                                autocomplete="OFF" required name="hora-inicial" placeholder="08:00" value="08:00"
-                                pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
-                                oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
-                                <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
-                                </div>
-                            </div>
-
-                            <!--Solicitud de hora final-->
-                            <div class="col-12 col-md-6 mb-4">
-                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida (*) </label>
-                                <input type="text" class="form-control" id="hora-final" 
-                                autocomplete="OFF" required name="hora-final" placeholder="12:00" value="12:00"
-                                pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
-                                oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
-                                <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
-                                </div>
-                            </div>
-
-                            <!--Solicitud de observaciones-->
-                            <div class="col-12">
-                                <label for="observaciones" class="form-label fw-semibold"> Observaciones (*) </label>
-                                <textarea class="form-control" name="observaciones" id="observaciones" rows="3" required></textarea>
-                                <div class="form-text"> 
-                                    Campo obligatorio.
-                                </div>
-                            </div>
-
-                            <div class="col-12 my-4">
-                                <hr class="mb-0 border border-1 border-dark">
+                                <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
+                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01" max="2030-12-30" 
+                                class="form-control" id="fecha-chequeo" autocomplete="OFF" required
+                                onchange="verificarChequeo(document.getElementById('colaboradores').value, 
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 3)">
                             </div>
                         </div>
 
-                        <!--Botón de registro de contingencia-->
                         <div class="text-center">
                             <button class="btn btn-primary">
-                                Registrar contingencia
+                                Eliminar chequeo
                             </button>
                         </div>
                     </form>
@@ -171,7 +118,7 @@
                     ?>
                         <h4 class="text-center mt-4 mb-0">
                             <span class="badge bg-danger py-3">
-                                No se pueden añadir contingencias si no existen colaboradores registrados
+                                No hay chequeos a eliminar si no existen colaboradores registrados
                             </span>
                         </h4>
                     <?php
@@ -179,11 +126,6 @@
                     ?>
                 </div>
             </div>
-
-            <?php
-                # Cerrar la conexión con la base de datos.
-                $conexion_base->close();
-            ?>
         </div>
 
         <!--Scripts de la página-->
@@ -192,20 +134,16 @@
         <script src="../../js/bootstrap/jquery-3.6.0.min.js"> </script>
         <script src="../../js/bootstrap/bootstrap.bundle.min.js"> </script>
         <script src="../../js/dselect.min.js"> </script>
-        <script src="../../js/peticiones_ajax/verificar_contingencia.js"> </script>
+        <script src="../../js/peticiones_ajax/verificar_chequeo.js"> </script>
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script type="text/javascript">
-            document.body.onload = () => {
-                document.querySelector("html").classList.remove("invisible");
-            }
-
             <?php
                 if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                 ?>
                     document.body.onload = () => {
                         document.querySelector("html").classList.remove("invisible");
-                        verificarContingencia(document.getElementById('colaboradores').value, 
-                        document.getElementById('fecha-registro').value, 'fecha-registro', 1)
+                        verificarChequeo(document.getElementById('colaboradores').value, 
+                        document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 3);
                     }
                 <?php
                 }
@@ -226,8 +164,8 @@
             <?php
                 if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                 ?>
-                    document.getElementById("registro-contingencia").addEventListener("submit", confirmarRegistroContingencia);
-                    document.getElementById("fecha-registro").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                    document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                    document.getElementById("eliminacion-chequeo").addEventListener("submit", confirmarEliminacionChequeo);
                     dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
                 <?php
                 }

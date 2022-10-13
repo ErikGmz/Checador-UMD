@@ -8,6 +8,9 @@
         die();
     }
 
+    # Definir la zona horaria.
+    date_default_timezone_set('America/Mexico_City');
+
     # Iniciar y verificar la conexión
     # con la base de datos.
     $conexion_base = new mysqli("localhost", "root", "", "checadorumd");

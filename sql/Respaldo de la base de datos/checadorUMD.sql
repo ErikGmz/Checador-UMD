@@ -137,8 +137,10 @@ CREATE TRIGGER `calculoHorasTotalesActualizacion` BEFORE UPDATE ON `chequeo` FOR
 		IF NEW.hora_final IS NOT NULL THEN
 			SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
 		ELSE
-			IF NEW.tiempo_total IS NOT NULL THEN
+			IF (NEW.tiempo_total IS NOT NULL AND NEW.tiempo_total <> OLD.tiempo_total) THEN
 				SET NEW.hora_final = SEC_TO_TIME(TIME_TO_SEC(NEW.hora_inicial) + TIME_TO_SEC(NEW.tiempo_total));
+			ELSE
+				SET NEW.tiempo_total = NULL;
 			END IF;
 		END IF;
 	END
@@ -418,6 +420,12 @@ ALTER TABLE `turno`
 ALTER TABLE `chequeo`
   ADD CONSTRAINT `fk_Chequeo_Colaborador1` FOREIGN KEY (`ID_colaborador`) REFERENCES `colaborador` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE `chequeo` 
+  ADD CONSTRAINT `CK_Fecha` CHECK (`fecha_chequeo` BETWEEN "2021-01-01" AND "2030-12-31");
+
+ALTER TABLE `chequeo` 
+  ADD CONSTRAINT `CK_Chequeo_Horas` CHECK (`hora_inicial` < `hora_final`);
+
 --
 -- Filtros para la tabla `colaborador`
 --
@@ -432,11 +440,20 @@ ALTER TABLE `colaborador`
 ALTER TABLE `contingencia`
   ADD CONSTRAINT `fk_Contingencia_Colaborador1` FOREIGN KEY (`ID_colaborador`) REFERENCES `colaborador` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE `contingencia` 
+  ADD CONSTRAINT `CK_Fecha_Registro` CHECK (`fecha` BETWEEN "2021-01-01" AND "2030-12-31");
+
+ALTER TABLE `contingencia` 
+  ADD CONSTRAINT `CK_Contingencia_Horas` CHECK (`hora_inicial` < `hora_final`);
 --
 -- Filtros para la tabla `horario`
 --
 ALTER TABLE `horario`
   ADD CONSTRAINT `fk_Horario_Turno1` FOREIGN KEY (`ID_turno`) REFERENCES `turno` (`ID`);
+
+ALTER TABLE `horario` 
+  ADD CONSTRAINT `CK_Horario_Horas` CHECK (`hora_inicial` < `hora_final` 
+  AND `hora_inicial` BETWEEN "08:00:00" AND "21:00:00" AND `hora_final` BETWEEN "08:00:00" AND "21:00:00");
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
