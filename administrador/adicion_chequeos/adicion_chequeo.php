@@ -109,7 +109,7 @@
                             <!--Selección de la fecha de chequeo-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
-                                <input type="date" name="fecha-chequeo" value="2021-01-01"
+                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01" max="2030-12-30"
                                 class="form-control" id="fecha-chequeo" autocomplete="OFF" required
                                 onchange="verificarChequeo(document.getElementById('colaboradores').value, 
                                 document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 1)">
@@ -134,9 +134,9 @@
 
                             <!--Solicitud de hora final-->
                             <div class="col-12 col-md-6 mb-4 ">
-                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida (*) </label>
+                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida </label>
                                 <input type="text" class="form-control" id="hora-final" 
-                                autocomplete="OFF" required name="hora-final" placeholder="12:00:00" value="12:00:00"
+                                autocomplete="OFF" name="hora-final" placeholder="12:00:00" value="12:00:00"
                                 pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d|24:00:00$"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 

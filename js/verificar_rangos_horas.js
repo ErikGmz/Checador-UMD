@@ -5,6 +5,12 @@ function verificarRangosHoras(horaEntrada, horaSalida) {
     let campoEntrada = document.getElementById(horaEntrada);
     let campoSalida = document.getElementById(horaSalida);
 
+    if(campoSalida.value == "") {
+        campoEntrada.setCustomValidity("");
+        campoSalida.setCustomValidity("");
+        return;
+    }
+
     let tiempoEntrada = campoEntrada.value.split(":");
     let tiempoSalida = campoSalida.value.split(":");
 

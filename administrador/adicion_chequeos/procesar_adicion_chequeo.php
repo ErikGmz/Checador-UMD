@@ -14,7 +14,7 @@
     # Verificar que se haya enviado un
     # formulario de adición de chequeo.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-chequeo"], 
-    $_POST["hora-inicial"], $_POST["hora-final"], $_POST["estado-chequeo"])) {
+    $_POST["hora-inicial"], $_POST["estado-chequeo"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -32,10 +32,17 @@
                 }
                 else {
                     $tiempo_inicial = date("1970-01-01 " . $_POST["hora-inicial"]);
-                    $tiempo_final = date("1970-01-01 " . $_POST["hora-final"]);
-                    if($tiempo_final <= $tiempo_inicial || $tiempo_inicial > date("1970-01-02 00:00")
+
+                    if(isset($_POST["hora-final"]) && @$_POST["hora-final"] != "") {
+                        $tiempo_final = date("1970-01-01 " . $_POST["hora-final"]);
+                    }
+                    else {
+                        $tiempo_final = "";
+                    }
+
+                    if(($tiempo_final <= $tiempo_inicial || $tiempo_inicial > date("1970-01-02 00:00")
                     || $tiempo_inicial < date("1970-01-01 00:00") || $tiempo_final < date("1970-01-01 00:00")
-                    || $tiempo_final > date("1970-01-02 00:00")) {
+                    || $tiempo_final > date("1970-01-02 00:00")) && $tiempo_final != "") {
                         $resultado = 3;
                     }
                     else {
@@ -43,9 +50,16 @@
                         strtotime($_POST["fecha-chequeo"]) <= strtotime("2030-12-30")) {
                             # Agregar el chequeo a la base de datos.
                             try {
+                                if($tiempo_final != "") {
+                                    $registro_hora_final = "'" . date("H:i:s", strtotime($tiempo_final)) . "'";
+                                }
+                                else {
+                                    $registro_hora_final = "NULL";
+                                }
+
                                 if($conexion_base->query("INSERT INTO chequeo(fecha_chequeo, hora_inicial, hora_final, bloqueo_registro, ID_colaborador) "
-                                . "VALUES('" . $_POST["fecha-chequeo"] . "', '" . date("H:i:s", strtotime($tiempo_inicial)) . "', 
-                                '" . date("H:i:s", strtotime($tiempo_final)) . "', '" . $_POST["estado-chequeo"] . "', '"
+                                . "VALUES('" . $_POST["fecha-chequeo"] . "', '" . date("H:i:s", strtotime($tiempo_inicial)) 
+                                . "', $registro_hora_final, '" . $_POST["estado-chequeo"] . "', '"
                                 . $_POST["ID-colaborador"] . "');"))  {
                                     $resultado = 5;
                                 }
@@ -54,6 +68,7 @@
                                 }
                             }
                             catch(Exception $e) {
+                                echo $e->getMessage();
                                 $resultado = 1;
                             }
                         }

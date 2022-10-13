@@ -12,9 +12,9 @@
     date_default_timezone_set('America/Mexico_City');
 
     # Verificar que se haya enviado un
-    # formulario de modificación de contingencia.
-    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-registro"], $_POST["fecha-anterior"],
-    $_POST["hora-inicial"], $_POST["hora-final"], $_POST["observaciones"], $_POST["anterior-ID-colaborador"])) {
+    # formulario de modificación de chequeo.
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-chequeo"], $_POST["fecha-anterior"],
+    $_POST["hora-inicial"], $_POST["estado-chequeo"],  $_POST["anterior-ID-colaborador"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -23,31 +23,50 @@
         }
 
         # Verificar si los datos especificados no corresponden
-        # a otra contingencia ya existente en el sistema.
+        # a un chequeo ya existente en el sistema.
         try {
-            if($resultados = $conexion_base->query("SELECT * FROM contingencia WHERE 
-            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha = '" . $_POST["fecha-registro"] . "';")) {
+            if($resultados = $conexion_base->query("SELECT * FROM chequeo WHERE 
+            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-chequeo"] . "';")) {
                 if($resultados->num_rows > 0 && $_POST["ID-colaborador"] != $_POST["anterior-ID-colaborador"] 
-                && $_POST["fecha-anterior"] != $_POST["fecha-registro"]) {
+                && $_POST["fecha-anterior"] != $_POST["fecha-chequeo"]) {
                     $resultado = 2;
                 }
                 else {
-                    $tiempo_inicial = date("1970-01-01 " . $_POST["hora-inicial"] . ":00");
-                    $tiempo_final = date("1970-01-01 " . $_POST["hora-final"] . ":00");
-                    if($tiempo_final <= $tiempo_inicial || $tiempo_inicial > date("1970-01-01 21:00")
-                    || $tiempo_inicial < date("1970-01-01 08:00") || $tiempo_final < date("1970-01-01 08:00")
-                    || $tiempo_final > date("1970-01-01 21:00")) {
+                    $tiempo_inicial = date("1970-01-01 " . $_POST["hora-inicial"]);
+
+                    if(isset($_POST["hora-final"]) && @$_POST["hora-final"] != "") {
+                        $tiempo_final = date("1970-01-01 " . $_POST["hora-final"]);
+                    }
+                    else {
+                        $tiempo_final = "";
+                    }
+
+                    if(($tiempo_final <= $tiempo_inicial || $tiempo_inicial > date("1970-01-02 00:00")
+                    || $tiempo_inicial < date("1970-01-01 00:00") || $tiempo_final < date("1970-01-01 00:00")
+                    || $tiempo_final > date("1970-01-02 00:00")) && $tiempo_final != "") {
                         $resultado = 3;
                     }
                     else {
-                        if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01") &&
-                        strtotime($_POST["fecha-registro"]) <= strtotime("2030-12-30")) {
-                            # Actualizar la contingencia en la base de datos.
+                        if(strtotime($_POST["fecha-chequeo"]) >= strtotime("2021-01-01") &&
+                        strtotime($_POST["fecha-chequeo"]) <= strtotime("2030-12-30")) {
+                            # Actualizar el chequeo de la base de datos.
                             try {
-                                if($conexion_base->query("UPDATE contingencia SET fecha = '" . $_POST["fecha-registro"] . "', hora_inicial = '"
-                                . date("H:i:s", strtotime($tiempo_inicial)) . "', hora_final = '" . date("H:i:s", strtotime($tiempo_final)) . "', 
-                                observaciones = '" . $_POST["observaciones"] . "', ID_colaborador = '" . $_POST["ID-colaborador"] . "' WHERE
-                                ID_colaborador = '" . $_POST["anterior-ID-colaborador"] . "' AND fecha = '" . $_POST["fecha-anterior"] . "';"))  {
+                                if($tiempo_final != "") {
+                                    $registro_hora_final = "'" . date("H:i:s", strtotime($tiempo_final)) . "'";
+                                }
+                                else {
+                                    $registro_hora_final = "NULL";
+                                }
+                                echo $registro_hora_final;
+
+                                echo "UPDATE chequeo SET fecha_chequeo = '" . $_POST["fecha-chequeo"] 
+                                . "', hora_inicial = '" . date("H:i:s", strtotime($tiempo_inicial)) . "', hora_final = $registro_hora_final, "
+                                . " bloqueo_registro = '" . $_POST["estado-chequeo"] . "', ID_colaborador = '" . $_POST["ID-colaborador"] 
+                                . "' WHERE ID_colaborador = '" . $_POST["anterior-ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-anterior"] . "'";
+                                if($conexion_base->query("UPDATE chequeo SET fecha_chequeo = '" . $_POST["fecha-chequeo"] 
+                                . "', hora_inicial = '" . date("H:i:s", strtotime($tiempo_inicial)) . "', hora_final = $registro_hora_final, "
+                                . " bloqueo_registro = '" . $_POST["estado-chequeo"] . "', ID_colaborador = '" . $_POST["ID-colaborador"] 
+                                . "' WHERE ID_colaborador = '" . $_POST["anterior-ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-anterior"] . "'")) {
                                     $resultado = 5;
                                 }
                                 else {
@@ -55,6 +74,7 @@
                                 }
                             }
                             catch(Exception $e) {
+                                echo $e->getMessage();
                                 $resultado = 1;
                             }
                         }
@@ -97,7 +117,7 @@
         <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
 
         <!--Título de la página-->
-        <title> Resultado de la modificación de la contingencia </title>
+        <title> Resultado de la modificación del chequeo </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -120,10 +140,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Modificación no exitosa de contingencia",
-                            text: "Ocurrió un error al tratar de modificar la contingencia"
+                            title: "Modificación no exitosa de chequeo",
+                            text: "Ocurrió un error al tratar de modificar el chequeo"
                         }).then((resultado) => {
-                            location.href="modificacion_contingencia.php";
+                            location.href="modificacion_chequeo.php";
                         });
                     });
                 break;
@@ -132,13 +152,13 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Contingencia inexistente",
-                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia es inexistente en el sistema: </p> \\n"
+                            title: "Chequeo inexistente",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente chequeo es inexistente en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
-                            . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""
+                            . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {
-                            location.href="modificacion_contingencia.php";
+                            location.href="modificacion_chequeo.php";
                         });
                     });
                 break;
@@ -150,7 +170,7 @@
                             title: "Rango de horario incorrecto",
                             text: "Las horas inicial y final indicadas no son válidas"
                         }).then((resultado) => {
-                            location.href="modificacion_contingencia.php";
+                            location.href="modificacion_chequeo.php";
                         });
                     });
                 break;
@@ -159,10 +179,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Fecha de registro no válida",
-                            text: "La fecha de registro no corresponde al rango de fechas permitido"
+                            title: "Fecha de chequeo no válida",
+                            text: "La fecha de chequeo no corresponde al rango de fechas permitido"
                         }).then((resultado) => {
-                            location.href="modificacion_contingencia.php";
+                            location.href="modificacion_chequeo.php";
                         });
                     });
                 break;
@@ -171,13 +191,13 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "success",
-                            title: "Modificación exitosa de contingencia",
-                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia fue exitosamente modificada en el sistema: </p> \\n"
+                            title: "Modificación exitosa de chequeo",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente chequeo fue exitosamente modificado en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
-                            . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""
+                            . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {
-                            location.href="modificacion_contingencia.php";
+                            location.href="modificacion_chequeo.php";
                         });
                     });
                 break;
@@ -187,9 +207,9 @@
                         Swal.fire({
                             icon: "error",
                             title: "Error desconocido",
-                            text: "Ocurrió un error al tratar de modificar la contingencia"
+                            text: "Ocurrió un error al tratar de modificar el chequeo"
                         }).then((resultado) => {
-                            location.href="modificacion_contingencia.php";
+                            location.href="modificacion_chequeo.php";
                         });
                     });
                 break;

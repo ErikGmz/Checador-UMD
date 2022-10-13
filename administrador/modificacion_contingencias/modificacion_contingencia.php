@@ -192,9 +192,9 @@
 
                             <!--Solicitud de hora final-->
                             <div class="col-12 col-md-6 mb-4">
-                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida (*) </label>
+                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida </label>
                                 <input type="text" class="form-control" id="hora-final" 
-                                autocomplete="OFF" required name="hora-final" placeholder="12:00" value="<?=$datos_contingencia[1]?>"
+                                autocomplete="OFF" name="hora-final" placeholder="12:00" value="<?=$datos_contingencia[1]?>"
                                 pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 

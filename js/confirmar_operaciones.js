@@ -244,3 +244,22 @@ function confirmarRegistroChequeo(evento) {
         }
     });
 }
+
+// Función para confirmar la
+// modificación de un administrador.
+function confirmarModificacionChequeo(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Modificación de un chequeo",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea modificar el chequeo?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}

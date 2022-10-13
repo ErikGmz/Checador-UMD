@@ -41,7 +41,7 @@
         <link rel="stylesheet" href="../../css/dselect.min.css">
         
         <!--Título de la página-->
-        <title> Modificación de contingencia </title>
+        <title> Modificación de chequeo </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -65,16 +65,16 @@
             <div class="container-xl my-5">
                 <div class="jumbotron fondo-pantone-azul-claro">
                     <h1 class="fs-2 fw-semibold text-center"> 
-                        Modificación de contingencia del sistema
+                        Modificación de chequeo del sistema
                     </h1>
                     <hr class="my-4 border border-1 border-dark">
 
-                    <!--Formulario de selección de la contingencia registrada-->
+                    <!--Formulario de selección del chequeo registrado-->
                     <?php
                     if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                     ?>
                     <form method="GET" action="<?=$_SERVER['PHP_SELF']?>" class="mb-0">
-                        <h4 class="mb-4 text-center"> Datos de la contingencia </h4>
+                        <h4 class="mb-4 text-center"> Datos del chequeo </h4>
                         <div class="row">
                             <!--Selección del colaborador-->
                             <div class="col-12 col-md-6 mb-4">
@@ -97,11 +97,11 @@
                                 </select>
                             </div>
 
-                            <!--Selección de la fecha de contingencia-->
+                            <!--Selección de la fecha de chequeo-->
                             <div class="col-12 col-md-6 mb-4">
-                                <label for="fecha-registro" class="form-label fw-semibold"> Fecha de contingencia (*) </label>
-                                <input type="date" name="fecha-registro" value="2021-01-01" min="2021-01-01" max="2030-12-30" 
-                                class="form-control" id="fecha-registro" autocomplete="OFF" required>
+                                <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
+                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01" max="2030-12-30" 
+                                class="form-control" id="fecha-chequeo" autocomplete="OFF" required>
                             </div>
                         </div>
 
@@ -113,23 +113,23 @@
                     </form>
 
                     <?php
-                    if(isset($_GET["ID-colaborador"], $_GET["fecha-registro"])) {
-                        # Buscar la contingencia introducida 
+                    if(isset($_GET["ID-colaborador"], $_GET["fecha-chequeo"])) {
+                        # Buscar el chequeo introducido 
                         # en la información de búsqueda.
-                        if($contingencia = $conexion_base->query("SELECT TIME_FORMAT(hora_inicial, '%H:%i') AS hora_inicial,
-                        TIME_FORMAT(hora_final, '%H:%i') AS hora_final, observaciones FROM contingencia WHERE ID_colaborador = 
-                        '" . $_GET["ID-colaborador"] . "' AND fecha = '" . $_GET["fecha-registro"] . "';")) {
-                            if($contingencia->num_rows > 0) {
-                                $datos_contingencia = $contingencia->fetch_row();
+                        if($chequeo = $conexion_base->query("SELECT TIME_FORMAT(hora_inicial, '%H:%i:%s') AS hora_inicial,
+                        TIME_FORMAT(hora_final, '%H:%i:%s') AS hora_final, bloqueo_registro FROM chequeo WHERE ID_colaborador = 
+                        '" . $_GET["ID-colaborador"] . "' AND fecha_chequeo = '" . $_GET["fecha-chequeo"] . "';")) {
+                            if($chequeo->num_rows > 0) {
+                                $datos_chequeo = $chequeo->fetch_row();
                                 $valido = true;
                                 ?>
                                 <hr class="my-4 border border-1 border-dark">
                                 <?php
                     ?>
-                    <form method="POST" action="procesar_modificacion_contingencia.php" 
-                    class="mb-0" id="modificacion-contingencia">
+                    <form method="POST" action="procesar_modificacion_chequeo.php" 
+                    class="mb-0" id="modificacion-chequeo">
                         <div class="row mb-2">
-                            <!--Datos de la contingencia-->
+                            <!--Datos del chequeo-->
                             <div class="col-12 text-center mb-4">
                                 <h4 class="mb-0"> Modificación de datos </h4>
                             </div>
@@ -138,8 +138,8 @@
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="colaboradores" class="form-label fw-semibold"> Colaborador (*) </label>
                                 <select class="form-select" name="ID-colaborador" id="nuevos-colaboradores" 
-                                onchange="verificarContingencia(document.getElementById('nuevos-colaboradores').value, 
-                                document.getElementById('nueva-fecha-registro').value, 'nueva-fecha-registro', 2)" required>
+                                onchange="verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
+                                document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 2)" required>
                                     <?php
                                         # Obtener todos los colaboradores registrados.
                                         $colaboradores = $conexion_base->query("SELECT ID, CONCAT_WS(' ', nombres, apellido_paterno, apellido_materno) 
@@ -160,18 +160,17 @@
                                     ?>
                                 </select>
                                 <div class="form-text"> 
-                                    Campo obligatorio. Si no se selecciona ninguna opción, entonces 
-                                    el sistema escogerá por defecto la primera carrera de la lista.
+                                    Campo obligatorio.
                                 </div>
                             </div>
 
-                            <!--Selección de la fecha de contingencia-->
+                            <!--Selección de la fecha de chequeo-->
                             <div class="col-12 col-md-6 mb-4">
-                                <label for="fecha-registro" class="form-label fw-semibold"> Fecha de contingencia (*) </label>
-                                <input type="date" name="fecha-registro" value="<?=$_GET["fecha-registro"]?>" min="2021-01-01" max="2030-12-30" 
-                                class="form-control" id="nueva-fecha-registro" autocomplete="OFF" required
-                                onchange="verificarContingencia(document.getElementById('nuevos-colaboradores').value, 
-                                document.getElementById('nueva-fecha-registro').value, 'nueva-fecha-registro', 2)">
+                                <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
+                                <input type="date" name="fecha-chequeo" value="<?=$_GET["fecha-chequeo"]?>" min="2021-01-01" max="2030-12-30" 
+                                class="form-control" id="nueva-fecha-chequeo" autocomplete="OFF" required
+                                onchange="verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
+                                document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 2)">
                                 <div class="form-text"> 
                                     Campo obligatorio. El rango de fechas debe 
                                     encontrarse entre 01-01-2021 y 30-12-2030. Cada colaborador
@@ -183,30 +182,33 @@
                             <div class="col-12 col-md-6 mb-4 mb-md-0">
                                 <label for="hora-inicial" class="form-label fw-semibold"> Hora de entrada (*) </label>
                                 <input type="text" class="form-control" id="hora-inicial" 
-                                autocomplete="OFF" required name="hora-inicial" placeholder="08:00" value="<?=$datos_contingencia[0]?>"
-                                pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
+                                autocomplete="OFF" required name="hora-inicial" placeholder="08:00:00" value="<?=$datos_chequeo[0]?>"
+                                pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d|24:00:00$"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Formato de 00:00:00 a 24:00:00 horas.
                                 </div>
                             </div>
 
                             <!--Solicitud de hora final-->
-                            <div class="col-12 col-md-6 mb-4">
-                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida (*) </label>
+                            <div class="col-12 col-md-6 mb-4 ">
+                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida </label>
                                 <input type="text" class="form-control" id="hora-final" 
-                                autocomplete="OFF" required name="hora-final" placeholder="12:00" value="<?=$datos_contingencia[1]?>"
-                                pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
+                                autocomplete="OFF" name="hora-final" placeholder="12:00:00" value="<?=$datos_chequeo[1]?>"
+                                pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d|24:00:00$"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Formato de 00:00:00 a 24:00:00 horas.
                                 </div>
                             </div>
 
-                            <!--Solicitud de observaciones-->
-                            <div class="col-12">
-                                <label for="observaciones" class="form-label fw-semibold"> Observaciones (*) </label>
-                                <textarea class="form-control" name="observaciones" id="observaciones" rows="3" required><?php echo $datos_contingencia[2] ?></textarea>
+                            <!--Selección del estado del chequeo-->
+                            <div class="col-12 col-md-6 mb-0">
+                                <label for="estado-chequeo" class="form-label fw-semibold"> Estado del chequeo (*) </label>
+                                <select class="form-select" name="estado-chequeo" id="estado-chequeo" required>
+                                    <option value="0" <?php if(!$datos_chequeo[2]) echo "selected" ?>> Desbloqueado </option>
+                                    <option value="1" <?php if($datos_chequeo[2]) echo "selected" ?>> Bloqueado </option>
+                                </select>
                                 <div class="form-text"> 
                                     Campo obligatorio.
                                 </div>
@@ -217,14 +219,14 @@
                             </div>
                         </div>
 
-                        <!--Botón de registro de contingencia-->
+                        <!--Botón de registro de chequeo-->
                         <div class="text-center">
                             <button class="btn btn-primary">
-                                Modificar contingencia
+                                Modificar chequeo
                             </button>
                         </div>
                         <input type="hidden" id="anterior-ID-colaborador" name="anterior-ID-colaborador" value="<?=$_GET["ID-colaborador"]?>">
-                        <input type="hidden" id="fecha-anterior" name="fecha-anterior" value="<?=$_GET["fecha-registro"]?>">
+                        <input type="hidden" id="fecha-anterior" name="fecha-anterior" value="<?=$_GET["fecha-chequeo"]?>">
                     </form>
                     <?php
                                 }
@@ -233,7 +235,7 @@
                                         <hr class="my-4 border border-1 border-dark">
                                         <h4 class="text-center mt-4 mb-0">
                                             <span class="badge bg-danger py-3">
-                                                La contingencia no fue encontrada
+                                                El chequeo no fue encontrado
                                             </span>
                                         </h4>
                                     <?php
@@ -244,12 +246,12 @@
                                     <hr class="my-4 border border-1 border-dark">
                                     <h4 class="text-center mt-4 mb-0">
                                         <span class="badge bg-danger py-3">
-                                            La contingencia no fue encontrada
+                                            La chequeo no fue encontrado
                                         </span>
                                     </h4>
                                 <?php
                             }
-                            @$contingencia->close();
+                            @$chequeo->close();
                         }
                     }
                     else {
@@ -277,7 +279,7 @@
         <script src="../../js/bootstrap/jquery-3.6.0.min.js"> </script>
         <script src="../../js/bootstrap/bootstrap.bundle.min.js"> </script>
         <script src="../../js/dselect.min.js"> </script>
-        <script src="../../js/peticiones_ajax/verificar_contingencia.js"> </script>
+        <script src="../../js/peticiones_ajax/verificar_chequeo.js"> </script>
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script type="text/javascript">
             document.body.onload = () => {
@@ -287,8 +289,8 @@
             <?php
             if(isset($colaboradores, $_GET["ID-colaborador"], $valido) && $colaboradores->num_rows > 0 && @$valido) {
             ?>
-                verificarContingencia(document.getElementById('nuevos-colaboradores').value, 
-                document.getElementById('nueva-fecha-registro').value, 'nueva-fecha-registro', 2)
+                verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
+                document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 2)
             <?php
             }
             ?>
@@ -301,13 +303,14 @@
             <?php
             if(isset($colaboradores) && $colaboradores->num_rows > 0) {
             ?>
-                document.getElementById("fecha-registro").value = new Date().toISOString().substring(0, 10);
+                document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString().split("/").reverse().join("-");
                 dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
             <?php
                 if(isset($_GET["ID-colaborador"], $valido) && @$valido) {
                 ?>
-                    document.getElementById("modificacion-contingencia").addEventListener("submit", confirmarModificacionContingencia);
+                    document.getElementById("modificacion-chequeo").addEventListener("submit", confirmarModificacionChequeo);
                     dselect(document.getElementById("nuevos-colaboradores"), { search: true, maxHeight: "200px" });
+                    dselect(document.getElementById("estado-chequeo"), { maxHeight: "200px" });
                 <?php
                 }
             }
