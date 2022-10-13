@@ -111,11 +111,20 @@
                                 <div class="form-text"> Campo obligatorio. Se admiten palabras adicionales</div>
                             </div>
 
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-6 mb-4">
                                 <label for="segundo-apellido" class="form-label fw-semibold"> Apellido materno </label>
                                 <input type="text" class="form-control mayusculas-iniciales" id="segundo-apellido" 
                                 autocomplete="OFF" name="segundo-apellido" pattern="^[a-zA-ZÁÉÍÓÚáéíóúñÑ ]{1,}$">
                                 <div class="form-text"> Campo opcional. Se admiten apellidos adicionales. </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 mb-0">
+                                <label for="fecha-nacimiento" class="form-label fw-semibold"> Fecha de nacimiento </label>
+                                <input type="date" name="fecha-nacimiento" min="1900-01-01" class="form-control" id="fecha-nacimiento" autocomplete="OFF">
+                                <div class="form-text"> 
+                                    Campo opcional. La fecha introducida por defecto corresponde 
+                                    a 20 años anteriores al día actual del calendario del sistema operativo.
+                                </div>
                             </div>
 
                             <div class="col-12 my-4">
@@ -166,7 +175,7 @@
                                 pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Campo obligatorio. Formato de 08:00 a 21:00 horas.
                                 </div>
                             </div>
 
@@ -177,7 +186,7 @@
                                 pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Campo obligatorio. Formato de 08:00 a 21:00 horas.
                                 </div>
                             </div>
 
@@ -225,6 +234,11 @@
             });
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
             document.getElementById("registro-colaborador").addEventListener("submit", confirmarRegistroColaborador);
+
+            let fechaActual = new Date();
+            document.getElementById("fecha-nacimiento").setAttribute("max", fechaActual.toLocaleDateString().split("/").reverse().join("-"));
+            fechaActual.setFullYear(fechaActual.getFullYear() - 21);
+            document.getElementById("fecha-nacimiento").value = fechaActual.toLocaleDateString().split("/").reverse().join("-");
 
             dselect(document.getElementById("carreras"), { search: true, maxHeight: "200px" });
             dselect(document.getElementById("modalidades"), { search: false });    

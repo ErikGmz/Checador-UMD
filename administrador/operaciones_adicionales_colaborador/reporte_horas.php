@@ -50,7 +50,8 @@
                 $chequeos = $conexion_base->query("SELECT chequeo.fecha_chequeo, chequeo.hora_inicial, 
                 chequeo.hora_final, chequeo.tiempo_total, contingencia.tiempo_total AS tiempo_contingencia, 
                 chequeo.bloqueo_registro FROM chequeo LEFT JOIN contingencia ON chequeo.fecha_chequeo = contingencia.fecha
-                WHERE chequeo.ID_colaborador = '" . @$_GET["ID-colaborador"] . "';");
+                AND chequeo.ID_colaborador = contingencia.ID_colaborador WHERE chequeo.ID_colaborador = '" . @$_GET["ID-colaborador"] 
+                . "'ORDER BY fecha_chequeo ASC;");
 
                 # Obtener el conteo de horas totales 
                 # de colaboración del usuario.

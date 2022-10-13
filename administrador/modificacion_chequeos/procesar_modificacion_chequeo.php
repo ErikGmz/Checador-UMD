@@ -57,12 +57,7 @@
                                 else {
                                     $registro_hora_final = "NULL";
                                 }
-                                echo $registro_hora_final;
 
-                                echo "UPDATE chequeo SET fecha_chequeo = '" . $_POST["fecha-chequeo"] 
-                                . "', hora_inicial = '" . date("H:i:s", strtotime($tiempo_inicial)) . "', hora_final = $registro_hora_final, "
-                                . " bloqueo_registro = '" . $_POST["estado-chequeo"] . "', ID_colaborador = '" . $_POST["ID-colaborador"] 
-                                . "' WHERE ID_colaborador = '" . $_POST["anterior-ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-anterior"] . "'";
                                 if($conexion_base->query("UPDATE chequeo SET fecha_chequeo = '" . $_POST["fecha-chequeo"] 
                                 . "', hora_inicial = '" . date("H:i:s", strtotime($tiempo_inicial)) . "', hora_final = $registro_hora_final, "
                                 . " bloqueo_registro = '" . $_POST["estado-chequeo"] . "', ID_colaborador = '" . $_POST["ID-colaborador"] 

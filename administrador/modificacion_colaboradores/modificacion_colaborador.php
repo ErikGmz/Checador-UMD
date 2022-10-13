@@ -253,7 +253,7 @@
                                 value="<?=$datos_usuario[6]?>"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Campo obligatorio. Formato de 08:00 a 21:00 horas.
                                 </div>
                             </div>
 
@@ -265,7 +265,7 @@
                                 value="<?=$datos_usuario[7]?>"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
-                                    Formato de 08:00 a 21:00 horas.
+                                    Campo obligatorio. Formato de 08:00 a 21:00 horas.
                                 </div>
                             </div>
 

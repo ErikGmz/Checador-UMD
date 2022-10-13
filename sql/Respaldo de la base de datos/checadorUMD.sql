@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-10-2022 a las 05:49:22
--- Versión del servidor: 10.4.25-MariaDB
--- Versión de PHP: 8.1.10
+-- Tiempo de generación: 13-10-2022 a las 23:20:56
+-- Versión del servidor: 10.4.24-MariaDB
+-- Versión de PHP: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -158,6 +158,7 @@ CREATE TABLE `colaborador` (
   `nombres` varchar(100) NOT NULL,
   `apellido_paterno` varchar(45) NOT NULL,
   `apellido_materno` varchar(45) DEFAULT NULL,
+  `fecha_nacimiento` date DEFAULT NULL,
   `numero_retardos` int(11) NOT NULL DEFAULT 0,
   `numero_desbloqueos` int(11) NOT NULL DEFAULT 0,
   `ID_carrera` int(10) UNSIGNED NOT NULL,
@@ -434,6 +435,8 @@ ALTER TABLE `colaborador`
   ADD CONSTRAINT `fk_Colaborador_Horario1` FOREIGN KEY (`ID_horario`) REFERENCES `horario` (`ID`),
   ADD CONSTRAINT `fk_Colaborador_Modalidad_Colaborador1` FOREIGN KEY (`ID_modalidad`) REFERENCES `modalidad_colaborador` (`ID`);
 
+ALTER TABLE `colaborador` 
+  ADD CONSTRAINT `CK_Fecha_Nacimiento` CHECK (`fecha_nacimiento` >= "1900-01-01");
 --
 -- Filtros para la tabla `contingencia`
 --
