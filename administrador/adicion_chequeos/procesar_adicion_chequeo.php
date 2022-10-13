@@ -8,10 +8,13 @@
         die();
     }
 
+    # Definir la zona horaria.
+    date_default_timezone_set('America/Mexico_City');
+
     # Verificar que se haya enviado un
-    # formulario de modificación de administrador.
-    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-administrador"], $_POST["clave-original"], 
-    $_POST["clave-nueva"], $_POST["confirmacion-clave-nueva"], $_POST["anterior-ID-administrador"])) {
+    # formulario de adición de chequeo.
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-chequeo"], 
+    $_POST["hora-inicial"], $_POST["hora-final"], $_POST["estado-chequeo"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -20,52 +23,43 @@
         }
 
         # Verificar si los datos especificados no corresponden
-        # a otro administrador ya existente en el sistema.
+        # a un chequeo ya existente en el sistema.
         try {
-            if($resultados = $conexion_base->query("SELECT * FROM coordinador WHERE 
-            ID = '" . $_POST["ID-administrador"] . "';")) {
-                if($resultados->num_rows > 0 && $_POST["ID-administrador"] != $_POST["anterior-ID-administrador"]) {
+            if($resultados = $conexion_base->query("SELECT * FROM chequeo WHERE 
+            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-chequeo"] . "';")) {
+                if($resultados->num_rows > 0) {
                     $resultado = 2;
                 }
                 else {
-                    if($consulta_clave = $conexion_base->query("SELECT clave FROM coordinador WHERE 
-                    ID = '" . $_POST["anterior-ID-administrador"] . "' LIMIT 1;")) {
-                        if($consulta_clave->num_rows <= 0) {
-                            $resultado = 1;
-                        }
-                        else {
-                            $clave = $consulta_clave->fetch_row();
-                            if($clave[0] != md5($_POST["clave-original"])) {
-                                $resultado = 3;
-                            }
-                            else {
-                                if($_POST["clave-nueva"] != $_POST["confirmacion-clave-nueva"]) {
-                                    $resultado = 4;
-                                }
-                                else {
-                                    # Actualizar el administrador en la base de datos.
-                                    try {
-                                        if($conexion_base->query("UPDATE coordinador SET ID = '" . $_POST["ID-administrador"] . "', "
-                                        . "clave = MD5('" . $_POST["clave-nueva"] . "') WHERE ID = '" 
-                                        . $_POST["anterior-ID-administrador"] . "';")) {
-                                            $resultado = 5;
-                                            if($_SESSION["ID_administrador"] == $_POST["anterior-ID-administrador"]) {
-                                                $_SESSION["ID_administrador"] = $_POST["ID-administrador"];
-                                            }
-                                        }
-                                        else {
-                                            $resultado = 1;
-                                        }
-                                    }
-                                    catch(Exception $e) {
-                                        $resultado = 1;
-                                    }
-                                }
-                            }
-                        }
+                    $tiempo_inicial = date("1970-01-01 " . $_POST["hora-inicial"]);
+                    $tiempo_final = date("1970-01-01 " . $_POST["hora-final"]);
+                    if($tiempo_final <= $tiempo_inicial || $tiempo_inicial > date("1970-01-02 00:00")
+                    || $tiempo_inicial < date("1970-01-01 00:00") || $tiempo_final < date("1970-01-01 00:00")
+                    || $tiempo_final > date("1970-01-02 00:00")) {
+                        $resultado = 3;
                     }
                     else {
-                        $resultado = 1;
+                        if(strtotime($_POST["fecha-chequeo"]) >= strtotime("2021-01-01") &&
+                        strtotime($_POST["fecha-chequeo"]) <= strtotime("2030-12-30")) {
+                            # Agregar el chequeo a la base de datos.
+                            try {
+                                if($conexion_base->query("INSERT INTO chequeo(fecha_chequeo, hora_inicial, hora_final, bloqueo_registro, ID_colaborador) "
+                                . "VALUES('" . $_POST["fecha-chequeo"] . "', '" . date("H:i:s", strtotime($tiempo_inicial)) . "', 
+                                '" . date("H:i:s", strtotime($tiempo_final)) . "', '" . $_POST["estado-chequeo"] . "', '"
+                                . $_POST["ID-colaborador"] . "');"))  {
+                                    $resultado = 5;
+                                }
+                                else {
+                                    $resultado = 1;
+                                }
+                            }
+                            catch(Exception $e) {
+                                $resultado = 1;
+                            }
+                        }
+                        else {
+                            $resultado = 4;
+                        }
                     }
                 }
                 $resultados->close();
@@ -102,7 +96,7 @@
         <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
 
         <!--Título de la página-->
-        <title> Resultado de la modificación del administrador </title>
+        <title> Resultado de la adición del chequeo </title>
 
         <!--Ícono de la página-->
         <link rel="apple-touch-icon" sizes="76x76" href="../../favicon/apple-touch-icon.png">
@@ -125,10 +119,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Modificación no exitosa de administrador",
-                            text: "Ocurrió un error al tratar de modificar al administrador"
+                            title: "Adición no exitosa de chequeo",
+                            text: "Ocurrió un error al tratar de añadir el chequeo"
                         }).then((resultado) => {
-                            location.href="modificacion_administrador.php";
+                            location.href="adicion_chequeo.php";
                         });
                     });
                 break;
@@ -137,12 +131,13 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Administrador ya existente",
-                            html: <?php echo "\"<p class='mb-4'> El siguiente administrador ya existe en el sistema: </p> \\n"
-                            . "<p class='mt-2 mb-0'> <b> Administrador: </b> " . @$_POST["ID-administrador"] . " </p>\""
+                            title: "Chequeo ya existente",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente chequeo ya existe en el sistema: </p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
+                            . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {
-                            location.href="modificacion_administrador.php";
+                            location.href="adicion_chequeo.php";
                         });
                     });
                 break;
@@ -151,10 +146,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Fallo de confirmación de contraseña original",
-                            text: "La contraseña original del administrador no concuerda con la introducida"
+                            title: "Rango de horario incorrecto",
+                            text: "Las horas inicial y final indicadas no son válidas"
                         }).then((resultado) => {
-                            location.href="modificacion_administrador.php";
+                            location.href="adicion_chequeo.php";
                         });
                     });
                 break;
@@ -163,10 +158,10 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Fallo de confirmación de contraseña nueva",
-                            text: "La contraseña nueva del administrador no concuerda con la confirmación introducida"
+                            title: "Fecha de chequeo no válida",
+                            text: "La fecha de chequeo no corresponde al rango de fechas permitido"
                         }).then((resultado) => {
-                            location.href="modificacion_administrador.php";
+                            location.href="adicion_chequeo.php";
                         });
                     });
                 break;
@@ -175,12 +170,13 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "success",
-                            title: "Modificación exitosa de administrador",
-                            html: <?php echo "\"<p class='mb-4'> El siguiente administrador fue exitosamente modificado en el sistema: </p> \\n"
-                            . "<p class='mt-2 mb-0'> <b> Administrador: </b> " . @$_POST["ID-administrador"] . " </p>\""
+                            title: "Adición exitosa de chequeo",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente chequeo fue exitosamente registrado en el sistema: </p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
+                            . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {
-                            location.href="modificacion_administrador.php";
+                            location.href="adicion_chequeo.php";
                         });
                     });
                 break;
@@ -190,9 +186,9 @@
                         Swal.fire({
                             icon: "error",
                             title: "Error desconocido",
-                            text: "Ocurrió un error al tratar de modificar al administrador"
+                            text: "Ocurrió un error al tratar de añadir el chequeo"
                         }).then((resultado) => {
-                            location.href="modificacion_administrador.php";
+                            location.href="adicion_chequeo.php";
                         });
                     });
                 break;

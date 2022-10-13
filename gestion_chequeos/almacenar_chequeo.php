@@ -39,40 +39,48 @@
                             try {
                                 if($conexion_base->query("INSERT INTO chequeo(fecha_chequeo, hora_inicial, ID_colaborador)
                                 VALUES('" . date("Y-m-d") . "', '$hora_registro', '" . $_POST["ID"] . "');")) {
-                                    # Verificar si se llegó 15 minutos después de
-                                    # la hora inicial (esquema de retardos).
-                                    if(strtotime("1970-01-01 $hora_registro UTC") - strtotime("1970-01-01 " . $datos_colaborador[7] . " UTC") >= strtotime("1970-01-01 00:15:00 UTC")) {
-                                        $incremento_retardos = (int)$datos_colaborador[6] + 1;
+                                    # Verificar si la fecha actual está en el
+                                    # rango permitido (01-01-2021 a 30-12-2030).
+                                    if(strtotime(date("Y-m-d")) >= strtotime("2021-01-01") &&
+                                    strtotime(date("Y-m-d")) <= strtotime("2030-12-30")) {
+                                        # Verificar si se llegó 15 minutos después de
+                                        # la hora inicial (esquema de retardos).
+                                        if(strtotime("1970-01-01 $hora_registro UTC") - strtotime("1970-01-01 " . $datos_colaborador[7] . " UTC") >= strtotime("1970-01-01 00:15:00 UTC")) {
+                                            $incremento_retardos = (int)$datos_colaborador[6] + 1;
 
-                                        # Actualizar los retardos en los datos del colaborador.
-                                        if($conexion_base->query("UPDATE colaborador SET numero_retardos = '$incremento_retardos'
-                                        WHERE ID = '" . $_POST["ID"] . "';")) {
-                                            if($incremento_retardos <= 2) {
-                                                $resultado = 8;
-                                            }
-                                            else {
-                                                # Definir como bloqueado al chequeo.
-                                                if($conexion_base->query("UPDATE chequeo SET bloqueo_registro = '1' WHERE
-                                                fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "';")) {
-                                                    $resultado = 9;
+                                            # Actualizar los retardos en los datos del colaborador.
+                                            if($conexion_base->query("UPDATE colaborador SET numero_retardos = '$incremento_retardos'
+                                            WHERE ID = '" . $_POST["ID"] . "';")) {
+                                                if($incremento_retardos <= 2) {
+                                                    $resultado = 8;
                                                 }
                                                 else {
-                                                    $resultado = 2;
+                                                    # Definir como bloqueado al chequeo.
+                                                    if($conexion_base->query("UPDATE chequeo SET bloqueo_registro = '1' WHERE
+                                                    fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "';")) {
+                                                        $resultado = 9;
+                                                    }
+                                                    else {
+                                                        $resultado = 2;
+                                                    }
                                                 }
+                                            }
+                                            else {
+                                                $resultado = 2;
                                             }
                                         }
                                         else {
-                                            $resultado = 2;
+                                            $incremento_retardos = (int)$datos_colaborador[6];
+                                            if($incremento_retardos <= 2) {
+                                                $resultado = 1;
+                                            }
+                                            else {
+                                                $resultado = 9;
+                                            }
                                         }
                                     }
                                     else {
-                                        $incremento_retardos = (int)$datos_colaborador[6];
-                                        if($incremento_retardos <= 2) {
-                                            $resultado = 1;
-                                        }
-                                        else {
-                                            $resultado = 9;
-                                        }
+                                        $resultado = 12;
                                     }
                                 } 
                                 else {
@@ -343,6 +351,18 @@
                             icon: 'error',
                             title: 'Error de autenticación',
                             text: 'El colaborador especificado es inexistente'
+                        }).then((resultado) => {
+                            location.href="../index.php";
+                        });
+                    });
+                break;
+
+                case 12:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Fecha de chequeo no válida",
+                            text: "La fecha de chequeo no corresponde al rango de fechas permitido"
                         }).then((resultado) => {
                             location.href="../index.php";
                         });

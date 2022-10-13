@@ -160,7 +160,8 @@
                                     ?>
                                 </select>
                                 <div class="form-text"> 
-                                    Campo obligatorio.
+                                    Campo obligatorio. Si no se selecciona ninguna opción, entonces 
+                                    el sistema escogerá por defecto la primera carrera de la lista.
                                 </div>
                             </div>
 
@@ -172,8 +173,8 @@
                                 onchange="verificarContingencia(document.getElementById('nuevos-colaboradores').value, 
                                 document.getElementById('nueva-fecha-registro').value, 'nueva-fecha-registro', 2)">
                                 <div class="form-text"> 
-                                    Campo obligatorio. El rango de fechas admitido se encuentra
-                                    entre 01-01-2021 y 30-12-2030. Cada colaborador
+                                    Campo obligatorio. El rango de fechas debe 
+                                    encontrarse entre 01-01-2021 y 30-12-2030. Cada colaborador
                                     puede tener máximo una contingencia por día.
                                 </div>
                             </div>
@@ -300,7 +301,7 @@
             <?php
             if(isset($colaboradores) && $colaboradores->num_rows > 0) {
             ?>
-                document.getElementById("fecha-registro").value = new Date().toLocaleDateString().split("/").reverse().join("-");;
+                document.getElementById("fecha-registro").value = new Date().toISOString().substring(0, 10);
                 dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
             <?php
                 if(isset($_GET["ID-colaborador"], $valido) && @$valido) {

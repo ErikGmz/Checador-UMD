@@ -225,3 +225,22 @@ function confirmarEliminacionAdministrador(evento) {
         }
     });
 }
+
+// Función para confirmar la
+// adición de un chequeo.
+function confirmarRegistroChequeo(evento) {
+    evento.preventDefault();
+
+    Swal.fire({
+        icon: "question",
+        title: "Adición de un chequeo",
+        showConfirmButton: true,
+        confirmButtonText: "Sí",
+        showDenyButton: true,
+        text: "¿Está seguro de que realmente desea agregar el chequeo?"
+    }).then((resultado) => {
+        if(resultado.isConfirmed) {
+            evento.target.submit();
+        }
+    });
+}

@@ -1,6 +1,6 @@
 <?php
-    # Código para verificar si una contingencia 
-    # ya se encuentra registrada o no.
+    # Código para verificar si un chequeo 
+    # ya se encuentra registrado o no.
     session_start();
 
     # Verificar si algún administrador no
@@ -10,7 +10,7 @@
         die();
     }
 
-    if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["ID-colaborador"], $_GET["fecha-registro"])) {
+    if($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["ID-colaborador"], $_GET["fecha-chequeo"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -19,9 +19,9 @@
             die();
         }
 
-        # Verificar si la contingencia está registrada.
-        if($colaborador = $conexion_base->query("SELECT * FROM contingencia WHERE 
-        ID_colaborador = '" . $_GET["ID-colaborador"] . "' AND fecha = '" . $_GET["fecha-registro"] . "';")) {
+        # Verificar si el chequeo está registrado.
+        if($colaborador = $conexion_base->query("SELECT * FROM chequeo WHERE 
+        ID_colaborador = '" . $_GET["ID-colaborador"] . "' AND fecha_chequeo = '" . $_GET["fecha-chequeo"] . "';")) {
             if($colaborador->num_rows > 0) {
                 echo "true";
             }
