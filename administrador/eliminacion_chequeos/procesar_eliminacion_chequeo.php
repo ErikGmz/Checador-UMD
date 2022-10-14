@@ -122,7 +122,7 @@
                             title: "Chequeo inexistente",
                             html: <?php echo "\"<p class='mb-4'> El siguiente chequeo es inexistente en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
-                            . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""
+                            . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {
                             location.href="eliminacion_chequeo.php";
@@ -149,7 +149,7 @@
                             title: "Eliminación exitosa de chequeo",
                             html: <?php echo "\"<p class='mb-4'> El siguiente chequeo fue exitosamente eliminado del sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
-                            . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""
+                            . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {
                             location.href="eliminacion_chequeo.php";
