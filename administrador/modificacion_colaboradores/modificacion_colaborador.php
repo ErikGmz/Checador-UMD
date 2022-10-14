@@ -194,7 +194,7 @@
                                 <div class="form-text"> Campo obligatorio. </div>
                             </div>
 
-                            <div class="col-12 col-lg-6 mb-3">
+                            <div class="col-12 col-lg-6 mb-0">
                                 <label for="fecha-nacimiento" class="form-label fw-semibold"> Fecha de nacimiento </label>
                                 <input type="date" name="fecha-nacimiento" min="1900-01-01" value="<?=$datos_usuario[10]?>" class="form-control" id="fecha-nacimiento" autocomplete="OFF">
                                 <div class="form-text"> 

@@ -103,12 +103,12 @@
                                             </div>
 
                                             <div class="col-12 col-lg-6 mb-3 mb-lg-0">
-                                                <label for="fecha-inicial" class="form-label fw-semibold"> Fecha inicial </label>
+                                                <label for="fecha-inicial" class="form-label fw-semibold"> Fecha inicial de revisión </label>
                                                 <input type="date" name="fecha-inicial" value="2021-01-01" min="2021-01-01" max="2030-12-30" class="form-control text-center mx-auto" id="fecha-inicial" autocomplete="OFF" required>
                                             </div>
 
                                             <div class="col-12 col-lg-6">
-                                                <label for="fecha-final" class="form-label fw-semibold"> Fecha final </label>
+                                                <label for="fecha-final" class="form-label fw-semibold"> Fecha final de revisión </label>
                                                 <input type="date" name="fecha-final"  min="2021-01-02" max="2030-12-31" class="form-control text-center mx-auto" id="fecha-final" autocomplete="OFF" required>
                                             </div>
                                         </div>

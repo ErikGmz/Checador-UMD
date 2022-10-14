@@ -28,7 +28,7 @@
     if(isset($_GET["ID-colaborador"])) {
         if($usuario = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
         colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad, colaborador.numero_retardos,
-        horario.hora_inicial, horario.hora_final, colaborador.numero_desbloqueos
+        horario.hora_inicial, horario.hora_final, colaborador.numero_desbloqueos, colaborador.fecha_nacimiento
         FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
         JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
         JOIN horario ON colaborador.ID_horario = horario.ID
@@ -44,6 +44,7 @@
                 $numero_desbloqueos = $resultados[9];
                 $hora_inicial = $resultados[7];
                 $hora_final = $resultados[8];
+                $fecha_nacimiento = $resultados[10];
 
                 # Obtener todos los chequeos realizados por
                 # el colaborador, respetando el rango de fechas.
@@ -220,6 +221,16 @@
                                             <p class="fw-semibold mb-2">
                                                 Nombre: <?php echo $nombre_colaborador ?>
                                             </p>
+
+                                            <?php
+                                            if(isset($fecha_nacimiento)) {
+                                            ?>
+                                            <p class="fw-semibold mb-2">
+                                                Fecha de nacimiento: <?php echo date("d-m-Y", strtotime($fecha_nacimiento)) ?>
+                                            </p>
+                                            <?php
+                                            }
+                                            ?>
 
                                             <p class="fw-semibold mb-2">
                                                 Carrera: <?php echo $carrera ?>
