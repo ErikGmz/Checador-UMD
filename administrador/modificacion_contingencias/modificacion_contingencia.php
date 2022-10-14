@@ -299,10 +299,19 @@
 
             <?php
             if(isset($colaboradores) && $colaboradores->num_rows > 0) {
-            ?>
-                document.getElementById("fecha-registro").value = new Date().toLocaleDateString().split("/").reverse().join("-");;
+                if(!isset($_GET["ID-colaborador"], $_GET["fecha-registro"])) {
+                ?>
+                    document.getElementById("fecha-registro").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                <?php
+                }
+                else {
+                ?>
+                    document.getElementById("fecha-registro").value = "<?=date("Y-m-d", strtotime($_GET["fecha-registro"]))?>";
+                <?php
+                }
+                ?>
                 dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
-            <?php
+                <?php
                 if(isset($_GET["ID-colaborador"], $valido) && @$valido) {
                 ?>
                     document.getElementById("modificacion-contingencia").addEventListener("submit", confirmarModificacionContingencia);

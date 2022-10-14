@@ -302,13 +302,23 @@
 
             <?php
             if(isset($colaboradores) && $colaboradores->num_rows > 0) {
-            ?>
-                document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                if(!isset($_GET["ID-colaborador"], $_GET["fecha-chequeo"])) {
+                ?>
+                    document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                <?php
+                }
+                else {
+                ?>
+                    document.getElementById("fecha-chequeo").value = "<?=date("Y-m-d", strtotime($_GET["fecha-chequeo"]))?>";
+                <?php
+                }
+                ?>
                 dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
-            <?php
+                <?php
                 if(isset($_GET["ID-colaborador"], $valido) && @$valido) {
                 ?>
                     document.getElementById("modificacion-chequeo").addEventListener("submit", confirmarModificacionChequeo);
+                    document.getElementById("fecha-chequeo").value = "<?=date("Y-m-d", strtotime($_GET["fecha-chequeo"]))?>";
                     dselect(document.getElementById("nuevos-colaboradores"), { search: true, maxHeight: "200px" });
                     dselect(document.getElementById("estado-chequeo"), { maxHeight: "200px" });
                 <?php
