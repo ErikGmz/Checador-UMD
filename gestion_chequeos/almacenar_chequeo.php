@@ -75,7 +75,14 @@
                                                 $resultado = 1;
                                             }
                                             else {
-                                                $resultado = 9;
+                                                # Definir como bloqueado al chequeo.
+                                                if($conexion_base->query("UPDATE chequeo SET bloqueo_registro = '1' WHERE
+                                                fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "';")) {
+                                                    $resultado = 9;
+                                                }
+                                                else {
+                                                    $resultado = 2;
+                                                }
                                             }
                                         }
                                     } 
