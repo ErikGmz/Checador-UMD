@@ -227,7 +227,7 @@
                 if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                 ?>
                     document.getElementById("registro-contingencia").addEventListener("submit", confirmarRegistroContingencia);
-                    document.getElementById("fecha-registro").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                    document.getElementById("fecha-registro").value = new Date().toLocaleDateString("fr-CA");
                     dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
                 <?php
                 }

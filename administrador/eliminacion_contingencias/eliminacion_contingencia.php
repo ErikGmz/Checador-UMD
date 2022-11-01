@@ -164,7 +164,7 @@
             <?php
                 if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                 ?>
-                    document.getElementById("fecha-registro").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                    document.getElementById("fecha-registro").value = new Date().toLocaleDateString("fr-CA");
                     document.getElementById("eliminacion-contingencia").addEventListener("submit", confirmarEliminacionContingencia);
                     dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
                 <?php

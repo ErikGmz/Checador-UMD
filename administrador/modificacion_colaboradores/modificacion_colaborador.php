@@ -362,7 +362,7 @@
                 if(isset($_GET["ID-colaborador"], $valido) && @$valido) {
                 ?>
                     document.getElementById("modificacion-colaborador").addEventListener("submit", confirmarModificacionColaborador);
-                    document.getElementById("fecha-nacimiento").setAttribute("max", new Date().toLocaleDateString().split("/").reverse().join("-"));
+                    document.getElementById("fecha-nacimiento").setAttribute("max", new Date().toLocaleDateString("fr-CA"));
                     dselect(document.getElementById("carreras"), { search: true, maxHeight: "200px" });
                     dselect(document.getElementById("modalidades"), { search: false });
                 <?php

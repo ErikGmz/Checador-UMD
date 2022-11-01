@@ -102,6 +102,18 @@
                 // Seleccionar automáticamente el recuadro
                 // del identificador del administrador.
                 enfocarRecuadro("ID-administrador");
+
+                document.getElementById("ID-administrador").addEventListener("keyup", (event) => {
+                    if(event.keyCode == 40) {
+                        enfocarRecuadro("clave-administrador");
+                    }
+                });
+
+                document.getElementById("clave-administrador").addEventListener("keyup", (event) => {
+                    if(event.keyCode == 38) {
+                        enfocarRecuadro("ID-administrador");
+                    }
+                });
             }
         </script>
     </body>
