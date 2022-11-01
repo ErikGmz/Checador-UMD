@@ -230,7 +230,7 @@
                 if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                 ?>
                     document.getElementById("registro-chequeo").addEventListener("submit", confirmarRegistroChequeo);
-                    document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                    document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString("fr-CA");
                     dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
                     dselect(document.getElementById("estado-chequeo"), { maxHeight: "200px" });
                 <?php

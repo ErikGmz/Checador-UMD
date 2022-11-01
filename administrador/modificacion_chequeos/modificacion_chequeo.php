@@ -304,7 +304,7 @@
             if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                 if(!isset($_GET["ID-colaborador"], $_GET["fecha-chequeo"])) {
                 ?>
-                    document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString().split("/").reverse().join("-");
+                    document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString("fr-CA");
                 <?php
                 }
                 else {

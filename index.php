@@ -124,13 +124,29 @@
                 // escoger el tipo de registro.
                 enfocarRecuadro("ID-colaborador");
             }
+            let casillaEntrada = document.getElementById("opcion-entrada");
+            let casillaSalida = document.getElementById("opcion-salida");
+            let recuadroID = document.getElementById("ID-colaborador");
 
-            document.getElementById("opcion-entrada").addEventListener("click", () => {
+            casillaEntrada.addEventListener("click", () => {
                 enfocarRecuadro("ID-colaborador");
             });
 
-            document.getElementById("opcion-salida").addEventListener("click", () => {
+            casillaSalida.addEventListener("click", () => {
                 enfocarRecuadro("ID-colaborador");
+            });
+
+            recuadroID.addEventListener("keyup", (event) => {
+                if(event.keyCode == 38 ||event.keyCode == 40) {
+                    if(casillaEntrada.checked) {
+                        casillaSalida.checked = true;
+                        casillaEntrada.checked = false;
+                    }
+                    else {
+                        casillaSalida.checked = false;
+                        casillaEntrada.checked = true;
+                    }
+                }
             });
         </script>
     </body>

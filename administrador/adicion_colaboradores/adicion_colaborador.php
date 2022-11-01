@@ -234,7 +234,7 @@
             });
             document.getElementById("formulario").addEventListener("submit", confirmarCierreSesion);
             document.getElementById("registro-colaborador").addEventListener("submit", confirmarRegistroColaborador);
-            document.getElementById("fecha-nacimiento").setAttribute("max", new Date().toLocaleDateString().split("/").reverse().join("-"));
+            document.getElementById("fecha-nacimiento").setAttribute("max", new Date().toLocaleDateString("fr-CA"));
 
             dselect(document.getElementById("carreras"), { search: true, maxHeight: "200px" });
             dselect(document.getElementById("modalidades"), { search: false });    
