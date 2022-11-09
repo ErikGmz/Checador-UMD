@@ -115,8 +115,7 @@
                                 document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 1)">
                                 <div class="form-text"> 
                                     Campo obligatorio. El rango de fechas admitido se encuentra
-                                    entre 01-01-2021 y 30-12-2030. Cada colaborador
-                                    puede tener máximo un chequeo por día.
+                                    entre 01-01-2021 y 30-12-2030.
                                 </div>
                             </div>
 

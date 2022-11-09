@@ -173,8 +173,7 @@
                                 document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 2)">
                                 <div class="form-text"> 
                                     Campo obligatorio. El rango de fechas debe 
-                                    encontrarse entre 01-01-2021 y 30-12-2030. Cada colaborador
-                                    puede tener máximo una contingencia por día.
+                                    encontrarse entre 01-01-2021 y 30-12-2030.
                                 </div>
                             </div>
 
