@@ -123,6 +123,13 @@ CREATE TABLE `chequeo` (
 --
 DELIMITER $$
 CREATE TRIGGER `calculoHorasTotales` BEFORE INSERT ON `chequeo` FOR EACH ROW BEGIN
+    IF (SELECT 1 FROM chequeo WHERE fecha_chequeo = NEW.fecha_chequeo AND 
+		ID_colaborador = NEW.ID_colaborador AND numero_chequeo = (SELECT MAX(numero_chequeo) FROM chequeo
+		WHERE fecha_chequeo = NEW.fecha_chequeo AND ID_colaborador = NEW.ID_colaborador) 
+		AND (hora_final IS NULL OR tiempo_total IS NULL)) <> 0 THEN		
+			SIGNAL SQLSTATE '45000' SET message_text = "Se debe completar el último chequeo del día antes de registrar uno nuevo para la fecha especificada.";
+		END IF;
+
 		IF NEW.hora_final IS NOT NULL THEN
 			SET NEW.tiempo_total = TIMEDIFF(NEW.hora_final, NEW.hora_inicial);
 		ELSE
@@ -143,17 +150,6 @@ CREATE TRIGGER `calculoHorasTotalesActualizacion` BEFORE UPDATE ON `chequeo` FOR
 			ELSE
 				SET NEW.tiempo_total = NULL;
 			END IF;
-		END IF;
-	END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `verificarChequeoFinalizado` BEFORE INSERT ON `chequeo` FOR EACH ROW BEGIN
-		IF (SELECT 1 FROM chequeo WHERE fecha_chequeo = NEW.fecha_chequeo AND 
-		ID_colaborador = NEW.ID_colaborador AND numero_chequeo = (SELECT MAX(numero_chequeo) FROM chequeo
-		WHERE fecha_chequeo = NEW.fecha_chequeo AND ID_colaborador = NEW.ID_colaborador) 
-		AND (hora_final IS NULL OR tiempo_total IS NULL)) <> 0 THEN		
-			SIGNAL SQLSTATE '45000' SET message_text = "Se debe completar el último chequeo del día antes de registrar uno nuevo para la fecha especificada.";
 		END IF;
 	END
 $$
