@@ -122,7 +122,7 @@ CREATE TABLE `chequeo` (
 -- Disparadores `chequeo`
 --
 DELIMITER $$
-CREATE TRIGGER `calculoHorasTotales` BEFORE INSERT ON `chequeo` FOR EACH ROW BEGIN
+CREATE TRIGGER `calculoHorasTotalesYValidacionChequeo` BEFORE INSERT ON `chequeo` FOR EACH ROW BEGIN
     IF (SELECT 1 FROM chequeo WHERE fecha_chequeo = NEW.fecha_chequeo AND 
 		ID_colaborador = NEW.ID_colaborador AND numero_chequeo = (SELECT MAX(numero_chequeo) FROM chequeo
 		WHERE fecha_chequeo = NEW.fecha_chequeo AND ID_colaborador = NEW.ID_colaborador) 
