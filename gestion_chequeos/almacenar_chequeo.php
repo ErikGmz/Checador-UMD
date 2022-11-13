@@ -13,12 +13,8 @@
 
         # Verificar si el colaborador indicado existe.
         try {
-            $colaborador = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
-            colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad,
-            colaborador.numero_retardos, horario.hora_inicial FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
-            JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
-            JOIN horario ON colaborador.ID_horario = horario.ID
-            WHERE colaborador.ID = '" . $_POST["ID"] . "' LIMIT 1;");
+            $colaborador = $conexion_base->query("SELECT * FROM desglose_colaboradores
+            WHERE ID = '" . $_POST["ID"] . "' LIMIT 1;");
             if(isset($colaborador) && $colaborador->num_rows > 0) {
                 $datos_colaborador = $colaborador->fetch_row();
 
@@ -31,16 +27,19 @@
                         strtotime(date("Y-m-d")) <= strtotime("2030-12-30")) {
                             # Obtener el último chequeo que el colaborador
                             # realizó en la fecha correspondiente.
-                            $verificacion_chequeo = $conexion_base->query("SELECT numero_chequeo, 
-                            hora_final FROM chequeo WHERE fecha_chequeo = '" . date("Y-m-d") 
-                            . "' AND ID_colaborador = '" . $_POST["ID"] 
-                            . "' AND numero_chequeo = (SELECT MAX(numero_chequeo) FROM chequeo WHERE 
-                            fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "') LIMIT 1;");
+                            $verificacion_chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" 
+                            . date("Y-m-d") . "', " . $_POST["ID"] . ");");
+                            do {
+                                if($auxiliar = $conexion_base->store_result()) {
+                                    $auxiliar->free();
+                                }
+                            } while($conexion_base->more_results() && $conexion_base->next_result());
 
                             if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
                                 # Verificar si el último chequeo que el colaborador
                                 # realizó en la fecha correspondiente fue completado.
                                 $resultados = $verificacion_chequeo->fetch_row();
+
                                 if(is_null($resultados[1])) {
                                     $resultado = 3;
                                 }
@@ -60,11 +59,18 @@
                                 try {
                                     if($conexion_base->query("INSERT INTO chequeo(numero_chequeo, fecha_chequeo, hora_inicial, ID_colaborador)
                                     VALUES('$numero_chequeo', '" . date("Y-m-d") . "', '$hora_registro', '" . $_POST["ID"] . "');")) {
+                                        $conexion_base->query("CALL corregir_enumeracion_chequeos('" . date("Y-m-d") . "', " . $_POST["ID"] . ");");
+                                        do {
+                                            if($auxiliar = $conexion_base->store_result()) {
+                                                $auxiliar->free();
+                                            }
+                                        } while($conexion_base->more_results() && $conexion_base->next_result());
+
                                         # Verificar si se llegó 15 minutos después de
                                         # la hora inicial (esquema de retardos) para el primer chequeo.
                                         if(strtotime("1970-01-01 $hora_registro UTC") - strtotime("1970-01-01 " . $datos_colaborador[7] . " UTC") 
                                         >= strtotime("1970-01-01 00:15:00 UTC") && $numero_chequeo == 1) {
-                                            $incremento_retardos = (int)$datos_colaborador[6] + 1;
+                                            $incremento_retardos = (int)$datos_colaborador[3] + 1;
 
                                             # Actualizar los retardos en los datos del colaborador.
                                             if($conexion_base->query("UPDATE colaborador SET numero_retardos = '$incremento_retardos'
@@ -89,7 +95,7 @@
                                             }
                                         }
                                         else {
-                                            $incremento_retardos = (int)$datos_colaborador[6];
+                                            $incremento_retardos = (int)$datos_colaborador[3];
                                             if($incremento_retardos <= 2) {
                                                 $resultado = 1;
                                             }
@@ -111,10 +117,10 @@
                                     }
                                 }
                                 catch(Exception $e) {
+                                    echo $e->getMessage();
                                     $resultado = 2;
                                 }
                             }
-                            @$verificacion_chequeo->close();
                         }
                         else {
                             $resultado = 12;
@@ -128,16 +134,19 @@
                         strtotime(date("Y-m-d")) <= strtotime("2030-12-30")) {
                             # Obtener el último chequeo que el colaborador
                             # realizó en la fecha correspondiente.
-                            $verificacion_chequeo = $conexion_base->query("SELECT numero_chequeo, 
-                            hora_final FROM chequeo WHERE fecha_chequeo = '" . date("Y-m-d") 
-                            . "' AND ID_colaborador = '" . $_POST["ID"] 
-                            . "' AND numero_chequeo = (SELECT MAX(numero_chequeo) FROM chequeo WHERE 
-                            fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "') LIMIT 1;");
+                            $verificacion_chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" 
+                            . date("Y-m-d") . "', " . $_POST["ID"] . ");");
+                            do {
+                                if($auxiliar = $conexion_base->store_result()) {
+                                    $auxiliar->free();
+                                }
+                            } while($conexion_base->more_results() && $conexion_base->next_result());
 
                             if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
                                 # Verificar si el último chequeo que el colaborador
                                 # realizó en la fecha correspondiente fue completado.
                                 $resultados = $verificacion_chequeo->fetch_row();
+
                                 if(!is_null($resultados[1])) {
                                     $resultado = 7;
                                 }
@@ -158,8 +167,15 @@
                                     if($conexion_base->query("UPDATE chequeo SET hora_final = '$hora_chequeo'
                                     WHERE fecha_chequeo = '" . date("Y-m-d") . "' AND ID_colaborador = '" . $_POST["ID"] . "'
                                     AND numero_chequeo = $numero_chequeo;")) {
+                                        $conexion_base->query("CALL corregir_enumeracion_chequeos('" . date("Y-m-d") . "', " . $_POST["ID"] . ");");
+                                        do {
+                                            if($auxiliar = $conexion_base->store_result()) {
+                                                $auxiliar->free();
+                                            }
+                                        } while($conexion_base->more_results() && $conexion_base->next_result());
+
                                         # Verificar si los retardos del colaborador ya fueron excedidos.
-                                        if((int)$datos_colaborador[6] > 2) {
+                                        if((int)$datos_colaborador[3] > 2) {
                                             $resultado = 10;
                                         }  
                                         else {
@@ -170,11 +186,11 @@
                                         $resultado = 6;
                                     }
                                 }
-                                catch(Exception $e) {
+                                catch(Exception $e) { 
+                                    echo $e->getMessage();
                                     $resultado = 6;
                                 }
                             }
-                            @$verificacion_chequeo->close();
                         }
                         else {
                             $resultado = 12;
@@ -192,6 +208,7 @@
             }
         }
         catch(Exception $e) {
+            echo $e->getMessage();
             $resultado = 13;
         }
         finally {
@@ -242,7 +259,7 @@
                         Swal.fire({
                             icon: "success",
                             title: "Éxito de chequeo de entrada",
-                            html: <?php echo "\"<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            html: <?php echo "\"<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
                             . "<p class='mb-0'> <b> Hora de chequeo de entrada: </b>" . date("h:i:s A", strtotime(@$hora_registro)) . " </p>\""
                             ?>
@@ -258,7 +275,7 @@
                             icon: 'error',
                             title: 'Error de chequeo de entrada',
                             html: <?php echo "\"<p class='mb-4'> Ocurrió un error al registrar el siguiente chequeo de entrada: </p> \\n"
-                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
                             . "<p class='mb-0'> <b> Hora de chequeo de entrada: </b>" . date("h:i:s A", strtotime(@$hora_registro)) . " </p>\""
                             ?>
@@ -274,7 +291,7 @@
                             icon: 'error',
                             title: 'Chequeo de salida sin realizar',
                             html: <?php echo "\"<p class='mb-4'> El siguiente colaborador no puede realizar otro chequeo de entrada hasta llevar a cabo uno de salida (" . date("d-m-Y") . "): </p> \\n"
-                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-0'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \"" ?>
                         }).then((resultado) => {
                             location.href="../index.php";
@@ -287,7 +304,7 @@
                         Swal.fire({
                             icon: "success",
                             title: "Éxito de chequeo de salida",
-                            html: <?php echo "\"<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            html: <?php echo "\"<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
                             . "<p class='mb-0'> <b> Hora de chequeo de salida: </b>" . date("h:i:s A", strtotime(@$hora_chequeo)) . " </p>\""
                             ?>
@@ -303,7 +320,7 @@
                             icon: 'error',
                             title: 'Chequeo de entrada no realizado',
                             html: <?php echo "\"<p class='mb-4'> El siguiente colaborador no ha hecho un nuevo chequeo de entrada de la fecha actual (" . date("d-m-Y") . "): </p> \\n"
-                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-0'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \"" ?>
                         }).then((resultado) => {
                             location.href="../index.php";
@@ -317,7 +334,7 @@
                             icon: 'error',
                             title: 'Error de chequeo de salida',
                             html: <?php echo "\"<p class='mb-4'> Ocurrió un error al registrar el siguiente chequeo de salida: </p> \\n"
-                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
                             . "<p class='mb-0'> <b> Hora de chequeo de salida: </b>" . date("h:i:s A", strtotime(@$hora_chequeo)) . " </p>\""
                             ?>
@@ -333,7 +350,7 @@
                             icon: 'error',
                             title: 'Chequeo de salida ya realizado',
                             html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya hizo el chequeo de salida del último registro de la fecha actual (" . date("d-m-Y") . "): </p> \\n"
-                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-0'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \"" ?>
                         }).then((resultado) => {
                             location.href="../index.php";
@@ -348,7 +365,7 @@
                             title: "Éxito de chequeo de entrada con retardo",
                             html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya acumuló " . @$incremento_retardos . " retardo" . (((int)@$incremento_retardos > 1) ? "s;" : ";")
                             . " el máximo permitido es de 2. Chequeo del día " . date("d-m-Y") . ": </p> \\n"
-                            . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
                             . "<p class='mb-0'> <b> Hora de chequeo de entrada: </b>" . date("h:i:s A", strtotime(@$hora_registro)) . " </p>\""
                             ?>
@@ -365,7 +382,7 @@
                             title: "Éxito de chequeo de entrada con retardos excedidos",
                             html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya acumuló " . @$incremento_retardos . " retardo" . (((int)@$incremento_retardos > 1) ? "s" : "") .
                             ", excediendo los 2 permitidos, debido a lo cual los próximos chequeos se bloquearán. Para solucionar el problema se debe hablar con algún coordinador. Chequeo del día " . date("d-m-Y") . ": </p> \\n"
-                            . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
                             . "<p class='mb-0'> <b> Hora de chequeo de entrada: </b>" . date("h:i:s A", strtotime(@$hora_registro)) . " </p>\""
                             ?>
@@ -381,7 +398,7 @@
                             icon: "warning",
                             title: "Éxito de chequeo de salida con retardos excedidos",
                             html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ha excedido los dos retardos permitidos, debido a lo cual los chequeos posteriores se han bloqueado. Chequeo del día " . date("d-m-Y") . ": </p> \\n"
-                            . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . " " . @$datos_colaborador[2] . " " . @$datos_colaborador[3] . "</p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-2'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \\n"
                             . "<p class='mb-0'> <b> Hora de chequeo de salida: </b>" . date("h:i:s A", strtotime(@$hora_chequeo)) . " </p>\""
                             ?>

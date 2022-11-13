@@ -28,26 +28,21 @@
 
     # Verificar si el usuario especificado
     # existe en la base de datos.
-    if($usuario = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
-    colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad, colaborador.numero_retardos,
-    horario.hora_inicial, horario.hora_final, colaborador.numero_desbloqueos, colaborador.fecha_nacimiento
-    FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
-    JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
-    JOIN horario ON colaborador.ID_horario = horario.ID
-    WHERE colaborador.ID = '" . @$_GET["ID-colaborador"] . "' LIMIT 1;")) {
+    if($usuario = $conexion_base->query("SELECT * FROM desglose_colaboradores
+    WHERE ID = '" . @$_GET["ID-colaborador"] . "' LIMIT 1;")) {
         if($usuario->num_rows > 0) {
             # Definir los datos del usuario encontrado.
             $resultados = $usuario->fetch_row();
             $ID_colaborador = $resultados[0];
-            $nombre_colaborador = $resultados[1] . " " . $resultados[2] . " " . $resultados[3];
-            $carrera = $resultados[4];
-            $modalidad = $resultados[5];
-            $numero_retardos = $resultados[6];
-            $numero_desbloqueos = $resultados[9];
+            $nombre_colaborador = $resultados[1];
+            $fecha_nacimiento = $resultados[2];
+            $numero_retardos = $resultados[3];
+            $numero_desbloqueos = $resultados[4];
+            $carrera = $resultados[5];
+            $modalidad = $resultados[6];
             $hora_inicial = $resultados[7];
             $hora_final = $resultados[8];
-            $fecha_nacimiento = $resultados[10];
-
+            
             # Comprobar si se indicaron horas de becario.
             if(isset($_GET["horas-becario"]) && is_numeric(@$_GET["horas-becario"])) {
                 $horas_becario = $_GET["horas-becario"];
@@ -84,11 +79,8 @@
 
             # Obtener todos los chequeos realizados por
             # el colaborador, respetando el rango de fechas.
-            $chequeos = $conexion_base->query("SELECT chequeo.fecha_chequeo, chequeo.hora_inicial, 
-            chequeo.hora_final, chequeo.tiempo_total, contingencia.tiempo_total AS tiempo_contingencia, 
-            chequeo.bloqueo_registro FROM chequeo LEFT JOIN contingencia ON chequeo.fecha_chequeo = contingencia.fecha
-            AND chequeo.ID_colaborador = contingencia.ID_colaborador WHERE chequeo.ID_colaborador = '" . @$_GET["ID-colaborador"] . "'
-            AND chequeo.fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final' ORDER BY fecha_chequeo ASC;");
+            $chequeos = $conexion_base->query("SELECT * FROM desglose_chequeos WHERE ID_colaborador = '" . @$_GET["ID-colaborador"] . "'
+            AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final' ORDER BY fecha_chequeo ASC;");
 
             # Obtener el conteo de horas totales 
             # de colaboración del usuario.
@@ -337,7 +329,7 @@
                                                 <tr>
                                                     <?php
                                                     $dias = ["Lunes", "Martes", "Miércoles", "Jueves",
-                                                    "Viernes"];
+                                                    "Viernes", "Sábado", "Domingo"];
 
                                                     while($chequeo = $chequeos->fetch_row()) {
                                                         echo "<tr> ";

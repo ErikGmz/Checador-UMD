@@ -19,11 +19,7 @@
     }
 
     # Obtener todos los colaboradores del sistema.
-    $colaboradores = $conexion_base->query("SELECT colaborador.ID, CONCAT_WS(' ', colaborador.nombres, colaborador.apellido_paterno, colaborador.apellido_materno) AS nombre_completo, colaborador.numero_retardos,
-    carrera.nombre, modalidad_colaborador.nombre, horario.hora_inicial, horario.hora_final, colaborador.numero_desbloqueos 
-    FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
-    JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
-    JOIN horario ON colaborador.ID_horario = horario.ID;");
+    $colaboradores = $conexion_base->query("SELECT * FROM desglose_colaboradores;");
 ?>
 
 <!--Código HTML del archivo-->

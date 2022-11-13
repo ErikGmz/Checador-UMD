@@ -19,11 +19,7 @@
     }
 
     # Obtener todas las contingencias del sistema.
-    $contingencias = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, 
-    colaborador.apellido_paterno, colaborador.apellido_materno,
-    contingencia.fecha, contingencia.hora_inicial, contingencia.hora_final, contingencia.tiempo_total, 
-    contingencia.observaciones
-    FROM contingencia JOIN colaborador ON colaborador.ID = contingencia.ID_colaborador;");
+    $contingencias = $conexion_base->query("SELECT * FROM desglose_contingencias;");
 ?>
 
 <!--Código HTML del archivo-->

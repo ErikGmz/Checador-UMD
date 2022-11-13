@@ -112,18 +112,8 @@
                     if(isset($_GET["ID-colaborador"])) {
                         # Buscar al colaborador introducido 
                         # en la lista de búsqueda.
-                        if($usuario = $conexion_base->query("SELECT IF(SUBSTRING(nombres, 1, LOCATE(' ', nombres)) = '',
-                        TRIM(SUBSTRING(nombres, LOCATE(' ', nombres) + 1)), 
-                        TRIM(SUBSTRING(nombres, 1, LOCATE(' ', nombres)))) AS primer_nombre,
-                        IF(SUBSTRING(nombres, 1, LOCATE(' ', nombres)) != '',
-                        TRIM(SUBSTRING(nombres, LOCATE(' ', nombres) + 1)), '') AS segundo_nombre,
-                        colaborador.apellido_paterno, colaborador.apellido_materno,
-                        colaborador.ID_carrera, colaborador.ID_modalidad, 
-                        TIME_FORMAT(horario.hora_inicial, '%H:%i') AS hora_inicial,
-                        TIME_FORMAT(horario.hora_final, '%H:%i') AS hora_final,
-                        colaborador.numero_retardos, colaborador.numero_desbloqueos, colaborador.fecha_nacimiento
-                        FROM colaborador JOIN horario ON colaborador.ID_horario = horario.ID
-                        WHERE colaborador.ID = '" . $_GET["ID-colaborador"] . "';")) {
+                        if($usuario = $conexion_base->query("SELECT * FROM desglose_separado_colaboradores
+                        WHERE ID = '" . $_GET["ID-colaborador"] . "';")) {
                             if($usuario->num_rows > 0) {
                                 $datos_usuario = $usuario->fetch_row();
                                 $valido = true;
