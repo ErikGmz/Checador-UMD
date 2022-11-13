@@ -14,8 +14,8 @@ function verificarRangosHoras(horaEntrada, horaSalida) {
     let tiempoEntrada = campoEntrada.value.split(":");
     let tiempoSalida = campoSalida.value.split(":");
 
-    let referenciaEntrada = new Date(2021, 01, 01, tiempoEntrada[0], tiempoEntrada[1], 0).getTime();
-    let referenciaSalida = new Date(2021, 01, 01, tiempoSalida[0], tiempoSalida[1], 0).getTime();
+    let referenciaEntrada = new Date(2021, 01, 01, tiempoEntrada[0], tiempoEntrada[1], (tiempoEntrada[2] == undefined) ? 0 : tiempoEntrada[2]).getTime();
+    let referenciaSalida = new Date(2021, 01, 01, tiempoSalida[0], tiempoSalida[1], (tiempoSalida[2] == undefined) ? 0 : tiempoSalida[2]).getTime();
 
     if(referenciaEntrada >= referenciaSalida) {
         campoEntrada.setCustomValidity("La hora de entrada no puede ser mayor o igual a la de salida.");

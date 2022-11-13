@@ -80,7 +80,7 @@
             # Obtener todos los chequeos realizados por
             # el colaborador, respetando el rango de fechas.
             $chequeos = $conexion_base->query("SELECT * FROM desglose_chequeos WHERE ID_colaborador = '" . @$_GET["ID-colaborador"] . "'
-            AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final' ORDER BY fecha_chequeo ASC;");
+            AND fecha_chequeo BETWEEN '$fecha_inicial' AND '$fecha_final' ORDER BY fecha_chequeo ASC, numero_chequeo ASC;");
 
             # Obtener el conteo de horas totales 
             # de colaboración del usuario.
@@ -328,15 +328,15 @@
                                                 ?>
                                                 <tr>
                                                     <?php
-                                                    $dias = ["Lunes", "Martes", "Miércoles", "Jueves",
-                                                    "Viernes", "Sábado", "Domingo"];
+                                                    $dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves",
+                                                    "Viernes", "Sábado"];
 
                                                     while($chequeo = $chequeos->fetch_row()) {
                                                         echo "<tr> ";
                                                         echo "<th scope='row' class='py-3'> " . date("d-m-Y", strtotime($chequeo[0])) . " </th> ";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[4])) ? "N/A" : $chequeo[4]) .  " </td> ";
                                                         echo "<td class='py-3'> " . (($chequeo[5] == "0") ? "N/A" : $chequeo[5]) .  " </td> ";
-                                                        echo "<td class='py-3'> " . $dias[date("w", strtotime($chequeo[0])) - 1] . " </td> ";
+                                                        echo "<td class='py-3'> " . $dias[date("w", strtotime($chequeo[0]))] . " </td> ";
                                                         echo "<td class='py-3'> " . date("h:i:s A", strtotime($chequeo[1])) . " </td> ";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[2])) ? "N/A" : date("h:i:s A", strtotime($chequeo[2]))) . " </td>";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[3])) ? "N/A" : $chequeo[3]) . " </td>";

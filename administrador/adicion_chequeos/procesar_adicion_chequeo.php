@@ -22,16 +22,30 @@
             die("Hubo un error al conectar con la base de datos. " . $conexion_base->connect_error);
         }
 
-        # Verificar si los datos especificados no corresponden
-        # a un chequeo ya existente en el sistema.
+        # Verificar si el último chequeo correspondiente al
+        # colaborador y fecha actual fue completado o no.
         try {
-            if($resultados = $conexion_base->query("SELECT * FROM chequeo WHERE 
-            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-chequeo"] . "';")) {
+            if($resultados = $conexion_base->query("CALL obtener_ultimo_chequeo('" . $_POST["fecha-chequeo"] 
+            . "', " . $_POST["ID-colaborador"] . ")")) {
+                do {
+                    if($auxiliar = $conexion_base->store_result()) {
+                        $auxiliar->free();
+                    }
+                } while($conexion_base->more_results() && $conexion_base->next_result());
+
                 if($resultados->num_rows > 0) {
-                    $resultado = 2;
+                    $registro = $resultados->fetch_row();
+
+                    if(is_null($registro[1])) {
+                        $resultado = 2;
+                    }
                 }
-                else {
+
+                if(!isset($resultado)) {
                     $tiempo_inicial = date("1970-01-01 " . $_POST["hora-inicial"]);
+                    if(isset($registro)) {
+                        $hora_final_ultimo_chequeo = date("1970-01-01 " . $registro[1]);
+                    }
 
                     if(isset($_POST["hora-final"]) && @$_POST["hora-final"] != "") {
                         $tiempo_final = date("1970-01-01 " . $_POST["hora-final"]);
@@ -57,14 +71,40 @@
                                     $registro_hora_final = "NULL";
                                 }
 
-                                if($conexion_base->query("INSERT INTO chequeo(fecha_chequeo, hora_inicial, hora_final, bloqueo_registro, ID_colaborador) "
-                                . "VALUES('" . $_POST["fecha-chequeo"] . "', '" . date("H:i:s", strtotime($tiempo_inicial)) 
-                                . "', $registro_hora_final, '" . $_POST["estado-chequeo"] . "', '"
-                                . $_POST["ID-colaborador"] . "');"))  {
-                                    $resultado = 5;
-                                }
-                                else {
-                                    $resultado = 1;
+                                # Obtener el número del último chequeo 
+                                # para asignar el del actual.            
+                                if($ultimo_chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" 
+                                . $_POST["fecha-chequeo"] . "', " . $_POST["ID-colaborador"] . ")")) {
+                                    if($ultimo_chequeo->num_rows < 0) {
+                                        $chequeo_actual = 1;
+                                    }
+                                    else {
+                                        $registro = $ultimo_chequeo->fetch_row();
+                                        $chequeo_actual = (int)$registro[0] + 1;
+                                    }
+
+                                    do {
+                                        if($auxiliar = $conexion_base->store_result()) {
+                                            $auxiliar->free();
+                                        }
+                                    } while($conexion_base->more_results() && $conexion_base->next_result());
+
+                                    if($conexion_base->query("INSERT INTO chequeo(fecha_chequeo, hora_inicial, hora_final, bloqueo_registro, ID_colaborador, numero_chequeo) "
+                                    . "VALUES('" . $_POST["fecha-chequeo"] . "', '" . date("H:i:s", strtotime($tiempo_inicial)) 
+                                    . "', $registro_hora_final, '" . $_POST["estado-chequeo"] . "', '"
+                                    . $_POST["ID-colaborador"] . "', " . $chequeo_actual . ");"))  {
+                                        $conexion_base->query("CALL corregir_enumeracion_chequeos('" . date("Y-m-d") . "', " . $_POST["ID-colaborador"] . ");");
+                                        do {
+                                            if($auxiliar = $conexion_base->store_result()) {
+                                                $auxiliar->free();
+                                            }
+                                        } while($conexion_base->more_results() && $conexion_base->next_result());
+
+                                        $resultado = 5;
+                                    }
+                                    else {
+                                        $resultado = 1;
+                                    }
                                 }
                             }
                             catch(Exception $e) { 
@@ -147,8 +187,8 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Chequeo ya existente",
-                            html: <?php echo "\"<p class='mb-4'> El siguiente chequeo ya existe en el sistema: </p> \\n"
+                            title: "Chequeo anterior sin completar",
+                            html: <?php echo "\"<p class='mb-4'> El último chequeo con los siguientes datos no fue completado: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
@@ -188,6 +228,21 @@
                             icon: "success",
                             title: "Adición exitosa de chequeo",
                             html: <?php echo "\"<p class='mb-4'> El siguiente chequeo fue exitosamente registrado en el sistema: </p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
+                            . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
+                            ?>
+                        }).then((resultado) => {
+                            location.href="adicion_chequeo.php";
+                        });
+                    });
+                break;
+
+                case 6:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Inconsistencias entre los horarios del chequeo nuevo y los anteriores de la fecha correspondiente",
+                            html: <?php echo "\"<p class='mb-4'> Datos del chequeo: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>

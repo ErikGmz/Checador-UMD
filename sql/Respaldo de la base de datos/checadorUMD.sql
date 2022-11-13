@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-11-2022 a las 07:46:50
+-- Tiempo de generación: 14-11-2022 a las 00:13:55
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -144,14 +144,14 @@ INSERT INTO `carrera` (`ID`, `nombre`) VALUES
 --
 
 CREATE TABLE `chequeo` (
-  `fecha_chequeo` date NOT NULL CHECK (`fecha_chequeo` BETWEEN "2021-01-01" AND "2030-12-31"),
+  `fecha_chequeo` date NOT NULL CHECK (`fecha_chequeo` between '2021-01-01' and '2030-12-31'),
   `ID_colaborador` int(10) UNSIGNED NOT NULL,
   `numero_chequeo` int(11) NOT NULL DEFAULT 1,
   `hora_inicial` time NOT NULL CHECK (`hora_inicial` < `hora_final`),
   `hora_final` time DEFAULT NULL CHECK (`hora_inicial` < `hora_final`),
   `tiempo_total` time DEFAULT NULL,
   `bloqueo_registro` int(1) NOT NULL DEFAULT 0
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `chequeo`
@@ -3304,9 +3304,15 @@ INSERT INTO `chequeo` (`fecha_chequeo`, `ID_colaborador`, `numero_chequeo`, `hor
 ('2022-10-18', 269686, 1, '13:46:38', '13:57:15', '00:10:37', 1),
 ('2022-11-01', 269686, 1, '17:16:53', '17:16:58', '00:00:05', 1),
 ('2022-11-12', 269686, 1, '08:00:00', '12:00:00', '04:00:00', 0),
+('2022-11-13', 269686, 1, '08:00:00', '09:00:00', '01:00:00', 0),
 ('2022-11-12', 269686, 2, '15:00:00', '16:00:00', '01:00:00', 0),
+('2022-11-13', 269686, 2, '09:00:01', '11:00:00', '01:59:59', 0),
 ('2022-11-12', 269686, 3, '18:00:00', '19:00:00', '01:00:00', 0),
-('2022-11-12', 269686, 8, '23:44:46', '23:59:41', '00:14:55', 0);
+('2022-11-13', 269686, 3, '11:00:01', '13:00:00', '01:59:59', 0),
+('2022-11-13', 269686, 4, '13:00:01', '15:00:00', '01:59:59', 0),
+('2022-11-13', 269686, 5, '15:00:01', '17:00:00', '01:59:59', 0),
+('2022-11-12', 269686, 8, '23:44:46', '23:59:41', '00:14:55', 0),
+('2022-11-12', 269686, 9, '23:59:42', NULL, NULL, 0);
 
 --
 -- Disparadores `chequeo`
@@ -3343,8 +3349,8 @@ CREATE TRIGGER `calculoHorasTotalesYValidacionChequeo` BEFORE INSERT ON `chequeo
 				LEAVE read_loop;
 			END IF;
 
-			IF (NEW.hora_inicial < tiempo_inicial OR NEW.hora_inicial < tiempo_final 
-			OR NEW.hora_final < tiempo_inicial OR NEW.hora_final < tiempo_final) THEN
+			IF (NEW.hora_inicial <= tiempo_inicial OR NEW.hora_inicial <= tiempo_final 
+			OR NEW.hora_final <= tiempo_inicial OR NEW.hora_final <= tiempo_final) THEN
 				SIGNAL SQLSTATE '45000' SET message_text = "El horario especificado presenta conflictos con chequeos anteriores de la fecha correspondiente.";
 			END IF;
 		END LOOP;
@@ -3359,8 +3365,8 @@ CREATE TRIGGER `calculoHorasTotalesYValidacionChequeo` BEFORE INSERT ON `chequeo
 					LEAVE read_loop;
 				END IF;
 
-				IF (NEW.hora_inicial > tiempo_inicial OR NEW.hora_inicial > tiempo_final 
-				OR NEW.hora_final > tiempo_inicial OR NEW.hora_final > tiempo_final) THEN
+				IF (NEW.hora_inicial >= tiempo_inicial OR NEW.hora_inicial >= tiempo_final 
+				OR NEW.hora_final >= tiempo_inicial OR NEW.hora_final >= tiempo_final) THEN
 					SIGNAL SQLSTATE '45000' SET message_text = "El horario especificado presenta conflictos con chequeos posteriores de la fecha correspondiente.";
 				END IF;
 			END LOOP;
@@ -3405,8 +3411,8 @@ CREATE TRIGGER `calculoHorasTotalesYValidacionChequeoActualizacion` BEFORE UPDAT
 				LEAVE read_loop;
 			END IF;
 
-			IF (NEW.hora_inicial < tiempo_inicial OR NEW.hora_inicial < tiempo_final 
-			OR NEW.hora_final < tiempo_inicial OR NEW.hora_final < tiempo_final) THEN
+			IF (NEW.hora_inicial <= tiempo_inicial OR NEW.hora_inicial <= tiempo_final 
+			OR NEW.hora_final <= tiempo_inicial OR NEW.hora_final <= tiempo_final) THEN
 				SIGNAL SQLSTATE '45000' SET message_text = "El horario especificado presenta conflictos con chequeos anteriores de la fecha correspondiente.";
 			END IF;
 		END LOOP;
@@ -3421,8 +3427,8 @@ CREATE TRIGGER `calculoHorasTotalesYValidacionChequeoActualizacion` BEFORE UPDAT
 					LEAVE read_loop;
 				END IF;
 
-				IF (NEW.hora_inicial > tiempo_inicial OR NEW.hora_inicial > tiempo_final 
-				OR NEW.hora_final > tiempo_inicial OR NEW.hora_final > tiempo_final) THEN
+				IF (NEW.hora_inicial >= tiempo_inicial OR NEW.hora_inicial >= tiempo_final 
+				OR NEW.hora_final >= tiempo_inicial OR NEW.hora_final >= tiempo_final) THEN
 					SIGNAL SQLSTATE '45000' SET message_text = "El horario especificado presenta conflictos con chequeos posteriores de la fecha correspondiente.";
 				END IF;
 			END LOOP;
@@ -3443,13 +3449,13 @@ CREATE TABLE `colaborador` (
   `nombres` varchar(100) CHARACTER SET utf8 NOT NULL,
   `apellido_paterno` varchar(45) CHARACTER SET utf8 NOT NULL,
   `apellido_materno` varchar(45) CHARACTER SET utf8 DEFAULT NULL,
-  `fecha_nacimiento` date DEFAULT NULL CHECK (`fecha_nacimiento` >= "1900-01-01"),
+  `fecha_nacimiento` date DEFAULT NULL CHECK (`fecha_nacimiento` >= '1900-01-01'),
   `numero_retardos` int(11) NOT NULL DEFAULT 0,
   `numero_desbloqueos` int(11) NOT NULL DEFAULT 0,
   `ID_carrera` int(10) UNSIGNED NOT NULL,
   `ID_modalidad` int(10) UNSIGNED NOT NULL,
   `ID_horario` int(10) UNSIGNED NOT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `colaborador`
@@ -3535,20 +3541,20 @@ DELIMITER ;
 --
 
 CREATE TABLE `contingencia` (
-  `fecha` date NOT NULL CHECK (`fecha` BETWEEN "2021-01-01" AND "2030-12-31"),
+  `fecha` date NOT NULL CHECK (`fecha` between '2021-01-01' and '2030-12-31'),
   `hora_inicial` time NOT NULL CHECK (`hora_inicial` < `hora_final`),
   `hora_final` time NOT NULL CHECK (`hora_inicial` < `hora_final`),
   `tiempo_total` time NOT NULL,
   `observaciones` text CHARACTER SET utf8 NOT NULL,
   `ID_colaborador` int(10) UNSIGNED NOT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `contingencia`
 --
 
 INSERT INTO `contingencia` (`fecha`, `hora_inicial`, `hora_final`, `tiempo_total`, `observaciones`, `ID_colaborador`) VALUES
-('2022-11-08', '08:00:00', '12:00:00', '04:00:00', 'Servicio médico', 269686);
+('2022-11-08', '09:00:00', '12:00:00', '03:00:00', 'Servicio médico', 269686);
 
 --
 -- Disparadores `contingencia`
@@ -3603,6 +3609,7 @@ CREATE TABLE `desglose_chequeos` (
 ,`tiempo_contingencia` time
 ,`bloqueo_registro` int(1)
 ,`ID_colaborador` int(10) unsigned
+,`numero_chequeo` int(11)
 );
 
 -- --------------------------------------------------------
@@ -3670,12 +3677,10 @@ CREATE TABLE `desglose_separado_colaboradores` (
 
 CREATE TABLE `horario` (
   `ID` int(10) UNSIGNED NOT NULL,
-  `hora_inicial` time NOT NULL CHECK (`hora_inicial` < `hora_final` 
-  AND `hora_inicial` BETWEEN "08:00:00" AND "21:00:00" AND `hora_final` BETWEEN "08:00:00" AND "21:00:00"),
-  `hora_final` time NOT NULL CHECK (`hora_inicial` < `hora_final` 
-  AND `hora_inicial` BETWEEN "08:00:00" AND "21:00:00" AND `hora_final` BETWEEN "08:00:00" AND "21:00:00"),
+  `hora_inicial` time NOT NULL CHECK (`hora_inicial` < `hora_final` and `hora_inicial` between '08:00:00' and '21:00:00' and `hora_final` between '08:00:00' and '21:00:00'),
+  `hora_final` time NOT NULL CHECK (`hora_inicial` < `hora_final` and `hora_inicial` between '08:00:00' and '21:00:00' and `hora_final` between '08:00:00' and '21:00:00'),
   `ID_turno` int(10) UNSIGNED NOT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `horario`
@@ -3793,7 +3798,7 @@ INSERT INTO `turno` (`ID`, `nombre`) VALUES
 --
 DROP TABLE IF EXISTS `desglose_chequeos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `desglose_chequeos`  AS SELECT `chequeo`.`fecha_chequeo` AS `fecha_chequeo`, `chequeo`.`hora_inicial` AS `hora_inicial`, `chequeo`.`hora_final` AS `hora_final`, `chequeo`.`tiempo_total` AS `tiempo_total`, `contingencia`.`tiempo_total` AS `tiempo_contingencia`, `chequeo`.`bloqueo_registro` AS `bloqueo_registro`, `chequeo`.`ID_colaborador` AS `ID_colaborador` FROM (`chequeo` left join `contingencia` on(`chequeo`.`fecha_chequeo` = `contingencia`.`fecha` and `chequeo`.`ID_colaborador` = `contingencia`.`ID_colaborador`))  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `desglose_chequeos`  AS SELECT `chequeo`.`fecha_chequeo` AS `fecha_chequeo`, `chequeo`.`hora_inicial` AS `hora_inicial`, `chequeo`.`hora_final` AS `hora_final`, `chequeo`.`tiempo_total` AS `tiempo_total`, `contingencia`.`tiempo_total` AS `tiempo_contingencia`, `chequeo`.`bloqueo_registro` AS `bloqueo_registro`, `chequeo`.`ID_colaborador` AS `ID_colaborador`, `chequeo`.`numero_chequeo` AS `numero_chequeo` FROM (`chequeo` left join `contingencia` on(`chequeo`.`fecha_chequeo` = `contingencia`.`fecha` and `chequeo`.`ID_colaborador` = `contingencia`.`ID_colaborador`))  ;
 
 -- --------------------------------------------------------
 
@@ -3894,7 +3899,7 @@ ALTER TABLE `carrera`
 -- AUTO_INCREMENT de la tabla `colaborador`
 --
 ALTER TABLE `colaborador`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1619202;
 
 --
 -- AUTO_INCREMENT de la tabla `coordinador`
@@ -3906,7 +3911,7 @@ ALTER TABLE `coordinador`
 -- AUTO_INCREMENT de la tabla `horario`
 --
 ALTER TABLE `horario`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `modalidad_colaborador`

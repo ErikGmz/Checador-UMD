@@ -19,11 +19,26 @@
             die();
         }
 
-        # Verificar si el chequeo está registrado.
-        if($colaborador = $conexion_base->query("SELECT * FROM chequeo WHERE 
-        ID_colaborador = '" . $_GET["ID-colaborador"] . "' AND fecha_chequeo = '" . $_GET["fecha-chequeo"] . "';")) {
-            if($colaborador->num_rows > 0) {
-                echo "true";
+        # Verificar si existe al menos un chequeo que el colaborador
+        # haya llevado a cabo en la fecha actual.
+        if($chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" . $_GET["fecha-chequeo"] 
+        . "', " . $_GET["ID-colaborador"] . ")")) {
+            do {
+                if($auxiliar = $conexion_base->store_result()) {
+                    $auxiliar->free();
+                }
+            } while($conexion_base->more_results() && $conexion_base->next_result());
+
+            if($chequeo->num_rows > 0) {
+                $resultados = $chequeo->fetch_row();
+
+                # Comprobar si dicho chequeo fue realmente completado.
+                if(is_null($resultados[1])) {
+                    echo "true";
+                }
+                else {
+                    echo "false - " . $resultados[1];
+                }
             }
             else {
                 echo "false";
