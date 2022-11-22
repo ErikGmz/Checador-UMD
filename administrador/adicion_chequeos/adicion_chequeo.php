@@ -21,8 +21,6 @@
     # Obtener todos los colaboradores registrados.
     $colaboradores = $conexion_base->query("SELECT ID, CONCAT_WS(' ', nombres, apellido_paterno, apellido_materno) 
     AS nombre_completo FROM `colaborador`;");
-
-    # Obtener el úl
 ?>
 
 <!--Código HTML del archivo-->
@@ -88,7 +86,7 @@
                                 <select class="form-select" name="ID-colaborador" id="colaboradores" 
                                 onchange="verificarChequeo(document.getElementById('colaboradores').value, 
                                 document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 
-                                'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1)" required>
+                                'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1, 1)" required>
                                     <?php
                                         if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                                             while($colaborador = $colaboradores->fetch_row()) {
@@ -116,7 +114,7 @@
                                 class="form-control" id="fecha-chequeo" autocomplete="OFF" required
                                 onchange="verificarChequeo(document.getElementById('colaboradores').value, 
                                 document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 
-                                'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1)">
+                                'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1, 1)">
                                 <div class="form-text"> 
                                     Campo obligatorio. El rango de fechas admitido se encuentra
                                     entre 01-01-2021 y 30-12-2030.
@@ -210,7 +208,7 @@
                         document.querySelector("html").classList.remove("invisible");
                         verificarChequeo(document.getElementById('colaboradores').value, 
                         document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 
-                        'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1);
+                        'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1, 1);
                     }
                 <?php
                 }

@@ -1,7 +1,7 @@
 DELIMITER $$
-    CREATE PROCEDURE obtener_ultimo_chequeo (IN fecha DATE, IN ID INT(10))
+    CREATE OR REPLACE PROCEDURE obtener_ultimo_chequeo (IN fecha DATE, IN ID INT(10))
     BEGIN
-        SELECT numero_chequeo, hora_final FROM chequeo WHERE fecha_chequeo = fecha
+        SELECT numero_chequeo, hora_final, hora_inicial FROM chequeo WHERE fecha_chequeo = fecha
         AND ID_colaborador = ID AND numero_chequeo = (SELECT MAX(numero_chequeo) FROM chequeo WHERE 
         fecha_chequeo = fecha AND ID_colaborador = ID) LIMIT 1;
     END $$

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-11-2022 a las 00:13:55
+-- Tiempo de generación: 14-11-2022 a las 15:34:36
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -28,26 +28,9 @@ DELIMITER $$
 -- Procedimientos
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `corregir_enumeracion_chequeos` (IN `fecha` DATE, IN `ID` INT(10))   BEGIN
-        DECLARE done INT DEFAULT FALSE;
-        DECLARE numero INT DEFAULT 1;
-        DECLARE chequeo_anterior INT;
-        DECLARE cursor_chequeos CURSOR FOR SELECT numero_chequeo FROM chequeo 
-		WHERE fecha_chequeo = fecha AND 
-		ID_colaborador = ID ORDER BY numero_chequeo ASC;
-        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-
-        OPEN cursor_chequeos;
-		read_loop: LOOP
-			FETCH cursor_chequeos INTO chequeo_anterior;
-			IF done THEN
-				LEAVE read_loop;
-			END IF;
-
-			UPDATE chequeo SET numero_chequeo = numero WHERE 
-            fecha_chequeo = fecha AND ID_colaborador = ID AND numero_chequeo = chequeo_anterior;
-            SET numero := numero + 1;
-		END LOOP;
-		CLOSE cursor_chequeos;
+        SET @numero_chequeo := 0;
+        UPDATE chequeo SET numero_chequeo = @numero_chequeo := @numero_chequeo + 1 WHERE 
+        fecha_chequeo = fecha AND ID_colaborador = ID;
     END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `obtener_ultimo_chequeo` (IN `fecha` DATE, IN `ID` INT(10))   BEGIN
@@ -3304,13 +3287,10 @@ INSERT INTO `chequeo` (`fecha_chequeo`, `ID_colaborador`, `numero_chequeo`, `hor
 ('2022-10-18', 269686, 1, '13:46:38', '13:57:15', '00:10:37', 1),
 ('2022-11-01', 269686, 1, '17:16:53', '17:16:58', '00:00:05', 1),
 ('2022-11-12', 269686, 1, '08:00:00', '12:00:00', '04:00:00', 0),
-('2022-11-13', 269686, 1, '08:00:00', '09:00:00', '01:00:00', 0),
+('2022-11-13', 269686, 1, '08:00:00', '12:00:00', '04:00:00', 0),
 ('2022-11-12', 269686, 2, '15:00:00', '16:00:00', '01:00:00', 0),
-('2022-11-13', 269686, 2, '09:00:01', '11:00:00', '01:59:59', 0),
+('2022-11-13', 269686, 2, '12:00:00', '14:00:00', '02:00:00', 0),
 ('2022-11-12', 269686, 3, '18:00:00', '19:00:00', '01:00:00', 0),
-('2022-11-13', 269686, 3, '11:00:01', '13:00:00', '01:59:59', 0),
-('2022-11-13', 269686, 4, '13:00:01', '15:00:00', '01:59:59', 0),
-('2022-11-13', 269686, 5, '15:00:01', '17:00:00', '01:59:59', 0),
 ('2022-11-12', 269686, 8, '23:44:46', '23:59:41', '00:14:55', 0),
 ('2022-11-12', 269686, 9, '23:59:42', NULL, NULL, 0);
 
@@ -3349,8 +3329,8 @@ CREATE TRIGGER `calculoHorasTotalesYValidacionChequeo` BEFORE INSERT ON `chequeo
 				LEAVE read_loop;
 			END IF;
 
-			IF (NEW.hora_inicial <= tiempo_inicial OR NEW.hora_inicial <= tiempo_final 
-			OR NEW.hora_final <= tiempo_inicial OR NEW.hora_final <= tiempo_final) THEN
+			IF (NEW.hora_inicial < tiempo_inicial OR NEW.hora_inicial < tiempo_final 
+			OR NEW.hora_final < tiempo_inicial OR NEW.hora_final < tiempo_final) THEN
 				SIGNAL SQLSTATE '45000' SET message_text = "El horario especificado presenta conflictos con chequeos anteriores de la fecha correspondiente.";
 			END IF;
 		END LOOP;
@@ -3365,8 +3345,8 @@ CREATE TRIGGER `calculoHorasTotalesYValidacionChequeo` BEFORE INSERT ON `chequeo
 					LEAVE read_loop;
 				END IF;
 
-				IF (NEW.hora_inicial >= tiempo_inicial OR NEW.hora_inicial >= tiempo_final 
-				OR NEW.hora_final >= tiempo_inicial OR NEW.hora_final >= tiempo_final) THEN
+				IF (NEW.hora_inicial > tiempo_inicial OR NEW.hora_inicial > tiempo_final 
+				OR NEW.hora_final > tiempo_inicial OR NEW.hora_final > tiempo_final) THEN
 					SIGNAL SQLSTATE '45000' SET message_text = "El horario especificado presenta conflictos con chequeos posteriores de la fecha correspondiente.";
 				END IF;
 			END LOOP;
@@ -3411,8 +3391,8 @@ CREATE TRIGGER `calculoHorasTotalesYValidacionChequeoActualizacion` BEFORE UPDAT
 				LEAVE read_loop;
 			END IF;
 
-			IF (NEW.hora_inicial <= tiempo_inicial OR NEW.hora_inicial <= tiempo_final 
-			OR NEW.hora_final <= tiempo_inicial OR NEW.hora_final <= tiempo_final) THEN
+			IF (NEW.hora_inicial < tiempo_inicial OR NEW.hora_inicial < tiempo_final 
+			OR NEW.hora_final < tiempo_inicial OR NEW.hora_final < tiempo_final) THEN
 				SIGNAL SQLSTATE '45000' SET message_text = "El horario especificado presenta conflictos con chequeos anteriores de la fecha correspondiente.";
 			END IF;
 		END LOOP;
@@ -3427,8 +3407,8 @@ CREATE TRIGGER `calculoHorasTotalesYValidacionChequeoActualizacion` BEFORE UPDAT
 					LEAVE read_loop;
 				END IF;
 
-				IF (NEW.hora_inicial >= tiempo_inicial OR NEW.hora_inicial >= tiempo_final 
-				OR NEW.hora_final >= tiempo_inicial OR NEW.hora_final >= tiempo_final) THEN
+				IF (NEW.hora_inicial > tiempo_inicial OR NEW.hora_inicial > tiempo_final 
+				OR NEW.hora_final > tiempo_inicial OR NEW.hora_final > tiempo_final) THEN
 					SIGNAL SQLSTATE '45000' SET message_text = "El horario especificado presenta conflictos con chequeos posteriores de la fecha correspondiente.";
 				END IF;
 			END LOOP;

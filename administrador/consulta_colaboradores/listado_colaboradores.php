@@ -75,6 +75,7 @@
                                 <tr">
                                     <th scope="col"> ID </th>
                                     <th scope="col"> Nombre completo </th>
+                                    <th scope="col"> Fecha de nacimiento </th>
                                     <th scope="col"> Carrera </th>
                                     <th scope="col"> Modalidad </th>
                                     <th scope="col"> Hora de entrada </th>
@@ -91,12 +92,13 @@
                                         echo "<tr> ";
                                         echo "<th scope='row' class='py-3'> " . $colaborador[0] . " </th> ";
                                         echo "<td class='py-3'> " . $colaborador[1] .  " </td> ";
-                                        echo "<td class='py-3'> " . $colaborador[3] .  " </td> ";
-                                        echo "<td class='py-3'> " . $colaborador[4] . " </td> ";
-                                        echo "<td class='py-3'> " . date("h:i A", strtotime($colaborador[5])) . " </td> ";
-                                        echo "<td class='py-3'> " . date("h:i A", strtotime($colaborador[6])) . " </td>";
-                                        echo "<td class='py-3'> " . $colaborador[2] . " </td>";
-                                        echo "<td class='py-3'> " . $colaborador[7] . " </td>";
+                                        echo "<td class='py-3'> " . ((empty($colaborador[2])) ? "N/A" : date("d-m-Y", strtotime($colaborador[2]))) .  " </td> ";
+                                        echo "<td class='py-3'> " . $colaborador[5] .  " </td> ";
+                                        echo "<td class='py-3'> " . $colaborador[6] . " </td> ";
+                                        echo "<td class='py-3'> " . date("h:i A", strtotime($colaborador[7])) . " </td> ";
+                                        echo "<td class='py-3'> " . date("h:i A", strtotime($colaborador[8])) . " </td>";
+                                        echo "<td class='py-3'> " . $colaborador[3] . " </td>";
+                                        echo "<td class='py-3'> " . $colaborador[4] . " </td>";
                                         echo " </tr>";
                                     }
                                     ?>

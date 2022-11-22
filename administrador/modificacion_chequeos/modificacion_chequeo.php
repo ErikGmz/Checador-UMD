@@ -76,10 +76,20 @@
                     <form method="GET" action="<?=$_SERVER['PHP_SELF']?>" class="mb-0">
                         <h4 class="mb-4 text-center"> Datos del chequeo </h4>
                         <div class="row">
+                            <!--Selección del número de chequeo-->
+                            <div class="col-12 mb-4 texto-colaborador">
+                                <label for="numeros-chequeos" class="form-label fw-semibold"> Número de chequeo (*) </label>
+                                <select class="form-select recuadro-ID text-start" name="numero-chequeo" id="numero-chequeo" required> 
+                                    <option selected value="-1"> Chequeos no encontrados </option>
+                                </select>
+                            </div>
+
                             <!--Selección del colaborador-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="colaboradores" class="form-label fw-semibold"> Colaborador (*) </label>
-                                <select class="form-select" name="ID-colaborador" id="colaboradores" required>
+                                <select class="form-select" name="ID-colaborador" id="colaboradores" required
+                                onchange="obtenerNumeroChequeos(document.getElementById('colaboradores').value, 
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 'numero-chequeo', 1)">
                                     <?php
                                         if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                                             while($colaborador = $colaboradores->fetch_row()) {
@@ -101,7 +111,9 @@
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
                                 <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01" max="2030-12-30" 
-                                class="form-control" id="fecha-chequeo" autocomplete="OFF" required>
+                                class="form-control" id="fecha-chequeo" autocomplete="OFF" required
+                                onchange="obtenerNumeroChequeos(document.getElementById('colaboradores').value, 
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 'numero-chequeo', 1)">
                             </div>
                         </div>
 
@@ -113,12 +125,13 @@
                     </form>
 
                     <?php
-                    if(isset($_GET["ID-colaborador"], $_GET["fecha-chequeo"])) {
+                    if(isset($_GET["ID-colaborador"], $_GET["fecha-chequeo"], $_GET["numero-chequeo"])) {
                         # Buscar el chequeo introducido 
                         # en la información de búsqueda.
                         if($chequeo = $conexion_base->query("SELECT TIME_FORMAT(hora_inicial, '%H:%i:%s') AS hora_inicial,
                         TIME_FORMAT(hora_final, '%H:%i:%s') AS hora_final, bloqueo_registro FROM chequeo WHERE ID_colaborador = 
-                        '" . $_GET["ID-colaborador"] . "' AND fecha_chequeo = '" . $_GET["fecha-chequeo"] . "';")) {
+                        '" . $_GET["ID-colaborador"] . "' AND fecha_chequeo = '" . $_GET["fecha-chequeo"] 
+                        . "' AND numero_chequeo = " . $_GET["numero-chequeo"] . ";")) {
                             if($chequeo->num_rows > 0) {
                                 $datos_chequeo = $chequeo->fetch_row();
                                 $valido = true;
@@ -134,12 +147,28 @@
                                 <h4 class="mb-0"> Modificación de datos </h4>
                             </div>
 
+                            <!--Selección del número de chequeo-->
+                            <div class="col-12 mb-4 texto-colaborador">
+                                <div>
+                                    <label for="numeros-chequeos" class="form-label fw-semibold"> Número de chequeo (*) </label>
+                                    <select class="form-select recuadro-ID text-start" name="numero-chequeo" id="nuevo-numero-chequeo" required
+                                    onchange="verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
+                                    document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 
+                                    'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 2, 
+                                    document.getElementById('nuevo-numero-chequeo').value)"> 
+                                        <option selected value="-1"> Chequeos no encontrados </option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-text"> 
+                                    Campo obligatorio. 
+                                </div>
+                            </div>
+
                             <!--Selección del colaborador-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="colaboradores" class="form-label fw-semibold"> Colaborador (*) </label>
-                                <select class="form-select" name="ID-colaborador" id="nuevos-colaboradores" 
-                                onchange="verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
-                                document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 2)" required>
+                                <select class="form-select" name="ID-colaborador" id="nuevos-colaboradores" required>
                                     <?php
                                         # Obtener todos los colaboradores registrados.
                                         $colaboradores = $conexion_base->query("SELECT ID, CONCAT_WS(' ', nombres, apellido_paterno, apellido_materno) 
@@ -168,9 +197,7 @@
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
                                 <input type="date" name="fecha-chequeo" value="<?=$_GET["fecha-chequeo"]?>" min="2021-01-01" max="2030-12-30" 
-                                class="form-control" id="nueva-fecha-chequeo" autocomplete="OFF" required
-                                onchange="verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
-                                document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 2)">
+                                class="form-control" id="nueva-fecha-chequeo" autocomplete="OFF" required>
                                 <div class="form-text"> 
                                     Campo obligatorio. El rango de fechas debe 
                                     encontrarse entre 01-01-2021 y 30-12-2030.
@@ -180,11 +207,10 @@
                             <!--Solicitud de hora inicial-->
                             <div class="col-12 col-md-6 mb-4 mb-md-0">
                                 <label for="hora-inicial" class="form-label fw-semibold"> Hora de entrada (*) </label>
-                                <input type="text" class="form-control" id="hora-inicial" 
-                                autocomplete="OFF" required name="hora-inicial" placeholder="08:00:00" value="<?=$datos_chequeo[0]?>"
-                                pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d|24:00:00$"
+                                <input type="time" class="form-control" id="hora-inicial" step="1"
+                                autocomplete="OFF" required name="hora-inicial" value="<?=$datos_chequeo[0]?>"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
-                                <div class="form-text"> 
+                                <div class="form-text" id="texto-hora-inicial"> 
                                     Campo obligatorio. Formato de 00:00:00 a 24:00:00 horas.
                                 </div>
                             </div>
@@ -192,11 +218,10 @@
                             <!--Solicitud de hora final-->
                             <div class="col-12 col-md-6 mb-4 ">
                                 <label for="hora-final" class="form-label fw-semibold"> Hora de salida </label>
-                                <input type="text" class="form-control" id="hora-final" 
-                                autocomplete="OFF" name="hora-final" placeholder="12:00:00" value="<?=$datos_chequeo[1]?>"
-                                pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d|24:00:00$"
+                                <input type="time" class="form-control" id="hora-final" step="1"
+                                autocomplete="OFF" name="hora-final" value="<?=$datos_chequeo[1]?>"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
-                                <div class="form-text"> 
+                                <div class="form-text" id="texto-hora-final"> 
                                     Campo opcional. Formato de 00:00:00 a 24:00:00 horas.
                                 </div>
                             </div>
@@ -279,20 +304,12 @@
         <script src="../../js/bootstrap/bootstrap.bundle.min.js"> </script>
         <script src="../../js/dselect.min.js"> </script>
         <script src="../../js/peticiones_ajax/verificar_chequeo.js"> </script>
+        <script src="../../js/peticiones_ajax/obtener_numeros_chequeos.js"> </script>
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script type="text/javascript">
             document.body.onload = () => {
                 document.querySelector("html").classList.remove("invisible");
             }
-
-            <?php
-            if(isset($colaboradores, $_GET["ID-colaborador"], $valido) && $colaboradores->num_rows > 0 && @$valido) {
-            ?>
-                verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
-                document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 2)
-            <?php
-            }
-            ?>
 
             document.getElementById("cierre-sesion").addEventListener("click", () => {
                 document.getElementById("formulario").requestSubmit();
@@ -312,14 +329,54 @@
                 <?php
                 }
                 ?>
+                dselect(document.getElementById("numero-chequeo"), { maxHeight: "200px" });
                 dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
                 <?php
                 if(isset($_GET["ID-colaborador"], $valido) && @$valido) {
                 ?>
+                    obtenerNumeroChequeos(document.getElementById("colaboradores").value, 
+                    document.getElementById("fecha-chequeo").value, "fecha-chequeo", "numero-chequeo", <?php echo $_GET["numero-chequeo"] ?>);
+                    obtenerNumeroChequeos(document.getElementById('nuevos-colaboradores').value, 
+                    document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 'nuevo-numero-chequeo', <?php echo $_GET["numero-chequeo"] ?>)
+                    .then(function(respuesta) {
+                        verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
+                        document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 
+                        'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 2, 
+                        <?php echo $_GET["numero-chequeo"] ?>);
+                    });
+
                     document.getElementById("modificacion-chequeo").addEventListener("submit", confirmarModificacionChequeo);
                     document.getElementById("fecha-chequeo").value = "<?=date("Y-m-d", strtotime($_GET["fecha-chequeo"]))?>";
+                
+                    dselect(document.getElementById("nuevo-numero-chequeo"), { maxHeight: "200px" });
                     dselect(document.getElementById("nuevos-colaboradores"), { search: true, maxHeight: "200px" });
                     dselect(document.getElementById("estado-chequeo"), { maxHeight: "200px" });
+
+                    document.getElementById("nuevos-colaboradores").addEventListener("change", () => {
+                        obtenerNumeroChequeos(document.getElementById('nuevos-colaboradores').value, 
+                        document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 'nuevo-numero-chequeo', -1)
+                        .then(function(respuesta) {
+                            verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
+                            document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo',
+                            'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 2, document.getElementById("nuevo-numero-chequeo").value);
+                        });
+                    });
+
+                    document.getElementById("nueva-fecha-chequeo").addEventListener("change", () => {
+                        obtenerNumeroChequeos(document.getElementById('nuevos-colaboradores').value, 
+                        document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo', 'nuevo-numero-chequeo', -1)
+                        .then(function(respuesta) {
+                            verificarChequeo(document.getElementById('nuevos-colaboradores').value, 
+                            document.getElementById('nueva-fecha-chequeo').value, 'nueva-fecha-chequeo',
+                            'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 2, document.getElementById("nuevo-numero-chequeo").value);
+                        });
+                    });
+                <?php
+                }
+                else {
+                ?>
+                    obtenerNumeroChequeos(document.getElementById("colaboradores").value, 
+                    document.getElementById("fecha-chequeo").value, "fecha-chequeo", "numero-chequeo", -1);
                 <?php
                 }
             }

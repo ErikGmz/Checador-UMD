@@ -75,7 +75,7 @@
                                 # para asignar el del actual.            
                                 if($ultimo_chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" 
                                 . $_POST["fecha-chequeo"] . "', " . $_POST["ID-colaborador"] . ")")) {
-                                    if($ultimo_chequeo->num_rows < 0) {
+                                    if($ultimo_chequeo->num_rows <= 0) {
                                         $chequeo_actual = 1;
                                     }
                                     else {
