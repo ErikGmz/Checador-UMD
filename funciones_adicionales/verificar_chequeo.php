@@ -77,7 +77,7 @@
 
                     # Comprobar si la hora inicial de dicho chequeo existe.
                     if(is_null($resultados[1])) {
-                        $datos_chequeo_anterior .= " - ";
+                        $datos_chequeo_anterior .= "- ";
                     }
                     else {
                         $datos_chequeo_anterior .= $resultados[1] . " - ";
@@ -113,7 +113,7 @@
 
                     # Comprobar si la hora inicial de dicho chequeo existe.
                     if(is_null($resultados[1])) {
-                        $datos_chequeo_actual .= " - ";
+                        $datos_chequeo_actual .= "- ";
                     }
                     else {
                         $datos_chequeo_actual .= $resultados[1] . " - ";
@@ -159,14 +159,14 @@
             else {
                 $datos_chequeo_posterior = " - ";
             }
-        }
 
-        # Comprobar los datos completos del chequeo especificado.
-        if($datos_chequeo_anterior == " - - " && $datos_chequeo_actual == " - - " && $datos_chequeo_posterior == " - ") {
-            echo "true";
-        }
-        else {
-            echo "false - " . $datos_chequeo_anterior . $datos_chequeo_actual . $datos_chequeo_posterior;
+            # Comprobar los datos completos del chequeo especificado.
+            if($datos_chequeo_anterior == " - - " && $datos_chequeo_actual == " - - " && $datos_chequeo_posterior == " - ") {
+                echo "true";
+            }
+            else {
+                echo "false - " . $datos_chequeo_anterior . $datos_chequeo_actual . $datos_chequeo_posterior;
+            }
         }
         # Cerrar la conexión con la base de datos.
         $conexion_base->close();

@@ -118,8 +118,8 @@ IDCampoHoraFinal, tipoComportamiento, numeroChequeo) {
                                     mensaje_hora_final += " Debe ser mayor o igual a " + horaFinalChequeoAnterior + " y estrictamente mayor a la hora de entrada.";
                                 }
                                 else {
-                                    mensaje_hora_inicial += " Debe ser mayor o igual a " + horaFinalChequeoAnterior + ", ";
-                                    mensaje_hora_final += " Debe ser mayor o igual a " + horaFinalChequeoAnterior + ", ";
+                                    mensaje_hora_inicial += " Debe ser mayor o igual a " + horaFinalChequeoAnterior + " ";
+                                    mensaje_hora_final += " Debe ser mayor o igual a " + horaFinalChequeoAnterior;
                                 }
 
                                 document.getElementById(IDCampoHoraInicial).setAttribute("min", horaFinalChequeoAnterior);
@@ -145,8 +145,8 @@ IDCampoHoraFinal, tipoComportamiento, numeroChequeo) {
                                     mensaje_hora_final += " Debe ser menor o igual a " + horaInicialChequeoPosterior + " y estrictamente mayor a la hora de entrada.";  
                                 }
                                 else {
-                                    mensaje_hora_inicial += "menor o igual a " + horaInicialChequeoPosterior + ".";
-                                    mensaje_hora_final += "menor o igual a " + horaInicialChequeoPosterior + " y estrictamente mayor a la hora de entrada.";    
+                                    mensaje_hora_inicial += "y menor o igual a " + horaInicialChequeoPosterior + ".";
+                                    mensaje_hora_final += ", menor o igual a " + horaInicialChequeoPosterior + " y estrictamente mayor a la hora de entrada.";    
                                 }
 
                                 document.getElementById(IDCampoHoraInicial).setAttribute("max", horaInicialChequeoPosterior);

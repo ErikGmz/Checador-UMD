@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-11-2022 a las 15:34:36
+-- Tiempo de generación: 22-11-2022 a las 02:50:14
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -33,10 +33,46 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `corregir_enumeracion_chequeos` (IN 
         fecha_chequeo = fecha AND ID_colaborador = ID;
     END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `obtener_chequeo` (IN `fecha` DATE, IN `ID` INT(10), IN `numero` INT(11))   BEGIN
+        SELECT hora_final, hora_inicial FROM chequeo WHERE fecha_chequeo = fecha
+        AND ID_colaborador = ID AND numero_chequeo = numero LIMIT 1;
+    END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `obtener_chequeo_anterior` (IN `fecha` DATE, IN `ID` INT(10), IN `numero` INT(11))   BEGIN
+        SELECT hora_final, hora_inicial FROM chequeo WHERE fecha_chequeo = fecha
+        AND ID_colaborador = ID AND numero_chequeo = numero_chequeo_anterior(fecha, ID, numero) LIMIT 1;
+    END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `obtener_chequeo_posterior` (IN `fecha` DATE, IN `ID` INT(10), IN `numero` INT(11))   BEGIN
+        SELECT hora_final, hora_inicial FROM chequeo WHERE fecha_chequeo = fecha
+        AND ID_colaborador = ID AND numero_chequeo = numero_chequeo_posterior(fecha, ID, numero) LIMIT 1;
+    END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `obtener_ultimo_chequeo` (IN `fecha` DATE, IN `ID` INT(10))   BEGIN
-        SELECT numero_chequeo, hora_final FROM chequeo WHERE fecha_chequeo = fecha
+        SELECT numero_chequeo, hora_final, hora_inicial FROM chequeo WHERE fecha_chequeo = fecha
         AND ID_colaborador = ID AND numero_chequeo = (SELECT MAX(numero_chequeo) FROM chequeo WHERE 
         fecha_chequeo = fecha AND ID_colaborador = ID) LIMIT 1;
+    END$$
+
+--
+-- Funciones
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `numero_chequeo_anterior` (`fecha` DATE, `ID` INT(10), `numero` INT(11)) RETURNS INT(11)  BEGIN
+        DECLARE valor INT;
+
+        SELECT numero_chequeo INTO valor FROM chequeo WHERE fecha_chequeo = fecha AND ID_colaborador = ID
+        AND numero_chequeo < numero ORDER BY numero_chequeo DESC LIMIT 1;
+
+        RETURN valor;
+    END$$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `numero_chequeo_posterior` (`fecha` DATE, `ID` INT(10), `numero` INT(11)) RETURNS INT(11)  BEGIN
+        DECLARE valor INT;
+
+        SELECT numero_chequeo INTO valor FROM chequeo WHERE fecha_chequeo = fecha AND ID_colaborador = ID
+        AND numero_chequeo > numero ORDER BY numero_chequeo ASC LIMIT 1;
+
+        RETURN valor;
     END$$
 
 DELIMITER ;
@@ -127,7 +163,7 @@ INSERT INTO `carrera` (`ID`, `nombre`) VALUES
 --
 
 CREATE TABLE `chequeo` (
-  `fecha_chequeo` date NOT NULL CHECK (`fecha_chequeo` between '2021-01-01' and '2030-12-31'),
+  `fecha_chequeo` date NOT NULL CHECK (`fecha_chequeo` >= '2021-01-01'),
   `ID_colaborador` int(10) UNSIGNED NOT NULL,
   `numero_chequeo` int(11) NOT NULL DEFAULT 1,
   `hora_inicial` time NOT NULL CHECK (`hora_inicial` < `hora_final`),
@@ -3521,7 +3557,7 @@ DELIMITER ;
 --
 
 CREATE TABLE `contingencia` (
-  `fecha` date NOT NULL CHECK (`fecha` between '2021-01-01' and '2030-12-31'),
+  `fecha` date NOT NULL CHECK (`fecha` >= '2021-01-01'),
   `hora_inicial` time NOT NULL CHECK (`hora_inicial` < `hora_final`),
   `hora_final` time NOT NULL CHECK (`hora_inicial` < `hora_final`),
   `tiempo_total` time NOT NULL,
@@ -3534,7 +3570,8 @@ CREATE TABLE `contingencia` (
 --
 
 INSERT INTO `contingencia` (`fecha`, `hora_inicial`, `hora_final`, `tiempo_total`, `observaciones`, `ID_colaborador`) VALUES
-('2022-11-08', '09:00:00', '12:00:00', '03:00:00', 'Servicio médico', 269686);
+('2022-11-08', '09:00:00', '12:00:00', '03:00:00', 'Servicio médico', 160243),
+('2022-11-21', '08:00:00', '12:00:00', '04:00:00', 'sdsds', 269686);
 
 --
 -- Disparadores `contingencia`

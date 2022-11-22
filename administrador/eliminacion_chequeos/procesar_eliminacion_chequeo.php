@@ -13,7 +13,7 @@
 
     # Verificar que se haya enviado un
     # formulario de eliminación de contingencia.
-    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-chequeo"])) {
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-chequeo"], $_POST["numero-chequeo"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -25,17 +25,24 @@
         # a un chequeo existente en el sistema.
         try {
             if($resultados = $conexion_base->query("SELECT * FROM chequeo WHERE 
-            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-chequeo"] . "';")) {
+            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-chequeo"] . "'
+            AND numero_chequeo = " . $_POST["numero-chequeo"] . ";")) {
                 if($resultados->num_rows <= 0) {
                     $resultado = 2;
                 }
                 else {
-                    if(strtotime($_POST["fecha-chequeo"]) >= strtotime("2021-01-01") &&
-                    strtotime($_POST["fecha-chequeo"]) <= strtotime("2030-12-30")) {
+                    if(strtotime($_POST["fecha-chequeo"]) >= strtotime("2021-01-01")) {
                         # Borrar el chequeo en la base de datos.
                         try {
                             if($conexion_base->query("DELETE FROM chequeo WHERE fecha_chequeo = '" . $_POST["fecha-chequeo"]
-                            . "' AND ID_colaborador = '" . $_POST["ID-colaborador"] . "';"))  {
+                            . "' AND ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND numero_chequeo = " . $_POST["numero-chequeo"] . ";")) {
+                                $conexion_base->query("CALL corregir_enumeracion_chequeos('" . $_POST["fecha-chequeo"] . "', " . $_POST["ID-colaborador"] . ");");
+                                do {
+                                    if($auxiliar = $conexion_base->store_result()) {
+                                        $auxiliar->free();
+                                    }
+                                } while($conexion_base->more_results() && $conexion_base->next_result());
+
                                 $resultado = 4;
                             }
                             else {
@@ -124,6 +131,7 @@
                             title: "Chequeo inexistente",
                             html: <?php echo "\"<p class='mb-4'> El siguiente chequeo es inexistente en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
+                            . "<p class='my-2'> <b> Número de chequeo: </b> " . @$_POST["numero-chequeo"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {
@@ -137,7 +145,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Fecha de registro no válida",
-                            text: "La fecha de registro no corresponde al rango de fechas permitido"
+                            text: "La fecha de registro no corresponde al rango de fechas permitido (01-01-2021 o mayor)"
                         }).then((resultado) => {
                             location.href="eliminacion_chequeo.php";
                         });
@@ -151,6 +159,7 @@
                             title: "Eliminación exitosa de chequeo",
                             html: <?php echo "\"<p class='mb-4'> El siguiente chequeo fue exitosamente eliminado del sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
+                            . "<p class='my-2'> <b> Número de chequeo: </b> " . @$_POST["numero-chequeo"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {

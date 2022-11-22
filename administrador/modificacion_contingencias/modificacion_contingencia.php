@@ -167,13 +167,13 @@
                             <!--Selección de la fecha de contingencia-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="fecha-registro" class="form-label fw-semibold"> Fecha de contingencia (*) </label>
-                                <input type="date" name="fecha-registro" value="<?=$_GET["fecha-registro"]?>" min="2021-01-01" max="2030-12-30" 
+                                <input type="date" name="fecha-registro" value="<?=$_GET["fecha-registro"]?>" min="2021-01-01"
                                 class="form-control" id="nueva-fecha-registro" autocomplete="OFF" required
                                 onchange="verificarContingencia(document.getElementById('nuevos-colaboradores').value, 
                                 document.getElementById('nueva-fecha-registro').value, 'nueva-fecha-registro', 2)">
                                 <div class="form-text"> 
                                     Campo obligatorio. El rango de fechas admitido se encuentra
-                                    entre 01-01-2021 y 30-12-2030. Cada colaborador
+                                    entre 01-01-2021 y mayor. Cada colaborador
                                     puede tener máximo una contingencia por día.
                                 </div>
                             </div>

@@ -22,34 +22,49 @@
                 switch($_POST["chequeo"]) {
                     case "entrada":
                         # Verificar si la fecha actual está en el
-                        # rango permitido (01-01-2021 a 30-12-2030).
-                        if(strtotime(date("Y-m-d")) >= strtotime("2021-01-01") &&
-                        strtotime(date("Y-m-d")) <= strtotime("2030-12-30")) {
-                            # Obtener el último chequeo que el colaborador
-                            # realizó en la fecha correspondiente.
-                            $verificacion_chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" 
-                            . date("Y-m-d") . "', " . $_POST["ID"] . ");");
-                            do {
-                                if($auxiliar = $conexion_base->store_result()) {
-                                    $auxiliar->free();
-                                }
-                            } while($conexion_base->more_results() && $conexion_base->next_result());
+                        # rango permitido (01-01-2021 o mayor).
+                        if(strtotime(date("Y-m-d")) >= strtotime("2021-01-01")) {
+                            # Verificar si no se han realizado dos chequeos en el mismo día.
+                            $verificacion_cantidad_chequeos = $conexion_base->query("SELECT cantidad_chequeos('"
+                            . date("Y-m-d") . "', " . $_POST["ID"] . ") FROM DUAL;");
 
-                            if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
-                                # Verificar si el último chequeo que el colaborador
-                                # realizó en la fecha correspondiente fue completado.
-                                $resultados = $verificacion_chequeo->fetch_row();
-
-                                if(is_null($resultados[1])) {
-                                    $resultado = 3;
+                            if(isset($verificacion_cantidad_chequeos) && $verificacion_cantidad_chequeos->num_rows > 0) {
+                                $resultados_cantidad_chequeos = $verificacion_cantidad_chequeos->fetch_row();
+                                
+                                if((int)$resultados_cantidad_chequeos[0] >= 2) {
+                                    $resultado = 13;
                                 }
                                 else {
-                                    # Obtener el número del siguiente chequeo del día.
-                                    $numero_chequeo = (int)$resultados[0] + 1;
+                                    # Obtener el último chequeo que el colaborador
+                                    # realizó en la fecha correspondiente.
+                                    $verificacion_chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" 
+                                    . date("Y-m-d") . "', " . $_POST["ID"] . ");");
+                                    do {
+                                        if($auxiliar = $conexion_base->store_result()) {
+                                            $auxiliar->free();
+                                        }
+                                    } while($conexion_base->more_results() && $conexion_base->next_result());
+
+                                    if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
+                                        # Verificar si el último chequeo que el colaborador
+                                        # realizó en la fecha correspondiente fue completado.
+                                        $resultados = $verificacion_chequeo->fetch_row();
+
+                                        if(is_null($resultados[1])) {
+                                            $resultado = 3;
+                                        }
+                                        else {
+                                            # Obtener el número del siguiente chequeo del día.
+                                            $numero_chequeo = (int)$resultados[0] + 1;
+                                        }
+                                    }
+                                    else {
+                                        $numero_chequeo = 1;
+                                    }
                                 }
                             }
                             else {
-                                $numero_chequeo = 1;
+                                $resultado = 1;
                             }
 
                             if(!isset($resultado)) {
@@ -129,9 +144,8 @@
 
                     case "salida":
                         # Verificar si la fecha actual está en el
-                        # rango permitido (01-01-2021 a 30-12-2030).
-                        if(strtotime(date("Y-m-d")) >= strtotime("2021-01-01") &&
-                        strtotime(date("Y-m-d")) <= strtotime("2030-12-30")) {
+                        # rango permitido (01-01-2021 o mayor).
+                        if(strtotime(date("Y-m-d")) >= strtotime("2021-01-01")) {
                             # Obtener el último chequeo que el colaborador
                             # realizó en la fecha correspondiente.
                             $verificacion_chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" 
@@ -425,7 +439,21 @@
                         Swal.fire({
                             icon: "error",
                             title: "Fecha de chequeo no válida",
-                            text: "La fecha de chequeo no corresponde al rango de fechas permitido (01-01-2021 al 30-12-2030)"
+                            text: "La fecha de chequeo no corresponde al rango de fechas permitido (01-01-2021 o mayor)"
+                        }).then((resultado) => {
+                            location.href="../index.php";
+                        });
+                    });
+                break;
+
+                case 13:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Límite de chequeos del día actual alcanzado",
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya realizó los dos chequeos permitidos en la fecha actual (" . date("d-m-Y") . "): </p> \\n"
+                            . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
+                            . "<p class='mb-0'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \"" ?>
                         }).then((resultado) => {
                             location.href="../index.php";
                         });

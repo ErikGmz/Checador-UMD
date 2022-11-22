@@ -110,14 +110,14 @@
                             <!--Selección de la fecha de chequeo-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
-                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01" max="2030-12-30"
+                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01"
                                 class="form-control" id="fecha-chequeo" autocomplete="OFF" required
                                 onchange="verificarChequeo(document.getElementById('colaboradores').value, 
                                 document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 
                                 'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1, 1)">
                                 <div class="form-text"> 
                                     Campo obligatorio. El rango de fechas admitido se encuentra
-                                    entre 01-01-2021 y 30-12-2030.
+                                    entre 01-01-2021 y mayor.
                                 </div>
                             </div>
 

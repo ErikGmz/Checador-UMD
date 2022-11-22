@@ -1,8 +1,8 @@
 ALTER TABLE `chequeo` 
-  ADD CONSTRAINT `CK_Fecha` CHECK (`fecha_chequeo` BETWEEN "2021-01-01" AND "2030-12-31");
+  ADD CONSTRAINT `CK_Fecha` CHECK (`fecha_chequeo` >= "2021-01-01");
 
 ALTER TABLE `contingencia` 
-  ADD CONSTRAINT `CK_Fecha_Registro` CHECK (`fecha` BETWEEN "2021-01-01" AND "2030-12-31");
+  ADD CONSTRAINT `CK_Fecha_Registro` CHECK (`fecha` >= "2021-01-01");
 
 ALTER TABLE `colaborador` 
   ADD CONSTRAINT `CK_Fecha_Nacimiento` CHECK (`fecha_nacimiento` >= "1900-01-01");

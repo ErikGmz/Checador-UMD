@@ -60,8 +60,7 @@
                         $resultado = 3;
                     }
                     else {
-                        if(strtotime($_POST["fecha-chequeo"]) >= strtotime("2021-01-01") &&
-                        strtotime($_POST["fecha-chequeo"]) <= strtotime("2030-12-30")) {
+                        if(strtotime($_POST["fecha-chequeo"]) >= strtotime("2021-01-01")) {
                             # Agregar el chequeo a la base de datos.
                             try {
                                 if($tiempo_final != "") {
@@ -93,7 +92,7 @@
                                     . "VALUES('" . $_POST["fecha-chequeo"] . "', '" . date("H:i:s", strtotime($tiempo_inicial)) 
                                     . "', $registro_hora_final, '" . $_POST["estado-chequeo"] . "', '"
                                     . $_POST["ID-colaborador"] . "', " . $chequeo_actual . ");"))  {
-                                        $conexion_base->query("CALL corregir_enumeracion_chequeos('" . date("Y-m-d") . "', " . $_POST["ID-colaborador"] . ");");
+                                        $conexion_base->query("CALL corregir_enumeracion_chequeos('" . $_POST["fecha-chequeo"] . "', " . $_POST["ID-colaborador"] . ");");
                                         do {
                                             if($auxiliar = $conexion_base->store_result()) {
                                                 $auxiliar->free();
@@ -215,7 +214,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Fecha de chequeo no válida",
-                            text: "La fecha de chequeo no corresponde al rango de fechas permitido"
+                            text: "La fecha de chequeo no corresponde al rango de fechas permitido (01-01-2021 o mayor)"
                         }).then((resultado) => {
                             location.href="adicion_chequeo.php";
                         });

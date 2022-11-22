@@ -73,12 +73,20 @@
                     <form method="POST" action="procesar_eliminacion_chequeo.php" id="eliminacion-chequeo" class="mb-0">
                         <h4 class="mb-4 text-center"> Datos del chequeo </h4>
                         <div class="row">
+                            <!--Selección del número de chequeo-->
+                            <div class="col-12 mb-4 texto-colaborador">
+                                <label for="numeros-chequeos" class="form-label fw-semibold"> Número de chequeo (*) </label>
+                                <select class="form-select recuadro-ID text-start" name="numero-chequeo" id="numero-chequeo" required> 
+                                    <option selected value="-1"> Chequeos no encontrados </option>
+                                </select>
+                            </div>
+
                             <!--Selección del colaborador-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="colaboradores" class="form-label fw-semibold"> Colaborador (*) </label>
                                 <select class="form-select" name="ID-colaborador" id="colaboradores" required
-                                onchange="verificarChequeo(document.getElementById('colaboradores').value, 
-                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 3)">
+                                onchange="obtenerNumeroChequeos(document.getElementById('colaboradores').value, 
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 'numero-chequeo', 1)">
                                     <?php
                                         if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                                             while($colaborador = $colaboradores->fetch_row()) {
@@ -99,10 +107,10 @@
                             <!--Selección de la fecha de chequeo-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
-                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01" max="2030-12-30" 
+                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01"
                                 class="form-control" id="fecha-chequeo" autocomplete="OFF" required
-                                onchange="verificarChequeo(document.getElementById('colaboradores').value, 
-                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 3)">
+                                onchange="obtenerNumeroChequeos(document.getElementById('colaboradores').value, 
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 'numero-chequeo', 1)">
                             </div>
                         </div>
 
@@ -135,6 +143,7 @@
         <script src="../../js/bootstrap/bootstrap.bundle.min.js"> </script>
         <script src="../../js/dselect.min.js"> </script>
         <script src="../../js/peticiones_ajax/verificar_chequeo.js"> </script>
+        <script src="../../js/peticiones_ajax/obtener_numeros_chequeos.js"> </script>
         <script src="../../js/verificar_rangos_horas.js"> </script>
         <script type="text/javascript">
             <?php
@@ -142,8 +151,6 @@
                 ?>
                     document.body.onload = () => {
                         document.querySelector("html").classList.remove("invisible");
-                        verificarChequeo(document.getElementById('colaboradores').value, 
-                        document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 3);
                     }
                 <?php
                 }
@@ -167,7 +174,11 @@
                     document.getElementById("fecha-chequeo").value = new Date().toLocaleDateString("fr-CA");
                     document.getElementById("eliminacion-chequeo").addEventListener("submit", confirmarEliminacionChequeo);
                     dselect(document.getElementById("colaboradores"), { search: true, maxHeight: "200px" });
-                <?php
+                    dselect(document.getElementById("numero-chequeo"), { maxHeight: "200px" });
+                    
+                    obtenerNumeroChequeos(document.getElementById("colaboradores").value, 
+                    document.getElementById("fecha-chequeo").value, "fecha-chequeo", "numero-chequeo", -1);
+                    <?php
                 }
             ?>
         </script>

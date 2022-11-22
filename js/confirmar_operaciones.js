@@ -1,5 +1,4 @@
-// Función para confirmar el cierre
-// de sesión de un administrador.
+// Función para confirmar el cierre de sesión de un administrador.
 function confirmarCierreSesion(evento) {
     evento.preventDefault();
 
@@ -10,15 +9,15 @@ function confirmarCierreSesion(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea cerrar sesión?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// adición de un colaborador.
+// Función para confirmar la adición de un colaborador.
 function confirmarRegistroColaborador(evento) {
     evento.preventDefault();
 
@@ -29,15 +28,15 @@ function confirmarRegistroColaborador(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea agregar al colaborador?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// modificación de un colaborador.
+// Función para confirmar la modificación de un colaborador.
 function confirmarModificacionColaborador(evento) {
     evento.preventDefault();
 
@@ -48,15 +47,15 @@ function confirmarModificacionColaborador(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea modificar el colaborador?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// eliminación de un colaborador.
+// Función para confirmar la eliminación de un colaborador.
 function confirmarEliminacionColaborador(evento) {
     evento.preventDefault();
 
@@ -67,15 +66,15 @@ function confirmarEliminacionColaborador(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea eliminar al colaborador?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar el
-// desbloqueo de un colaborador.
+// Función para confirmar el desbloqueo de un colaborador.
 function confirmarDesbloqueoColaborador(evento) {
     evento.preventDefault();
 
@@ -86,15 +85,15 @@ function confirmarDesbloqueoColaborador(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea desbloquear el ID del colaborador?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar el
-// bloqueo de un colaborador.
+// Función para confirmar el bloqueo de un colaborador.
 function confirmarBloqueoColaborador(evento) {
     evento.preventDefault();
 
@@ -105,15 +104,15 @@ function confirmarBloqueoColaborador(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea bloquear el ID del colaborador?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar el
-// registro de una contingencia.
+// Función para confirmar el registro de una contingencia.
 function confirmarRegistroContingencia(evento) {
     evento.preventDefault();
 
@@ -124,15 +123,15 @@ function confirmarRegistroContingencia(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea registrar la contingencia?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// modificación de una contingencia.
+// Función para confirmar la modificación de una contingencia.
 function confirmarModificacionContingencia(evento) {
     evento.preventDefault();
 
@@ -143,15 +142,15 @@ function confirmarModificacionContingencia(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea modificar la contingencia?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// eliminación de una contingencia.
+// Función para confirmar la eliminación de una contingencia.
 function confirmarEliminacionContingencia(evento) {
     evento.preventDefault();
 
@@ -162,15 +161,15 @@ function confirmarEliminacionContingencia(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea eliminar la contingencia?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// adición de un administrador.
+// Función para confirmar la adición de un administrador.
 function confirmarRegistroAdministrador(evento) {
     evento.preventDefault();
 
@@ -181,15 +180,15 @@ function confirmarRegistroAdministrador(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea agregar al administrador?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// modificación de un administrador.
+// Función para confirmar la modificación de un administrador.
 function confirmarModificacionAdministrador(evento) {
     evento.preventDefault();
 
@@ -200,15 +199,15 @@ function confirmarModificacionAdministrador(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea modificar al administrador?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// eliminación de un administrador.
+// Función para confirmar la eliminación de un administrador.
 function confirmarEliminacionAdministrador(evento) {
     evento.preventDefault();
 
@@ -219,15 +218,15 @@ function confirmarEliminacionAdministrador(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea eliminar al administrador?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// adición de un chequeo.
+// Función para confirmar la adición de un chequeo.
 function confirmarRegistroChequeo(evento) {
     evento.preventDefault();
 
@@ -238,15 +237,15 @@ function confirmarRegistroChequeo(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea agregar el chequeo?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// modificación de un chequeo.
+// Función para confirmar la modificación de un chequeo.
 function confirmarModificacionChequeo(evento) {
     evento.preventDefault();
 
@@ -257,15 +256,15 @@ function confirmarModificacionChequeo(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea modificar el chequeo?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }
     });
 }
 
-// Función para confirmar la
-// eliminación de un chequeo.
+// Función para confirmar la eliminación de un chequeo.
 function confirmarEliminacionChequeo(evento) {
     evento.preventDefault();
 
@@ -276,7 +275,8 @@ function confirmarEliminacionChequeo(evento) {
         confirmButtonText: "Sí",
         showDenyButton: true,
         text: "¿Está seguro de que realmente desea eliminar el chequeo?"
-    }).then((resultado) => {
+    })
+    .then((resultado) => {
         if(resultado.isConfirmed) {
             evento.target.submit();
         }

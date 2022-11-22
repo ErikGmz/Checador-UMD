@@ -40,8 +40,7 @@
                         $resultado = 3;
                     }
                     else {
-                        if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01") &&
-                        strtotime($_POST["fecha-registro"]) <= strtotime("2030-12-30")) {
+                        if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01")) {
                             # Actualizar la contingencia en la base de datos.
                             try {
                                 if($conexion_base->query("UPDATE contingencia SET fecha = '" . $_POST["fecha-registro"] . "', hora_inicial = '"
@@ -134,8 +133,8 @@
                     window.addEventListener("load", () => {
                         Swal.fire({
                             icon: "error",
-                            title: "Contingencia inexistente",
-                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia es inexistente en el sistema: </p> \\n"
+                            title: "Contingencia ya existente",
+                            html: <?php echo "\"<p class='mb-4'> La siguiente contingencia ya existe en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de registro: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-registro"])). "</p>\""
                             ?>
@@ -162,7 +161,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Fecha de registro no válida",
-                            text: "La fecha de registro no corresponde al rango de fechas permitido"
+                            text: "La fecha de registro no corresponde al rango de fechas permitido (01-01-2022 o mayor)"
                         }).then((resultado) => {
                             location.href="modificacion_contingencia.php";
                         });

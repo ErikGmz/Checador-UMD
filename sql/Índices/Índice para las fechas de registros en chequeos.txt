@@ -1,0 +1,1 @@
+CREATE OR REPLACE INDEX indice_fecha_registro ON chequeo (fecha_chequeo);

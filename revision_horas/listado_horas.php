@@ -52,8 +52,7 @@
             }
 
             # Comprobar si la fecha inicial es válida.
-            if(strtotime(@$_GET["fecha-inicial"]) >= strtotime("2021-01-01") &&
-            strtotime(@$_GET["fecha-inicial"]) <= strtotime("2030-12-30")) {
+            if(strtotime(@$_GET["fecha-inicial"]) >= strtotime("2021-01-01")) {
                 $fecha_inicial = @$_GET["fecha-inicial"];
             }
             else {
@@ -61,12 +60,11 @@
             }
 
             # Comprobar si la fecha final es válida.
-            if(strtotime(@$_GET["fecha-final"]) <= strtotime("2030-12-31") && 
-            strtotime(@$_GET["fecha-final"]) >= strtotime("2021-01-02")) {
+            if(strtotime(@$_GET["fecha-final"]) >= strtotime("2021-01-02")) {
                 $fecha_final = @$_GET["fecha-final"];
             }
             else {
-                $fecha_final = "2030-12-31";
+                $fecha_final = "2021-01-01";
             }
 
             # Verificar si el rango de fechas es válido;

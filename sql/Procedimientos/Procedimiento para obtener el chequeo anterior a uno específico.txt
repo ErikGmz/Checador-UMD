@@ -2,6 +2,6 @@ DELIMITER $$
     CREATE OR REPLACE PROCEDURE obtener_chequeo_posterior (IN fecha DATE, IN ID INT(10), IN numero INT(11))
     BEGIN
         SELECT hora_final, hora_inicial FROM chequeo WHERE fecha_chequeo = fecha
-        AND ID_colaborador = ID AND numero_chequeo = numero + 1 LIMIT 1;
+        AND ID_colaborador = ID AND numero_chequeo = numero_chequeo_posterior(fecha, ID, numero) LIMIT 1;
     END $$
 DELIMITER ;

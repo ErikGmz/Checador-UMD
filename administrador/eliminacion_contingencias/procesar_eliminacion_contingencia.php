@@ -30,8 +30,7 @@
                     $resultado = 2;
                 }
                 else {
-                    if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01") &&
-                    strtotime($_POST["fecha-registro"]) <= strtotime("2030-12-30")) {
+                    if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01")) {
                         # Borrar la contingencia en la base de datos.
                         try {
                             if($conexion_base->query("DELETE FROM contingencia WHERE fecha = '" . $_POST["fecha-registro"]
@@ -137,7 +136,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Fecha de registro no válida",
-                            text: "La fecha de registro no corresponde al rango de fechas permitido"
+                            text: "La fecha de registro no corresponde al rango de fechas permitido (01-01-2021 o mayor)"
                         }).then((resultado) => {
                             location.href="eliminacion_contingencia.php";
                         });
