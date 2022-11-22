@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-11-2022 a las 02:50:14
+-- Tiempo de generación: 22-11-2022 a las 06:11:02
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -57,6 +57,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `obtener_ultimo_chequeo` (IN `fecha`
 --
 -- Funciones
 --
+CREATE DEFINER=`root`@`localhost` FUNCTION `cantidad_chequeos` (`fecha` DATE, `ID` INT(10)) RETURNS INT(11)  BEGIN
+        DECLARE valor INT;
+
+        SELECT COUNT(*) INTO valor FROM chequeo WHERE fecha_chequeo = fecha AND ID_colaborador = ID LIMIT 1;
+
+        RETURN valor;
+    END$$
+
 CREATE DEFINER=`root`@`localhost` FUNCTION `numero_chequeo_anterior` (`fecha` DATE, `ID` INT(10), `numero` INT(11)) RETURNS INT(11)  BEGIN
         DECLARE valor INT;
 
@@ -3322,13 +3330,12 @@ INSERT INTO `chequeo` (`fecha_chequeo`, `ID_colaborador`, `numero_chequeo`, `hor
 INSERT INTO `chequeo` (`fecha_chequeo`, `ID_colaborador`, `numero_chequeo`, `hora_inicial`, `hora_final`, `tiempo_total`, `bloqueo_registro`) VALUES
 ('2022-10-18', 269686, 1, '13:46:38', '13:57:15', '00:10:37', 1),
 ('2022-11-01', 269686, 1, '17:16:53', '17:16:58', '00:00:05', 1),
-('2022-11-12', 269686, 1, '08:00:00', '12:00:00', '04:00:00', 0),
+('2022-11-12', 269686, 1, '08:00:00', '11:00:00', '03:00:00', 0),
 ('2022-11-13', 269686, 1, '08:00:00', '12:00:00', '04:00:00', 0),
-('2022-11-12', 269686, 2, '15:00:00', '16:00:00', '01:00:00', 0),
+('2022-11-21', 269686, 1, '08:30:09', '08:30:17', '00:00:08', 1),
+('2022-11-12', 269686, 2, '12:00:00', '15:00:00', '03:00:00', 0),
 ('2022-11-13', 269686, 2, '12:00:00', '14:00:00', '02:00:00', 0),
-('2022-11-12', 269686, 3, '18:00:00', '19:00:00', '01:00:00', 0),
-('2022-11-12', 269686, 8, '23:44:46', '23:59:41', '00:14:55', 0),
-('2022-11-12', 269686, 9, '23:59:42', NULL, NULL, 0);
+('2022-11-12', 269686, 3, '16:00:00', '17:00:00', '01:00:00', 0);
 
 --
 -- Disparadores `chequeo`
@@ -3518,7 +3525,7 @@ INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_matern
 (256732, 'Daniela', 'López', 'Rico', NULL, 0, 4, 29, 1, 8),
 (259189, 'Héctor Eduardo', 'González', 'De Anda', NULL, 0, 0, 36, 1, 1),
 (262376, 'Ángela Geanine', 'De Lira', 'Ávila', NULL, 1, 1, 71, 1, 23),
-(269686, 'Erik Alejandro', 'Gómez', 'Martínez', '2001-07-16', 5, 0, 61, 1, 23),
+(269686, 'Erik Alejandro', 'Gómez', 'Martínez', '2001-07-16', 6, 0, 61, 1, 23),
 (270128, 'Andrea', 'García', 'Martínez', NULL, 0, 0, 52, 1, 16),
 (271448, 'Gibran ', 'Repizo', 'Gómez', NULL, 0, 0, 71, 1, 1),
 (272124, 'Andrea Jaqueline', 'Gámez', 'Ruiz', NULL, 1, 0, 52, 1, 21),
@@ -3859,7 +3866,9 @@ ALTER TABLE `carrera`
 --
 ALTER TABLE `chequeo`
   ADD PRIMARY KEY (`numero_chequeo`,`fecha_chequeo`,`ID_colaborador`),
-  ADD KEY `fk_Chequeo_Colaborador1_idx` (`ID_colaborador`);
+  ADD KEY `indice_fecha_registro` (`fecha_chequeo`),
+  ADD KEY `indice_ID_colaborador` (`ID_colaborador`),
+  ADD KEY `indice_colaborador_fecha_chequeo` (`fecha_chequeo`,`ID_colaborador`);
 
 --
 -- Indices de la tabla `colaborador`
