@@ -28,30 +28,29 @@
                             $verificacion_cantidad_chequeos = $conexion_base->query("SELECT cantidad_chequeos('"
                             . date("Y-m-d") . "', " . $_POST["ID"] . ") FROM DUAL;");
 
-                            if(isset($verificacion_cantidad_chequeos) && $verificacion_cantidad_chequeos->num_rows > 0) {
-                                $resultados_cantidad_chequeos = $verificacion_cantidad_chequeos->fetch_row();
-                                
-                                if((int)$resultados_cantidad_chequeos[0] >= 2) {
-                                    $resultado = 13;
+                            # Obtener el último chequeo que el colaborador
+                            # realizó en la fecha correspondiente.
+                            $verificacion_chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" 
+                            . date("Y-m-d") . "', " . $_POST["ID"] . ");");
+                            do {
+                                if($auxiliar = $conexion_base->store_result()) {
+                                    $auxiliar->free();
+                                }
+                            } while($conexion_base->more_results() && $conexion_base->next_result());
+
+                            if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
+                                # Verificar si el último chequeo que el colaborador
+                                # realizó en la fecha correspondiente fue completado.
+                                $resultados = $verificacion_chequeo->fetch_row();
+
+                                if(is_null($resultados[1])) {
+                                    $resultado = 3;
                                 }
                                 else {
-                                    # Obtener el último chequeo que el colaborador
-                                    # realizó en la fecha correspondiente.
-                                    $verificacion_chequeo = $conexion_base->query("CALL obtener_ultimo_chequeo('" 
-                                    . date("Y-m-d") . "', " . $_POST["ID"] . ");");
-                                    do {
-                                        if($auxiliar = $conexion_base->store_result()) {
-                                            $auxiliar->free();
-                                        }
-                                    } while($conexion_base->more_results() && $conexion_base->next_result());
-
-                                    if(isset($verificacion_chequeo) && $verificacion_chequeo->num_rows > 0) {
-                                        # Verificar si el último chequeo que el colaborador
-                                        # realizó en la fecha correspondiente fue completado.
-                                        $resultados = $verificacion_chequeo->fetch_row();
-
-                                        if(is_null($resultados[1])) {
-                                            $resultado = 3;
+                                    if(isset($verificacion_cantidad_chequeos) && $verificacion_cantidad_chequeos->num_rows > 0) {
+                                        $resultados_cantidad_chequeos = $verificacion_cantidad_chequeos->fetch_row();
+                                        if((int)$resultados_cantidad_chequeos[0] >= 2) {
+                                            $resultado = 13;
                                         }
                                         else {
                                             # Obtener el número del siguiente chequeo del día.
@@ -59,12 +58,12 @@
                                         }
                                     }
                                     else {
-                                        $numero_chequeo = 1;
+                                        $resultado = 1;
                                     }
                                 }
                             }
                             else {
-                                $resultado = 1;
+                                $numero_chequeo = 1;
                             }
 
                             if(!isset($resultado)) {
