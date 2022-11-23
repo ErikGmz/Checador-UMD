@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-11-2022 a las 06:11:02
+-- Tiempo de generación: 23-11-2022 a las 21:14:21
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -84,6 +84,50 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `numero_chequeo_posterior` (`fecha` D
     END$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `cantidad_colaboradores_carreras`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `cantidad_colaboradores_carreras` (
+`nombre_carrera` text
+,`cantidad_colaboradores` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `cantidad_colaboradores_modalidades`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `cantidad_colaboradores_modalidades` (
+`nombre_modalidad` varchar(45)
+,`cantidad_colaboradores` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `cantidad_colaboradores_participaciones`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `cantidad_colaboradores_participaciones` (
+`nombre_participacion` varchar(45)
+,`cantidad_colaboradores` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `cantidad_colaboradores_turnos`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `cantidad_colaboradores_turnos` (
+`nombre_turno` varchar(45)
+,`cantidad_colaboradores` bigint(21)
+);
 
 -- --------------------------------------------------------
 
@@ -3333,8 +3377,10 @@ INSERT INTO `chequeo` (`fecha_chequeo`, `ID_colaborador`, `numero_chequeo`, `hor
 ('2022-11-12', 269686, 1, '08:00:00', '11:00:00', '03:00:00', 0),
 ('2022-11-13', 269686, 1, '08:00:00', '12:00:00', '04:00:00', 0),
 ('2022-11-21', 269686, 1, '08:30:09', '08:30:17', '00:00:08', 1),
+('2022-11-22', 269686, 1, '13:29:20', '13:29:31', '00:00:11', 1),
 ('2022-11-12', 269686, 2, '12:00:00', '15:00:00', '03:00:00', 0),
 ('2022-11-13', 269686, 2, '12:00:00', '14:00:00', '02:00:00', 0),
+('2022-11-22', 269686, 2, '13:29:34', '13:29:37', '00:00:03', 1),
 ('2022-11-12', 269686, 3, '16:00:00', '17:00:00', '01:00:00', 0);
 
 --
@@ -3475,75 +3521,76 @@ CREATE TABLE `colaborador` (
   `fecha_nacimiento` date DEFAULT NULL CHECK (`fecha_nacimiento` >= '1900-01-01'),
   `numero_retardos` int(11) NOT NULL DEFAULT 0,
   `numero_desbloqueos` int(11) NOT NULL DEFAULT 0,
-  `ID_carrera` int(10) UNSIGNED NOT NULL,
-  `ID_modalidad` int(10) UNSIGNED NOT NULL,
-  `ID_horario` int(10) UNSIGNED NOT NULL
+  `ID_carrera` int(10) UNSIGNED NOT NULL DEFAULT 10,
+  `ID_modalidad` int(10) UNSIGNED NOT NULL DEFAULT 1,
+  `ID_participacion` int(10) UNSIGNED NOT NULL DEFAULT 1,
+  `ID_horario` int(10) UNSIGNED NOT NULL DEFAULT 2
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `colaborador`
 --
 
-INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_materno`, `fecha_nacimiento`, `numero_retardos`, `numero_desbloqueos`, `ID_carrera`, `ID_modalidad`, `ID_horario`) VALUES
-(123461, 'Rubén Ricardo', 'Ruiz', 'Rivera', NULL, 0, 0, 36, 1, 1),
-(156709, 'Patty', 'Becerra', 'Zúñiga', NULL, 0, 1, 31, 2, 2),
-(159354, 'Jessica Daniela', 'Silva', 'Arellano', NULL, 0, 2, 39, 1, 3),
-(160243, 'Denisse Montserrat', 'Hernández', 'Juárez', NULL, 1, 2, 32, 2, 2),
-(160554, 'Ana Sarahí', 'Gallegos', 'Carmona', NULL, 0, 1, 36, 1, 2),
-(160641, 'Kevin Eduardo', 'López', 'López', NULL, 1, 1, 32, 2, 4),
-(161271, 'Dania Alejandra', 'Coronel', 'Rivera', NULL, 1, 1, 31, 2, 1),
-(169383, 'Esmeralda', 'Vázquez', 'Ávila', NULL, 1, 0, 31, 2, 5),
-(169918, 'Lesly Manelli', 'Lara', 'Ruiz', NULL, 1, 0, 31, 1, 2),
-(173612, 'Omar Alejandro', 'Mendoza', 'Chávez', NULL, 1, 0, 31, 1, 6),
-(174283, 'Daniel Alejandro', 'García', 'Perea', NULL, 0, 1, 29, 1, 7),
-(174568, 'Luis Adrián', 'Ávila', 'Laureano', NULL, 1, 0, 38, 1, 8),
-(188027, 'Antonio Tenoch', 'Ramos', 'Villasante', NULL, 1, 0, 71, 1, 1),
-(188658, 'Omar Alejandro', 'Reyes', 'Dittrich', NULL, 0, 0, 39, 1, 9),
-(189270, 'Estefanía', 'Aguilar', 'De Santiago', NULL, 1, 0, 29, 1, 10),
-(189468, 'Vanessa', 'Álvarez', 'Rodríguez', NULL, 2, 0, 39, 2, 1),
-(202782, 'Ricardo De Jesús', 'Díaz ', 'Acevedo', NULL, 2, 1, 31, 1, 11),
-(204444, 'Rodrigo', 'Nava', 'Rodríguez', NULL, 1, 2, 31, 1, 9),
-(210806, 'Irela', 'Ramírez', 'Barrón', NULL, 0, 2, 29, 1, 12),
-(210857, 'Ana Sofi', 'Ruiz Esparza', 'Cardona', NULL, 3, 1, 29, 1, 12),
-(214137, 'Cassandra Guadalupe', 'Torres', 'Romo', NULL, 0, 6, 10, 1, 12),
-(214660, 'José Elías', 'Alvarado', 'Reyes', NULL, 0, 1, 29, 1, 13),
-(226644, 'Andrea Guadalupe', 'Ruiz Esparza', 'Ortega', NULL, 2, 0, 39, 1, 14),
-(227563, 'Luis Iván', 'Narváez', 'Tiscareño', NULL, 0, 0, 29, 4, 15),
-(227621, 'Stephany Edith', 'Mendoza', 'González', NULL, 2, 0, 71, 1, 1),
-(231823, 'Dayana Denis', 'Valentón', 'Sánchez', NULL, 0, 0, 52, 1, 16),
-(238160, 'Leonardo', 'López', 'Calderón', NULL, 0, 3, 36, 1, 17),
-(240628, 'María Guadalupe', 'Carrillo', 'Franco', NULL, 3, 1, 36, 1, 18),
-(244214, 'Sara Patricia ', 'Martín', 'Coronado', NULL, 1, 2, 93, 1, 19),
-(244817, 'Daniela Geraldine', 'Reynoso', 'Trejo', NULL, 0, 0, 17, 1, 12),
-(252327, 'Karen Paola', 'Benítez', 'Velázquez', NULL, 0, 0, 52, 1, 20),
-(252929, 'Montserrat', 'Méndez', NULL, NULL, 0, 1, 38, 1, 9),
-(253780, 'Jessica Lizette', 'Lima', 'Felipe', NULL, 0, 12, 93, 1, 21),
-(254181, 'Héctor Jair', 'Balderas', 'Nieves', NULL, 1, 1, 52, 1, 22),
-(255033, 'Ximena ', 'Sánchez', 'Acuña', NULL, 0, 0, 52, 1, 21),
-(256086, 'Eric Martín', 'Díaz De León', 'Lara', NULL, 1, 0, 38, 1, 23),
-(256431, 'Andrés Antonio', 'Alonzo', 'Luna', NULL, 0, 0, 52, 1, 24),
-(256732, 'Daniela', 'López', 'Rico', NULL, 0, 4, 29, 1, 8),
-(259189, 'Héctor Eduardo', 'González', 'De Anda', NULL, 0, 0, 36, 1, 1),
-(262376, 'Ángela Geanine', 'De Lira', 'Ávila', NULL, 1, 1, 71, 1, 23),
-(269686, 'Erik Alejandro', 'Gómez', 'Martínez', '2001-07-16', 6, 0, 61, 1, 23),
-(270128, 'Andrea', 'García', 'Martínez', NULL, 0, 0, 52, 1, 16),
-(271448, 'Gibran ', 'Repizo', 'Gómez', NULL, 0, 0, 71, 1, 1),
-(272124, 'Andrea Jaqueline', 'Gámez', 'Ruiz', NULL, 1, 0, 52, 1, 21),
-(272244, 'Juan Emmanuel', 'Martínez', 'Rodríguez', NULL, 0, 0, 52, 1, 25),
-(272807, 'José Alonso', 'Gallegos', 'Santoyo', NULL, 0, 0, 71, 1, 26),
-(272962, 'Gloria', 'Ruvalcaba', 'Rodríguez', NULL, 1, 1, 52, 1, 15),
-(275244, 'María Aracely', 'Cruz', 'Rivera', NULL, 1, 0, 52, 1, 13),
-(275992, 'María Fernanda', 'Velasco', 'Esparza', NULL, 0, 0, 52, 1, 27),
-(276489, 'María Guadalupe', 'Torres', 'Rodríguez', NULL, 0, 0, 52, 1, 28),
-(277896, 'Zaira Ithaii', 'Lara', 'González', NULL, 2, 0, 52, 1, 21),
-(289434, 'Paloma Fernanda', 'Roque', 'De Luna', NULL, 0, 0, 15, 1, 23),
-(289478, 'Emily Anahí', 'Valle', 'León', NULL, 0, 0, 15, 1, 23),
-(292014, 'Fátima Isabel', 'Magallanes', 'Rangel', NULL, 0, 0, 77, 1, 23),
-(297518, 'Jennifer', 'Sánchez', 'Esquivel', NULL, 2, 1, 38, 1, 23),
-(336738, 'Andrés', 'Torres', 'Sandoval', NULL, 0, 0, 52, 1, 16),
-(338403, 'Yael Quetzalli', 'Arellano', 'Márquez', NULL, 2, 2, 18, 1, 19),
-(894521, 'María Estefanía', 'López', 'González', '2000-08-05', 0, 1, 52, 1, 14),
-(1619201, 'Ana', 'Flores', 'Chávez', NULL, 0, 0, 32, 2, 29);
+INSERT INTO `colaborador` (`ID`, `nombres`, `apellido_paterno`, `apellido_materno`, `fecha_nacimiento`, `numero_retardos`, `numero_desbloqueos`, `ID_carrera`, `ID_modalidad`, `ID_participacion`, `ID_horario`) VALUES
+(123461, 'Rubén Ricardo', 'Ruiz', 'Rivera', NULL, 0, 0, 36, 1, 1, 1),
+(156709, 'Patty', 'Becerra', 'Zúñiga', NULL, 0, 1, 31, 2, 1, 2),
+(159354, 'Jessica Daniela', 'Silva', 'Arellano', NULL, 0, 2, 39, 1, 1, 3),
+(160243, 'Denisse Montserrat', 'Hernández', 'Juárez', NULL, 1, 2, 32, 2, 1, 2),
+(160554, 'Ana Sarahí', 'Gallegos', 'Carmona', NULL, 0, 1, 36, 1, 1, 2),
+(160641, 'Kevin Eduardo', 'López', 'López', NULL, 1, 1, 32, 2, 1, 4),
+(161271, 'Dania Alejandra', 'Coronel', 'Rivera', NULL, 1, 1, 31, 2, 1, 1),
+(169383, 'Esmeralda', 'Vázquez', 'Ávila', NULL, 1, 0, 31, 2, 1, 5),
+(169918, 'Lesly Manelli', 'Lara', 'Ruiz', NULL, 1, 0, 31, 1, 1, 2),
+(173612, 'Omar Alejandro', 'Mendoza', 'Chávez', NULL, 1, 0, 31, 1, 1, 6),
+(174283, 'Daniel Alejandro', 'García', 'Perea', NULL, 0, 1, 29, 1, 1, 7),
+(174568, 'Luis Adrián', 'Ávila', 'Laureano', NULL, 1, 0, 38, 1, 1, 8),
+(188027, 'Antonio Tenoch', 'Ramos', 'Villasante', NULL, 1, 0, 71, 1, 1, 1),
+(188658, 'Omar Alejandro', 'Reyes', 'Dittrich', NULL, 0, 0, 39, 1, 1, 9),
+(189270, 'Estefanía', 'Aguilar', 'De Santiago', NULL, 1, 0, 29, 1, 1, 10),
+(189468, 'Vanessa', 'Álvarez', 'Rodríguez', NULL, 2, 0, 39, 2, 1, 1),
+(202782, 'Ricardo De Jesús', 'Díaz ', 'Acevedo', NULL, 2, 1, 31, 1, 1, 11),
+(204444, 'Rodrigo', 'Nava', 'Rodríguez', NULL, 1, 2, 31, 1, 1, 9),
+(210806, 'Irela', 'Ramírez', 'Barrón', NULL, 0, 2, 29, 1, 1, 12),
+(210857, 'Ana Sofi', 'Ruiz Esparza', 'Cardona', NULL, 3, 1, 29, 1, 1, 12),
+(214137, 'Cassandra Guadalupe', 'Torres', 'Romo', NULL, 0, 6, 10, 1, 1, 12),
+(214660, 'José Elías', 'Alvarado', 'Reyes', NULL, 0, 1, 29, 1, 1, 13),
+(226644, 'Andrea Guadalupe', 'Ruiz Esparza', 'Ortega', NULL, 2, 0, 39, 1, 1, 14),
+(227563, 'Luis Iván', 'Narváez', 'Tiscareño', NULL, 0, 0, 29, 4, 1, 15),
+(227621, 'Stephany Edith', 'Mendoza', 'González', NULL, 2, 0, 71, 1, 1, 1),
+(231823, 'Dayana Denis', 'Valentón', 'Sánchez', NULL, 0, 0, 52, 1, 1, 16),
+(238160, 'Leonardo', 'López', 'Calderón', NULL, 0, 3, 36, 1, 1, 17),
+(240628, 'María Guadalupe', 'Carrillo', 'Franco', NULL, 3, 1, 36, 1, 1, 18),
+(244214, 'Sara Patricia ', 'Martín', 'Coronado', NULL, 1, 2, 93, 1, 1, 19),
+(244817, 'Daniela Geraldine', 'Reynoso', 'Trejo', NULL, 0, 0, 17, 1, 1, 12),
+(252327, 'Karen Paola', 'Benítez', 'Velázquez', NULL, 0, 0, 52, 1, 1, 20),
+(252929, 'Montserrat', 'Méndez', NULL, NULL, 0, 1, 38, 1, 1, 9),
+(253780, 'Jessica Lizette', 'Lima', 'Felipe', NULL, 0, 12, 93, 1, 1, 21),
+(254181, 'Héctor Jair', 'Balderas', 'Nieves', NULL, 1, 1, 52, 1, 1, 22),
+(255033, 'Ximena ', 'Sánchez', 'Acuña', NULL, 0, 0, 52, 1, 1, 21),
+(256086, 'Eric Martín', 'Díaz De León', 'Lara', NULL, 1, 0, 38, 1, 1, 23),
+(256431, 'Andrés Antonio', 'Alonzo', 'Luna', NULL, 0, 0, 52, 1, 1, 24),
+(256732, 'Daniela', 'López', 'Rico', NULL, 0, 4, 29, 1, 1, 8),
+(259189, 'Héctor Eduardo', 'González', 'De Anda', NULL, 0, 0, 36, 1, 1, 1),
+(262376, 'Ángela Geanine', 'De Lira', 'Ávila', NULL, 1, 1, 71, 1, 1, 23),
+(269686, 'Erik Alejandro', 'Gómez', 'Martínez', '2001-07-16', 6, 0, 61, 1, 1, 23),
+(270128, 'Andrea', 'García', 'Martínez', NULL, 0, 0, 52, 1, 1, 16),
+(271448, 'Gibran ', 'Repizo', 'Gómez', NULL, 0, 0, 71, 1, 1, 1),
+(272124, 'Andrea Jaqueline', 'Gámez', 'Ruiz', NULL, 1, 0, 52, 1, 1, 21),
+(272244, 'Juan Emmanuel', 'Martínez', 'Rodríguez', NULL, 0, 0, 52, 1, 1, 25),
+(272807, 'José Alonso', 'Gallegos', 'Santoyo', NULL, 0, 0, 71, 1, 1, 26),
+(272962, 'Gloria', 'Ruvalcaba', 'Rodríguez', NULL, 1, 1, 52, 1, 1, 15),
+(275244, 'María Aracely', 'Cruz', 'Rivera', NULL, 1, 0, 52, 1, 1, 13),
+(275992, 'María Fernanda', 'Velasco', 'Esparza', NULL, 0, 0, 52, 1, 1, 27),
+(276489, 'María Guadalupe', 'Torres', 'Rodríguez', NULL, 0, 0, 52, 1, 1, 28),
+(277896, 'Zaira Ithaii', 'Lara', 'González', NULL, 2, 0, 52, 1, 1, 21),
+(289434, 'Paloma Fernanda', 'Roque', 'De Luna', NULL, 0, 0, 15, 1, 1, 23),
+(289478, 'Emily Anahí', 'Valle', 'León', NULL, 0, 0, 15, 1, 1, 23),
+(292014, 'Fátima Isabel', 'Magallanes', 'Rangel', NULL, 0, 0, 77, 1, 1, 23),
+(297518, 'Jennifer', 'Sánchez', 'Esquivel', NULL, 2, 1, 38, 1, 1, 23),
+(336738, 'Andrés', 'Torres', 'Sandoval', NULL, 0, 0, 52, 1, 1, 16),
+(338403, 'Yael Quetzalli', 'Arellano', 'Márquez', NULL, 2, 2, 18, 1, 1, 19),
+(894521, 'María Estefanía', 'López', 'González', '2000-08-05', 0, 1, 52, 1, 1, 14),
+(1619201, 'Ana', 'Flores', 'Chávez', NULL, 0, 0, 32, 2, 1, 29);
 
 --
 -- Disparadores `colaborador`
@@ -3652,6 +3699,12 @@ CREATE TABLE `desglose_colaboradores` (
 ,`nombre_modalidad` varchar(45)
 ,`hora_inicial` time
 ,`hora_final` time
+,`nombre_participacion` varchar(45)
+,`nombre_turno` varchar(45)
+,`ID_carrera` int(10) unsigned
+,`ID_modalidad` int(10) unsigned
+,`ID_participacion` int(10) unsigned
+,`ID_turno` int(10) unsigned
 );
 
 -- --------------------------------------------------------
@@ -3691,6 +3744,7 @@ CREATE TABLE `desglose_separado_colaboradores` (
 ,`numero_desbloqueos` int(11)
 ,`fecha_nacimiento` date
 ,`ID` int(10) unsigned
+,`ID_participacion` int(10) unsigned
 );
 
 -- --------------------------------------------------------
@@ -3715,13 +3769,13 @@ INSERT INTO `horario` (`ID`, `hora_inicial`, `hora_final`, `ID_turno`) VALUES
 (2, '08:00:00', '14:00:00', 1),
 (3, '09:30:00', '12:30:00', 1),
 (4, '08:00:00', '13:00:00', 1),
-(5, '08:30:00', '14:30:00', 1),
-(6, '09:00:00', '15:00:00', 1),
+(5, '08:30:00', '14:30:00', 3),
+(6, '09:00:00', '15:00:00', 3),
 (7, '10:00:00', '19:00:00', 3),
-(8, '13:00:00', '18:00:00', 2),
+(8, '13:00:00', '18:00:00', 3),
 (9, '10:00:00', '16:00:00', 3),
 (10, '14:00:00', '17:00:00', 2),
-(11, '13:00:00', '19:00:00', 2),
+(11, '13:00:00', '19:00:00', 3),
 (12, '11:00:00', '15:00:00', 3),
 (13, '11:30:00', '15:30:00', 3),
 (14, '09:00:00', '13:00:00', 1),
@@ -3732,14 +3786,14 @@ INSERT INTO `horario` (`ID`, `hora_inicial`, `hora_final`, `ID_turno`) VALUES
 (19, '10:30:00', '14:30:00', 3),
 (20, '14:00:00', '18:00:00', 2),
 (21, '10:00:00', '14:00:00', 1),
-(22, '09:30:00', '15:30:00', 1),
+(22, '09:30:00', '15:30:00', 3),
 (23, '15:00:00', '19:00:00', 2),
 (24, '14:00:00', '21:00:00', 2),
 (25, '14:30:00', '17:30:00', 2),
 (26, '18:00:00', '19:00:00', 2),
 (27, '09:00:00', '14:00:00', 1),
 (28, '10:00:00', '15:00:00', 3),
-(29, '15:00:00', '18:50:00', 3),
+(29, '15:00:00', '18:50:00', 2),
 (32, '12:00:00', '12:05:00', 1);
 
 --
@@ -3777,23 +3831,46 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `modalidad_colaborador`
+-- Estructura de tabla para la tabla `modalidad`
 --
 
-CREATE TABLE `modalidad_colaborador` (
+CREATE TABLE `modalidad` (
   `ID` int(10) UNSIGNED NOT NULL,
   `nombre` varchar(45) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci ROW_FORMAT=COMPACT;
 
 --
--- Volcado de datos para la tabla `modalidad_colaborador`
+-- Volcado de datos para la tabla `modalidad`
 --
 
-INSERT INTO `modalidad_colaborador` (`ID`, `nombre`) VALUES
+INSERT INTO `modalidad` (`ID`, `nombre`) VALUES
+(1, 'Beca'),
+(2, 'Servicio social'),
+(3, 'Prácticas profesionales'),
+(4, 'Beca / Servicio social'),
+(5, 'Beca / Prácticas profesionales'),
+(6, 'Pasantía');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `participacion`
+--
+
+CREATE TABLE `participacion` (
+  `ID` int(10) UNSIGNED NOT NULL,
+  `nombre` varchar(45) COLLATE utf8mb4_spanish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `participacion`
+--
+
+INSERT INTO `participacion` (`ID`, `nombre`) VALUES
 (1, 'Presencial'),
-(2, 'Pasantía'),
-(3, 'A distancia'),
-(4, 'Mixta');
+(2, 'A distancia'),
+(3, 'Mixta'),
+(4, 'Otra');
 
 -- --------------------------------------------------------
 
@@ -3818,6 +3895,42 @@ INSERT INTO `turno` (`ID`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura para la vista `cantidad_colaboradores_carreras`
+--
+DROP TABLE IF EXISTS `cantidad_colaboradores_carreras`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `cantidad_colaboradores_carreras`  AS SELECT coalesce(`carrera`.`nombre`,'Todas las carreras registradas') AS `nombre_carrera`, count(0) AS `cantidad_colaboradores` FROM (`carrera` join `colaborador` on(`carrera`.`ID` = `colaborador`.`ID_carrera`)) GROUP BY `carrera`.`nombre` with rollup having `nombre_carrera` is not null  ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `cantidad_colaboradores_modalidades`
+--
+DROP TABLE IF EXISTS `cantidad_colaboradores_modalidades`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `cantidad_colaboradores_modalidades`  AS SELECT coalesce(`modalidad`.`nombre`,'Todas las modalidades') AS `nombre_modalidad`, count(`colaborador`.`ID`) AS `cantidad_colaboradores` FROM (`modalidad` left join `colaborador` on(`modalidad`.`ID` = `colaborador`.`ID_modalidad`)) GROUP BY `modalidad`.`nombre` with rollup  ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `cantidad_colaboradores_participaciones`
+--
+DROP TABLE IF EXISTS `cantidad_colaboradores_participaciones`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `cantidad_colaboradores_participaciones`  AS SELECT coalesce(`participacion`.`nombre`,'Todos los tipos de participación') AS `nombre_participacion`, count(`colaborador`.`ID`) AS `cantidad_colaboradores` FROM (`participacion` left join `colaborador` on(`participacion`.`ID` = `colaborador`.`ID_participacion`)) GROUP BY `participacion`.`nombre` with rollup  ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `cantidad_colaboradores_turnos`
+--
+DROP TABLE IF EXISTS `cantidad_colaboradores_turnos`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `cantidad_colaboradores_turnos`  AS SELECT coalesce(`turno`.`nombre`,'Todos los turnos') AS `nombre_turno`, count(`colaborador`.`ID`) AS `cantidad_colaboradores` FROM ((`colaborador` left join `horario` on(`horario`.`ID` = `colaborador`.`ID_horario`)) join `turno` on(`turno`.`ID` = `horario`.`ID_turno`)) GROUP BY `turno`.`nombre` with rollup  ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura para la vista `desglose_chequeos`
 --
 DROP TABLE IF EXISTS `desglose_chequeos`;
@@ -3831,7 +3944,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `desglose_colaboradores`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `desglose_colaboradores`  AS SELECT `colaborador`.`ID` AS `ID`, concat_ws(' ',`colaborador`.`nombres`,`colaborador`.`apellido_paterno`,`colaborador`.`apellido_materno`) AS `nombre_completo`, `colaborador`.`fecha_nacimiento` AS `fecha_nacimiento`, `colaborador`.`numero_retardos` AS `numero_retardos`, `colaborador`.`numero_desbloqueos` AS `numero_desbloqueos`, `carrera`.`nombre` AS `nombre_carrera`, `modalidad_colaborador`.`nombre` AS `nombre_modalidad`, `horario`.`hora_inicial` AS `hora_inicial`, `horario`.`hora_final` AS `hora_final` FROM (((`colaborador` join `carrera` on(`colaborador`.`ID_carrera` = `carrera`.`ID`)) join `modalidad_colaborador` on(`colaborador`.`ID_modalidad` = `modalidad_colaborador`.`ID`)) join `horario` on(`colaborador`.`ID_horario` = `horario`.`ID`))  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `desglose_colaboradores`  AS SELECT `colaborador`.`ID` AS `ID`, concat_ws(' ',`colaborador`.`nombres`,`colaborador`.`apellido_paterno`,`colaborador`.`apellido_materno`) AS `nombre_completo`, `colaborador`.`fecha_nacimiento` AS `fecha_nacimiento`, `colaborador`.`numero_retardos` AS `numero_retardos`, `colaborador`.`numero_desbloqueos` AS `numero_desbloqueos`, `carrera`.`nombre` AS `nombre_carrera`, `modalidad`.`nombre` AS `nombre_modalidad`, `horario`.`hora_inicial` AS `hora_inicial`, `horario`.`hora_final` AS `hora_final`, `participacion`.`nombre` AS `nombre_participacion`, `turno`.`nombre` AS `nombre_turno`, `carrera`.`ID` AS `ID_carrera`, `modalidad`.`ID` AS `ID_modalidad`, `participacion`.`ID` AS `ID_participacion`, `turno`.`ID` AS `ID_turno` FROM (((((`colaborador` join `carrera` on(`colaborador`.`ID_carrera` = `carrera`.`ID`)) join `modalidad` on(`colaborador`.`ID_modalidad` = `modalidad`.`ID`)) join `participacion` on(`colaborador`.`ID_participacion` = `participacion`.`ID`)) join `horario` on(`colaborador`.`ID_horario` = `horario`.`ID`)) join `turno` on(`horario`.`ID_turno` = `turno`.`ID`))  ;
 
 -- --------------------------------------------------------
 
@@ -3849,7 +3962,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `desglose_separado_colaboradores`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `desglose_separado_colaboradores`  AS SELECT if(substr(`colaborador`.`nombres`,1,locate(' ',`colaborador`.`nombres`)) = '',trim(substr(`colaborador`.`nombres`,locate(' ',`colaborador`.`nombres`) + 1)),trim(substr(`colaborador`.`nombres`,1,locate(' ',`colaborador`.`nombres`)))) AS `primer_nombre`, if(substr(`colaborador`.`nombres`,1,locate(' ',`colaborador`.`nombres`)) <> '',trim(substr(`colaborador`.`nombres`,locate(' ',`colaborador`.`nombres`) + 1)),'') AS `segundo_nombre`, `colaborador`.`apellido_paterno` AS `apellido_paterno`, `colaborador`.`apellido_materno` AS `apellido_materno`, `colaborador`.`ID_carrera` AS `ID_carrera`, `colaborador`.`ID_modalidad` AS `ID_modalidad`, time_format(`horario`.`hora_inicial`,'%H:%i') AS `hora_inicial`, time_format(`horario`.`hora_final`,'%H:%i') AS `hora_final`, `colaborador`.`numero_retardos` AS `numero_retardos`, `colaborador`.`numero_desbloqueos` AS `numero_desbloqueos`, `colaborador`.`fecha_nacimiento` AS `fecha_nacimiento`, `colaborador`.`ID` AS `ID` FROM (`colaborador` join `horario` on(`colaborador`.`ID_horario` = `horario`.`ID`))  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `desglose_separado_colaboradores`  AS SELECT if(substr(`colaborador`.`nombres`,1,locate(' ',`colaborador`.`nombres`)) = '',trim(substr(`colaborador`.`nombres`,locate(' ',`colaborador`.`nombres`) + 1)),trim(substr(`colaborador`.`nombres`,1,locate(' ',`colaborador`.`nombres`)))) AS `primer_nombre`, if(substr(`colaborador`.`nombres`,1,locate(' ',`colaborador`.`nombres`)) <> '',trim(substr(`colaborador`.`nombres`,locate(' ',`colaborador`.`nombres`) + 1)),'') AS `segundo_nombre`, `colaborador`.`apellido_paterno` AS `apellido_paterno`, `colaborador`.`apellido_materno` AS `apellido_materno`, `colaborador`.`ID_carrera` AS `ID_carrera`, `colaborador`.`ID_modalidad` AS `ID_modalidad`, time_format(`horario`.`hora_inicial`,'%H:%i') AS `hora_inicial`, time_format(`horario`.`hora_final`,'%H:%i') AS `hora_final`, `colaborador`.`numero_retardos` AS `numero_retardos`, `colaborador`.`numero_desbloqueos` AS `numero_desbloqueos`, `colaborador`.`fecha_nacimiento` AS `fecha_nacimiento`, `colaborador`.`ID` AS `ID`, `colaborador`.`ID_participacion` AS `ID_participacion` FROM (`colaborador` join `horario` on(`colaborador`.`ID_horario` = `horario`.`ID`))  ;
 
 --
 -- Índices para tablas volcadas
@@ -3877,7 +3990,8 @@ ALTER TABLE `colaborador`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `fk_Colaborador_Carrera_idx` (`ID_carrera`),
   ADD KEY `fk_Colaborador_Modalidad_Colaborador1_idx` (`ID_modalidad`),
-  ADD KEY `fk_Colaborador_Horario1_idx` (`ID_horario`);
+  ADD KEY `fk_Colaborador_Horario1_idx` (`ID_horario`),
+  ADD KEY `fk_Colaborador_Participacion_Colaborador1` (`ID_participacion`);
 
 --
 -- Indices de la tabla `contingencia`
@@ -3900,9 +4014,15 @@ ALTER TABLE `horario`
   ADD KEY `fk_Horario_Turno1_idx` (`ID_turno`);
 
 --
--- Indices de la tabla `modalidad_colaborador`
+-- Indices de la tabla `modalidad`
 --
-ALTER TABLE `modalidad_colaborador`
+ALTER TABLE `modalidad`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indices de la tabla `participacion`
+--
+ALTER TABLE `participacion`
   ADD PRIMARY KEY (`ID`);
 
 --
@@ -3937,12 +4057,18 @@ ALTER TABLE `coordinador`
 -- AUTO_INCREMENT de la tabla `horario`
 --
 ALTER TABLE `horario`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
--- AUTO_INCREMENT de la tabla `modalidad_colaborador`
+-- AUTO_INCREMENT de la tabla `modalidad`
 --
-ALTER TABLE `modalidad_colaborador`
+ALTER TABLE `modalidad`
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `participacion`
+--
+ALTER TABLE `participacion`
   MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
@@ -3967,7 +4093,8 @@ ALTER TABLE `chequeo`
 ALTER TABLE `colaborador`
   ADD CONSTRAINT `fk_Colaborador_Carrera` FOREIGN KEY (`ID_carrera`) REFERENCES `carrera` (`ID`),
   ADD CONSTRAINT `fk_Colaborador_Horario1` FOREIGN KEY (`ID_horario`) REFERENCES `horario` (`ID`),
-  ADD CONSTRAINT `fk_Colaborador_Modalidad_Colaborador1` FOREIGN KEY (`ID_modalidad`) REFERENCES `modalidad_colaborador` (`ID`);
+  ADD CONSTRAINT `fk_Colaborador_Modalidad_Colaborador1` FOREIGN KEY (`ID_modalidad`) REFERENCES `modalidad` (`ID`),
+  ADD CONSTRAINT `fk_Colaborador_Participacion_Colaborador1` FOREIGN KEY (`ID_participacion`) REFERENCES `participacion` (`ID`);
 
 --
 -- Filtros para la tabla `contingencia`

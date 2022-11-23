@@ -66,42 +66,48 @@
                     <?php
                     if(isset($administradores) && @$administradores->num_rows > 0) {
                     ?>
-                    <div class="table-responsive fondo-pantone-azul-intermedio rounded p-3">
-                        <table class="table table-striped mb-0">
-                            <thead>
-                                <tr">
-                                    <th scope="col"> Número de administrador </th>
-                                    <th scope="col"> ID del administrador </th>
-                                </tr>
-                            </thead>
+                    <div class="rounded-2 text-center fondo-pantone-azul-intermedio mx-auto"> 
+                        <h6 class="text-center text-white fondo-pantone-azul-oscuro py-3 rounded-top mb-0 px-3"> 
+                            Listado de administradores
+                        </h6>
+                        
+                        <div class="table-responsive fondo-pantone-azul-intermedio rounded tabla-desglose p-3">
+                            <table class="table table-striped mb-0">
+                                <thead>
+                                    <tr">
+                                        <th scope="col"> Número de administrador </th>
+                                        <th scope="col"> ID del administrador </th>
+                                    </tr>
+                                </thead>
 
-                            <tbody class="table-group-divider">
-                                <tr>
-                                    <?php
-                                    $numero_administrador = 0;
-                                    while($administrador = $administradores->fetch_row()) {
-                                        echo "<tr> ";
-                                        echo "<th scope='row' class='py-3'> " . ++$numero_administrador . " </th> ";
-                                        echo "<td class='py-3'> " . $administrador[0] .  " </td> ";
-                                        echo " </tr>";
-                                    }
-                                    ?>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <?php
-                        }
-                        else {
-                        ?>
-                            <p class="mb-0 fs-5 fw-semibold py-3 text-center"> 
-                                No hay administradores registrados en el sistema
-                            </p>
-                        <?php   
-                        }
+                                <tbody class="table-group-divider">
+                                    <tr>
+                                        <?php
+                                        $numero_administrador = 0;
+                                        while($administrador = $administradores->fetch_row()) {
+                                            echo "<tr> ";
+                                            echo "<th scope='row' class='py-3'> " . ++$numero_administrador . " </th> ";
+                                            echo "<td class='py-3'> " . $administrador[0] .  " </td> ";
+                                            echo " </tr>";
+                                        }
+                                        ?>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <?php
+                            }
+                            else {
+                            ?>
+                                <p class="mb-0 fs-5 fw-semibold py-3 text-center"> 
+                                    No hay administradores registrados en el sistema
+                                </p>
+                            <?php   
+                            }
 
-                        # Cerrar la conexión con la base de datos.
-                        $conexion_base->close();
-                        ?>
+                            # Cerrar la conexión con la base de datos.
+                            $conexion_base->close();
+                            ?>
+                        </div>
                     </div>
                 </div>
             </div>

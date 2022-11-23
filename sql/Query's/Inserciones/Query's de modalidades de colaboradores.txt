@@ -1,4 +1,6 @@
-INSERT INTO checadorumd.modalidad_colaborador(ID, nombre) VALUES (1, "Presencial"),
-(2, "Pasantía"),
-(3, "A distancia"),
-(4, "Mixta");
+INSERT INTO checadorumd.modalidad(ID, nombre) VALUES (1, "Beca"),
+(2, "Servicio social"),
+(3, "Prácticas profesionales"),
+(4, "Becario / Servicio social"),
+(5, "Becario / Prácticas profesionales"),
+(6, "Pasantía");

@@ -14,7 +14,7 @@
     # Verificar que se haya enviado un
     # formulario de modificación de colaborador.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["primer-nombre"], 
-    $_POST["primer-apellido"], $_POST["carrera"], $_POST["modalidad"], $_POST["hora-entrada"], $_POST["hora-salida"],
+    $_POST["primer-apellido"], $_POST["carrera"], $_POST["modalidad"], $_POST["participacion"], $_POST["hora-entrada"], $_POST["hora-salida"],
     $_POST["anterior-ID-colaborador"], $_POST["numero-retardos"], $_POST["numero-desbloqueos"], $_POST["fecha-nacimiento"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
@@ -89,7 +89,8 @@
                                         }
                                         if($conexion_base->query("UPDATE colaborador SET ID = '" . $_POST["ID-colaborador"] . "', nombres = '$nombres', apellido_paterno = '$apellido_paterno', "
                                         . "apellido_materno = '$apellido_materno', ID_carrera = '" . $_POST["carrera"] . "', ID_modalidad = '" . $_POST["modalidad"] . "', "
-                                        . "ID_horario = '$ID_horario', numero_retardos = '" . $_POST["numero-retardos"] . "', numero_desbloqueos = '" . $_POST["numero-desbloqueos"]
+                                        . "ID_participacion = '" . $_POST["participacion"] . "', ID_horario = '$ID_horario', numero_retardos = '" 
+                                        . $_POST["numero-retardos"] . "', numero_desbloqueos = '" . $_POST["numero-desbloqueos"]
                                         . "', fecha_nacimiento = $fecha_nacimiento WHERE ID = " . $_POST["anterior-ID-colaborador"]) . ";") {
                                             $resultado = 4;
                                             $conexion_base->query("COMMIT;");

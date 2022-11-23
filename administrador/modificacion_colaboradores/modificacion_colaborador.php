@@ -26,7 +26,10 @@
     $carreras = $conexion_base->query("SELECT * FROM carrera;");
 
     # Obtener todas las modalidades registradas.
-    $modalidades = $conexion_base->query("SELECT * FROM modalidad_colaborador;");
+    $modalidades = $conexion_base->query("SELECT * FROM modalidad;");
+
+    # Obtener todas los tipos de participación registrados.
+    $participaciones = $conexion_base->query("SELECT * FROM participacion;");
 
     # Obtener turnos registrados.
     $turnos = $conexion_base->query("SELECT * FROM turno;");
@@ -244,6 +247,27 @@
                                 </div>
                             </div>
 
+                            <div class="col-12 col-md-6 mb-4">
+                                <label for="participaciones" class="form-label fw-semibold"> Tipo de participación (*) </label>
+                                <select class="form-select" name="participacion" id="participaciones">
+                                    <?php
+                                        if(isset($participaciones) && $participaciones->num_rows > 0) {
+                                            while($participacion = $participaciones->fetch_row()) {
+                                                if($participacion[0] == $datos_usuario[10]) {
+                                                    echo "<option selected value='" . $participacion[0]. "'> " . $participacion[1] . " </option> ";
+                                                }
+                                                else {
+                                                    echo "<option value='" . $participacion[0]. "'> " . $participacion[1] . " </option> ";
+                                                }
+                                            }
+                                        }
+                                    ?>
+                                </select>
+                                <div class="form-text"> 
+                                    Campo obligatorio.
+                                </div>
+                            </div>
+
                             <div class="col-12 col-md-6 mb-4 mb-md-0">
                                 <label for="hora-entrada" class="form-label fw-semibold"> Hora de entrada (*) </label>
                                 <input type="time" class="form-control mayusculas-iniciales" id="hora-entrada" 
@@ -351,6 +375,7 @@
                     document.getElementById("fecha-nacimiento").setAttribute("max", new Date().toLocaleDateString("fr-CA"));
                     dselect(document.getElementById("carreras"), { search: true, maxHeight: "200px" });
                     dselect(document.getElementById("modalidades"), { search: false });
+                    dselect(document.getElementById("participaciones"), { search: false });
                 <?php
                 }
             }

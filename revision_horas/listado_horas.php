@@ -42,6 +42,7 @@
             $modalidad = $resultados[6];
             $hora_inicial = $resultados[7];
             $hora_final = $resultados[8];
+            $participacion = $resultados[9];
             
             # Comprobar si se indicaron horas de becario.
             if(isset($_GET["horas-becario"]) && is_numeric(@$_GET["horas-becario"])) {
@@ -259,6 +260,10 @@
                                             </p>
 
                                             <p class="fw-semibold mb-2">
+                                                Tipo de participación: <?php echo $participacion ?>
+                                            </p>
+
+                                            <p class="fw-semibold mb-2">
                                                 Número de retardos: <?php echo $numero_retardos ?>
                                             </p>
 
@@ -303,7 +308,7 @@
                                         Reporte de horas
                                     </h6>
 
-                                    <div class="table-responsive mx-auto py-4 px-0 px-sm-4"> 
+                                    <div class="table-responsive tabla-desglose mx-auto py-4 px-0 px-sm-4"> 
                                         <?php
                                         if(@$_GET["chequeo"] == "desglose") {
                                         ?>
@@ -311,12 +316,13 @@
                                             <thead>
                                                 <tr">
                                                     <th scope="col"> Fecha de registro </th>
+                                                    <th scope="col"> Número de registro </th>
                                                     <th scope="col"> Contingencia </th>
                                                     <th scope="col"> Bloqueo </th>
-                                                    <th scope="col"> Día de registro </th>
-                                                    <th scope="col"> Hora de entrada </th>
-                                                    <th scope="col"> Hora de salida </th>
-                                                    <th scope="col"> Tiempo total </th>
+                                                    <th scope="col" class="no-partir-palabra"> Día de registro </th>
+                                                    <th scope="col" class="no-partir-palabra"> Hora de entrada </th>
+                                                    <th scope="col" class="no-partir-palabra"> Hora de salida </th>
+                                                    <th scope="col" class="no-partir-palabra"> Tiempo total </th>
                                                 </tr>
                                             </thead>
 
@@ -332,6 +338,7 @@
                                                     while($chequeo = $chequeos->fetch_row()) {
                                                         echo "<tr> ";
                                                         echo "<th scope='row' class='py-3'> " . date("d-m-Y", strtotime($chequeo[0])) . " </th> ";
+                                                        echo "<th scope='row' class='py-3'> " . $chequeo[7] . " </th> ";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[4])) ? "N/A" : $chequeo[4]) .  " </td> ";
                                                         echo "<td class='py-3'> " . (($chequeo[5] == "0") ? "N/A" : $chequeo[5]) .  " </td> ";
                                                         echo "<td class='py-3'> " . $dias[date("w", strtotime($chequeo[0]))] . " </td> ";

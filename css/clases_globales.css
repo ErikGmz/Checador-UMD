@@ -46,3 +46,11 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.tabla-desglose {
+    max-height: 400px;
+}
+
+.no-partir-palabra {
+    white-space: nowrap !important;
+}

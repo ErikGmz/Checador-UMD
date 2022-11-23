@@ -1,0 +1,3 @@
+CREATE OR REPLACE VIEW cantidad_colaboradores_carreras AS SELECT COALESCE(carrera.nombre, 'Todas las carreras registradas') 
+AS nombre_carrera, COUNT(*) AS cantidad_colaboradores FROM carrera JOIN colaborador ON carrera.ID = colaborador.ID_carrera 
+GROUP BY carrera.nombre WITH ROLLUP HAVING nombre_carrera IS NOT NULL;

@@ -69,51 +69,57 @@
                     <?php
                     if(isset($contingencias) && @$contingencias->num_rows > 0) {
                     ?>
-                    <div class="table-responsive fondo-pantone-azul-intermedio rounded p-3">
-                        <table class="table table-striped mb-0">
-                            <thead>
-                                <tr">
-                                    <th scope="col"> ID </th>
-                                    <th scope="col"> Nombre completo </th>
-                                    <th scope="col"> Fecha de contingencia </th>
-                                    <th scope="col"> Hora inicial </th>
-                                    <th scope="col"> Hora final </th>
-                                    <th scope="col"> Tiempo total </th>
-                                    <th scope="col"> Observaciones </th>
-                                </tr>
-                            </thead>
+                    <div class="rounded-2 text-center fondo-pantone-azul-intermedio mx-auto"> 
+                        <h6 class="text-center text-white fondo-pantone-azul-oscuro py-3 rounded-top mb-0 px-3"> 
+                            Listado de contingencias
+                        </h6>
 
-                            <tbody class="table-group-divider">
-                                <tr>
-                                    <?php
-                                    while($contingencia = $contingencias->fetch_row()) {
-                                        echo "<tr> ";
-                                        echo "<th scope='row' class='py-3'> " . $contingencia[0] . " </th> ";
-                                        echo "<td class='py-3'> " . $contingencia[1] .  " " . $contingencia[2] . " " . $contingencia[3] . " </td> ";
-                                        echo "<td class='py-3'> " . date("d-m-Y", strtotime($contingencia[4])) .  " </td> ";
-                                        echo "<td class='py-3'> " . date("h:i A", strtotime($contingencia[5])) . " </td> ";
-                                        echo "<td class='py-3'> " . date("h:i A", strtotime($contingencia[6])) . " </td>";
-                                        echo "<td class='py-3'> " . $contingencia[7] . " </td>";
-                                        echo "<td class='py-3'> " . $contingencia[8] . " </td>";
-                                        echo " </tr>";
-                                    }
-                                    ?>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <?php
-                        }
-                        else {
-                        ?>
-                            <p class="mb-0 fs-5 fw-semibold py-3 text-center"> 
-                                No hay contingencias registradas en el sistema
-                            </p>
-                        <?php   
-                        }
+                        <div class="table-responsive fondo-pantone-azul-intermedio rounded tabla-desglose p-3">
+                            <table class="table table-striped mb-0">
+                                <thead>
+                                    <tr">
+                                        <th scope="col"> ID </th>
+                                        <th scope="col"> Nombre completo </th>
+                                        <th scope="col"> Fecha de contingencia </th>
+                                        <th scope="col"> Hora inicial </th>
+                                        <th scope="col"> Hora final </th>
+                                        <th scope="col"> Tiempo total </th>
+                                        <th scope="col"> Observaciones </th>
+                                    </tr>
+                                </thead>
 
-                        # Cerrar la conexión con la base de datos.
-                        $conexion_base->close();
-                        ?>
+                                <tbody class="table-group-divider">
+                                    <tr>
+                                        <?php
+                                        while($contingencia = $contingencias->fetch_row()) {
+                                            echo "<tr> ";
+                                            echo "<th scope='row' class='py-3'> " . $contingencia[0] . " </th> ";
+                                            echo "<td class='py-3'> " . $contingencia[1] .  " " . $contingencia[2] . " " . $contingencia[3] . " </td> ";
+                                            echo "<td class='py-3'> " . date("d-m-Y", strtotime($contingencia[4])) .  " </td> ";
+                                            echo "<td class='py-3'> " . date("h:i A", strtotime($contingencia[5])) . " </td> ";
+                                            echo "<td class='py-3'> " . date("h:i A", strtotime($contingencia[6])) . " </td>";
+                                            echo "<td class='py-3'> " . $contingencia[7] . " </td>";
+                                            echo "<td class='py-3'> " . $contingencia[8] . " </td>";
+                                            echo " </tr>";
+                                        }
+                                        ?>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <?php
+                            }
+                            else {
+                            ?>
+                                <p class="mb-0 fs-5 fw-semibold py-3 text-center"> 
+                                    No hay contingencias registradas en el sistema
+                                </p>
+                            <?php   
+                            }
+
+                            # Cerrar la conexión con la base de datos.
+                            $conexion_base->close();
+                            ?>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@
     # Verificar que se haya enviado un
     # formulario de adición de colaborador.
     if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["primer-nombre"], 
-    $_POST["primer-apellido"], $_POST["carrera"], $_POST["modalidad"], $_POST["hora-entrada"], 
+    $_POST["primer-apellido"], $_POST["carrera"], $_POST["modalidad"], $_POST["participacion"], $_POST["hora-entrada"], 
     $_POST["hora-salida"], $_POST["fecha-nacimiento"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
@@ -84,8 +84,8 @@
                                         $fecha_nacimiento = "NULL";
                                     }
                                     if($conexion_base->query("INSERT INTO colaborador(ID, nombres, apellido_paterno, apellido_materno, 
-                                    ID_carrera, ID_modalidad, ID_horario, fecha_nacimiento) VALUES('" . $_POST["ID-colaborador"] . "', '$nombres', '$apellido_paterno', '$apellido_materno', '" 
-                                    . $_POST["carrera"] . "', '" . $_POST["modalidad"] . "', '$ID_horario', $fecha_nacimiento);")) {
+                                    ID_carrera, ID_modalidad, ID_participacion, ID_horario, fecha_nacimiento) VALUES('" . $_POST["ID-colaborador"] . "', '$nombres', '$apellido_paterno', '$apellido_materno', '" 
+                                    . $_POST["carrera"] . "', '" . $_POST["modalidad"] . "', '" . $_POST["participacion"] . "', '$ID_horario', $fecha_nacimiento);")) {
                                         $resultado = 4;
                                         $conexion_base->query("COMMIT;");
                                     }
