@@ -180,7 +180,7 @@
 
                             <!--Solicitud de hora inicial-->
                             <div class="col-12 col-md-6 mb-4 mb-md-0">
-                                <label for="hora-inicial" class="form-label fw-semibold"> Hora de entrada (*) </label>
+                                <label for="hora-inicial" class="form-label fw-semibold"> Hora inicial (*) </label>
                                 <input type="time" class="form-control" id="hora-inicial" 
                                 autocomplete="OFF" required name="hora-inicial" value="<?=$datos_contingencia[0]?>" min="08:00" max="21:00"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
@@ -191,9 +191,9 @@
 
                             <!--Solicitud de hora final-->
                             <div class="col-12 col-md-6 mb-4">
-                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida </label>
+                                <label for="hora-final" class="form-label fw-semibold"> Hora final (*) </label>
                                 <input type="time" class="form-control" id="hora-final" 
-                                autocomplete="OFF" name="hora-final" value="<?=$datos_contingencia[1]?>" min="08:00" max="21:00"
+                                autocomplete="OFF" name="hora-final" required value="<?=$datos_contingencia[1]?>" min="08:00" max="21:00"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 
                                     Campo obligatorio. Formato de 08:00 a 21:00 horas.

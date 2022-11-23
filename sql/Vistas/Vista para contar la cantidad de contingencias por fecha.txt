@@ -1,0 +1,3 @@
+CREATE OR REPLACE VIEW cantidad_contingencias_fechas AS SELECT COALESCE(fecha, 'Todos las fechas registradas') 
+AS fecha_contingencia, COUNT(*) AS cantidad_contingencias FROM desglose_contingencias
+GROUP BY fecha WITH ROLLUP;

@@ -364,10 +364,10 @@
                         </div>
                     </div>
 
-                    <!--Estadísticas generales sobre las carreras de los colaboradores--->
                     <?php
                     if(!$aplicacion_filtros) {
                     ?>
+                    <!--Estadísticas generales sobre las carreras de los colaboradores--->
                     <div class="rounded-2 text-center fondo-pantone-azul-intermedio mx-auto mb-4"> 
                         <h6 class="text-center text-white fondo-pantone-azul-oscuro py-3 rounded-top mb-0 px-3"> 
                             Cantidad de colaboradores por carrera

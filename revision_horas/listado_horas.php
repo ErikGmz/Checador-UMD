@@ -338,11 +338,11 @@
                                                     while($chequeo = $chequeos->fetch_row()) {
                                                         echo "<tr> ";
                                                         echo "<th scope='row' class='py-3'> " . date("d-m-Y", strtotime($chequeo[0])) . " </th> ";
-                                                        echo "<th scope='row' class='py-3'> " . $chequeo[7] . " </th> ";
+                                                        echo "<th scope='row' class='py-3'> " . ((empty($chequeo[7])) ? "N/A" : $chequeo[7])  . " </th> ";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[4])) ? "N/A" : $chequeo[4]) .  " </td> ";
-                                                        echo "<td class='py-3'> " . (($chequeo[5] == "0") ? "N/A" : $chequeo[5]) .  " </td> ";
+                                                        echo "<td class='py-3'> " . (($chequeo[5] == "0" || empty($chequeo[5])) ? "N/A" : $chequeo[5]) .  " </td> ";
                                                         echo "<td class='py-3'> " . $dias[date("w", strtotime($chequeo[0]))] . " </td> ";
-                                                        echo "<td class='py-3'> " . date("h:i:s A", strtotime($chequeo[1])) . " </td> ";
+                                                        echo "<td class='py-3'> " . ((empty($chequeo[1])) ? "N/A" : date("h:i:s A", strtotime($chequeo[1]))) . " </td> ";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[2])) ? "N/A" : date("h:i:s A", strtotime($chequeo[2]))) . " </td>";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[3])) ? "N/A" : $chequeo[3]) . " </td>";
                                                         echo " </tr>";

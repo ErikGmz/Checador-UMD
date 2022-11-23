@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-11-2022 a las 21:14:21
+-- Tiempo de generación: 24-11-2022 a las 00:18:12
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 8.1.6
 
@@ -127,6 +127,28 @@ CREATE TABLE `cantidad_colaboradores_participaciones` (
 CREATE TABLE `cantidad_colaboradores_turnos` (
 `nombre_turno` varchar(45)
 ,`cantidad_colaboradores` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `cantidad_contingencias_colaboradores`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `cantidad_contingencias_colaboradores` (
+`nombre_colaborador` varchar(192)
+,`cantidad_contingencias` bigint(21)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `cantidad_contingencias_fechas`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `cantidad_contingencias_fechas` (
+`fecha_contingencia` varchar(28)
+,`cantidad_contingencias` bigint(21)
 );
 
 -- --------------------------------------------------------
@@ -3624,8 +3646,13 @@ CREATE TABLE `contingencia` (
 --
 
 INSERT INTO `contingencia` (`fecha`, `hora_inicial`, `hora_final`, `tiempo_total`, `observaciones`, `ID_colaborador`) VALUES
-('2022-11-08', '09:00:00', '12:00:00', '03:00:00', 'Servicio médico', 160243),
-('2022-11-21', '08:00:00', '12:00:00', '04:00:00', 'sdsds', 269686);
+('2022-10-11', '08:00:00', '12:00:00', '04:00:00', 'Prueba', 123461),
+('2022-11-21', '08:00:00', '12:00:00', '04:00:00', 'sdsds', 269686),
+('2022-11-23', '08:00:00', '12:00:00', '04:00:00', 'Contingencia de prueba.', 269686),
+('2022-11-30', '08:00:00', '12:00:00', '04:00:00', 'Prueba', 160641),
+('2022-11-30', '08:00:00', '12:00:00', '04:00:00', 'asas', 269686),
+('2022-12-01', '08:00:00', '12:00:00', '04:00:00', 'Prueba.', 269686),
+('2022-12-09', '08:00:00', '12:00:00', '04:00:00', 'Prueba', 123461);
 
 --
 -- Disparadores `contingencia`
@@ -3678,7 +3705,7 @@ CREATE TABLE `desglose_chequeos` (
 ,`hora_final` time
 ,`tiempo_total` time
 ,`tiempo_contingencia` time
-,`bloqueo_registro` int(1)
+,`bloqueo_registro` int(11)
 ,`ID_colaborador` int(10) unsigned
 ,`numero_chequeo` int(11)
 );
@@ -3931,11 +3958,29 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Estructura para la vista `cantidad_contingencias_colaboradores`
+--
+DROP TABLE IF EXISTS `cantidad_contingencias_colaboradores`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `cantidad_contingencias_colaboradores`  AS SELECT coalesce(`desglose_colaboradores`.`nombre_completo`,'Todos los colaboradores registrados') AS `nombre_colaborador`, count(0) AS `cantidad_contingencias` FROM (`desglose_colaboradores` join `contingencia` on(`contingencia`.`ID_colaborador` = `desglose_colaboradores`.`ID`)) GROUP BY `desglose_colaboradores`.`nombre_completo` with rollup  ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `cantidad_contingencias_fechas`
+--
+DROP TABLE IF EXISTS `cantidad_contingencias_fechas`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `cantidad_contingencias_fechas`  AS SELECT coalesce(`desglose_contingencias`.`fecha`,'Todos las fechas registradas') AS `fecha_contingencia`, count(0) AS `cantidad_contingencias` FROM `desglose_contingencias` GROUP BY `desglose_contingencias`.`fecha` with rollup  ;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura para la vista `desglose_chequeos`
 --
 DROP TABLE IF EXISTS `desglose_chequeos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `desglose_chequeos`  AS SELECT `chequeo`.`fecha_chequeo` AS `fecha_chequeo`, `chequeo`.`hora_inicial` AS `hora_inicial`, `chequeo`.`hora_final` AS `hora_final`, `chequeo`.`tiempo_total` AS `tiempo_total`, `contingencia`.`tiempo_total` AS `tiempo_contingencia`, `chequeo`.`bloqueo_registro` AS `bloqueo_registro`, `chequeo`.`ID_colaborador` AS `ID_colaborador`, `chequeo`.`numero_chequeo` AS `numero_chequeo` FROM (`chequeo` left join `contingencia` on(`chequeo`.`fecha_chequeo` = `contingencia`.`fecha` and `chequeo`.`ID_colaborador` = `contingencia`.`ID_colaborador`))  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `desglose_chequeos`  AS SELECT `chequeo`.`fecha_chequeo` AS `fecha_chequeo`, `chequeo`.`hora_inicial` AS `hora_inicial`, `chequeo`.`hora_final` AS `hora_final`, `chequeo`.`tiempo_total` AS `tiempo_total`, `contingencia`.`tiempo_total` AS `tiempo_contingencia`, `chequeo`.`bloqueo_registro` AS `bloqueo_registro`, `chequeo`.`ID_colaborador` AS `ID_colaborador`, `chequeo`.`numero_chequeo` AS `numero_chequeo` FROM (`chequeo` left join `contingencia` on(`chequeo`.`fecha_chequeo` = `contingencia`.`fecha` and `chequeo`.`ID_colaborador` = `contingencia`.`ID_colaborador`)) union select `contingencia`.`fecha` AS `fecha`,`chequeo`.`hora_inicial` AS `hora_inicial`,`chequeo`.`hora_final` AS `hora_final`,`chequeo`.`tiempo_total` AS `tiempo_total`,`contingencia`.`tiempo_total` AS `tiempo_contingencia`,`chequeo`.`bloqueo_registro` AS `bloqueo_registro`,`contingencia`.`ID_colaborador` AS `ID_colaborador`,`chequeo`.`numero_chequeo` AS `numero_chequeo` from (`contingencia` left join `chequeo` on(`chequeo`.`fecha_chequeo` = `contingencia`.`fecha` and `chequeo`.`ID_colaborador` = `contingencia`.`ID_colaborador`))  ;
 
 -- --------------------------------------------------------
 
