@@ -26,33 +26,30 @@
     # estructuración del reporte de
     # cierto colaborador del sistema.
     if(isset($_GET["ID-colaborador"])) {
-        if($usuario = $conexion_base->query("SELECT colaborador.ID, colaborador.nombres, colaborador.apellido_paterno, 
-        colaborador.apellido_materno, carrera.nombre AS carrera, modalidad_colaborador.nombre AS modalidad, colaborador.numero_retardos,
-        horario.hora_inicial, horario.hora_final, colaborador.numero_desbloqueos, colaborador.fecha_nacimiento
-        FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID
-        JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
-        JOIN horario ON colaborador.ID_horario = horario.ID
-        WHERE colaborador.ID = '" . @$_GET["ID-colaborador"] . "' LIMIT 1;")) {
+        if($usuario = $conexion_base->query("SELECT * FROM desglose_colaboradores
+        WHERE ID = '" . @$_GET["ID-colaborador"] . "' LIMIT 1;")) {
             if($usuario->num_rows > 0) {
                 # Definir los datos del usuario encontrado.
                 $resultados = $usuario->fetch_row();
                 $ID_colaborador = $resultados[0];
-                $nombre_colaborador = $resultados[1] . " " . $resultados[2] . " " . $resultados[3];
-                $carrera = $resultados[4];
-                $modalidad = $resultados[5];
-                $numero_retardos = $resultados[6];
-                $numero_desbloqueos = $resultados[9];
+                $nombre_colaborador = $resultados[1];
+                $fecha_nacimiento = $resultados[2];
+                $numero_retardos = $resultados[3];
+                $numero_desbloqueos = $resultados[4];
+                $carrera = $resultados[5];
+                $modalidad = $resultados[6];
                 $hora_inicial = $resultados[7];
                 $hora_final = $resultados[8];
-                $fecha_nacimiento = $resultados[10];
+                $participacion = $resultados[9];
 
                 # Obtener todos los chequeos realizados por
                 # el colaborador, respetando el rango de fechas.
-                $chequeos = $conexion_base->query("SELECT chequeo.fecha_chequeo, chequeo.hora_inicial, 
-                chequeo.hora_final, chequeo.tiempo_total, contingencia.tiempo_total AS tiempo_contingencia, 
-                chequeo.bloqueo_registro FROM chequeo LEFT JOIN contingencia ON chequeo.fecha_chequeo = contingencia.fecha
-                AND chequeo.ID_colaborador = contingencia.ID_colaborador WHERE chequeo.ID_colaborador = '" . @$_GET["ID-colaborador"] 
-                . "'ORDER BY fecha_chequeo ASC;");
+                $chequeos = $conexion_base->query("SELECT * FROM desglose_chequeos 
+                WHERE ID_colaborador = '" . @$_GET["ID-colaborador"] 
+                . "' ORDER BY fecha_chequeo ASC, numero_chequeo ASC;");
+                echo "SELECT * FROM desglose_chequeos 
+                WHERE ID_colaborador = '" . @$_GET["ID-colaborador"] 
+                . "' ORDER BY fecha_chequeo ASC, numero_chequeo ASC;";
 
                 # Obtener el conteo de horas totales 
                 # de colaboración del usuario.
@@ -245,6 +242,10 @@
                                             </p>
 
                                             <p class="fw-semibold mb-2">
+                                                Tipo de participación: <?php echo $participacion ?>
+                                            </p>
+
+                                            <p class="fw-semibold mb-2">
                                                 Número de retardos: <?php echo $numero_retardos ?>
                                             </p>
 
@@ -273,17 +274,18 @@
                                         Reporte de horas
                                     </h6>
 
-                                    <div class="table-responsive mx-auto py-4 px-0 px-sm-4"> 
+                                    <div class="table-responsive mx-auto tabla-desglose py-4 px-0 px-sm-4"> 
                                         <table class="table table-striped mb-0">
                                             <thead>
                                                 <tr">
                                                     <th scope="col"> Fecha de registro </th>
+                                                    <th scope="col"> Número de registro </th>
                                                     <th scope="col"> Contingencia </th>
                                                     <th scope="col"> Bloqueo </th>
-                                                    <th scope="col"> Día de registro </th>
-                                                    <th scope="col"> Hora de entrada </th>
-                                                    <th scope="col"> Hora de salida </th>
-                                                    <th scope="col"> Tiempo total </th>
+                                                    <th scope="col" class="no-partir-palabra"> Día de registro </th>
+                                                    <th scope="col" class="no-partir-palabra"> Hora de entrada </th>
+                                                    <th scope="col" class="no-partir-palabra"> Hora de salida </th>
+                                                    <th scope="col" class="no-partir-palabra"> Tiempo total </th>
                                                 </tr>
                                             </thead>
 
@@ -293,16 +295,17 @@
                                                 ?>
                                                 <tr>
                                                     <?php
-                                                    $dias = ["Lunes", "Martes", "Miércoles", "Jueves",
-                                                    "Viernes"];
+                                                    $dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves",
+                                                    "Viernes", "Sábado"];
 
                                                     while($chequeo = $chequeos->fetch_row()) {
                                                         echo "<tr> ";
                                                         echo "<th scope='row' class='py-3'> " . date("d-m-Y", strtotime($chequeo[0])) . " </th> ";
+                                                        echo "<th scope='row' class='py-3'> " . ((empty($chequeo[7])) ? "N/A" : $chequeo[7])  . " </th> ";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[4])) ? "N/A" : $chequeo[4]) .  " </td> ";
-                                                        echo "<td class='py-3'> " . (($chequeo[5] == "0") ? "N/A" : $chequeo[5]) .  " </td> ";
-                                                        echo "<td class='py-3'> " . $dias[date("w", strtotime($chequeo[0])) - 1] . " </td> ";
-                                                        echo "<td class='py-3'> " . date("h:i:s A", strtotime($chequeo[1])) . " </td> ";
+                                                        echo "<td class='py-3'> " . (($chequeo[5] == "0" || empty($chequeo[5])) ? "N/A" : $chequeo[5]) .  " </td> ";
+                                                        echo "<td class='py-3'> " . $dias[date("w", strtotime($chequeo[0]))] . " </td> ";
+                                                        echo "<td class='py-3'> " . ((empty($chequeo[1])) ? "N/A" : date("h:i:s A", strtotime($chequeo[1]))) . " </td> ";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[2])) ? "N/A" : date("h:i:s A", strtotime($chequeo[2]))) . " </td>";
                                                         echo "<td class='py-3'> " . ((empty($chequeo[3])) ? "N/A" : $chequeo[3]) . " </td>";
                                                         echo " </tr>";
@@ -319,7 +322,7 @@
                                             ?>
                                             <tfoot class="table-group-divider remarcado-inferior">
                                                 <tr>
-                                                    <td colspan="7" class="px-0 py-3">
+                                                    <td colspan="8" class="px-0 py-3">
                                                         <table class="table table-borderless mb-0">
                                                             <thead>
                                                                 <tr>

@@ -1,0 +1,8 @@
+DELIMITER $$
+    CREATE OR REPLACE PROCEDURE corregir_enumeracion_chequeos (IN fecha DATE, IN ID INT(10))
+    BEGIN
+        SET @numero_chequeo := 0;
+        UPDATE chequeo SET numero_chequeo = @numero_chequeo := @numero_chequeo + 1 WHERE 
+        fecha_chequeo = fecha AND ID_colaborador = ID;
+    END $$
+DELIMITER ;

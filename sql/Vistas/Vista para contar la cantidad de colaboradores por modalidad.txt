@@ -1,0 +1,3 @@
+CREATE OR REPLACE VIEW cantidad_colaboradores_modalidades AS SELECT COALESCE(modalidad.nombre, 'Todas las modalidades') 
+AS nombre_modalidad, COUNT(colaborador.ID) AS cantidad_colaboradores FROM modalidad LEFT JOIN colaborador ON modalidad.ID = colaborador.ID_modalidad
+GROUP BY modalidad.nombre WITH ROLLUP;

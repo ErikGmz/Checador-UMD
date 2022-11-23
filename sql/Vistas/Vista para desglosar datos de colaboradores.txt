@@ -1,0 +1,11 @@
+CREATE OR REPLACE VIEW desglose_colaboradores AS SELECT colaborador.ID, 
+CONCAT_WS(' ', colaborador.nombres, colaborador.apellido_paterno, colaborador.apellido_materno) AS nombre_completo, 
+colaborador.fecha_nacimiento, colaborador.numero_retardos, colaborador.numero_desbloqueos,
+carrera.nombre AS nombre_carrera, modalidad.nombre AS nombre_modalidad, horario.hora_inicial, horario.hora_final,
+participacion.nombre AS nombre_participacion, turno.nombre as nombre_turno,
+carrera.ID AS ID_carrera, modalidad.ID AS ID_modalidad, participacion.ID AS ID_participacion, turno.ID as ID_turno 
+FROM colaborador JOIN carrera ON colaborador.ID_carrera = carrera.ID 
+JOIN modalidad ON colaborador.ID_modalidad = modalidad.ID
+JOIN participacion ON colaborador.ID_participacion = participacion.ID
+JOIN horario ON colaborador.ID_horario = horario.ID
+JOIN turno ON horario.ID_turno = turno.ID;

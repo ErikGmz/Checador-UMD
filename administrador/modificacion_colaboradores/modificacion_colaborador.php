@@ -26,7 +26,10 @@
     $carreras = $conexion_base->query("SELECT * FROM carrera;");
 
     # Obtener todas las modalidades registradas.
-    $modalidades = $conexion_base->query("SELECT * FROM modalidad_colaborador;");
+    $modalidades = $conexion_base->query("SELECT * FROM modalidad;");
+
+    # Obtener todas los tipos de participación registrados.
+    $participaciones = $conexion_base->query("SELECT * FROM participacion;");
 
     # Obtener turnos registrados.
     $turnos = $conexion_base->query("SELECT * FROM turno;");
@@ -112,18 +115,8 @@
                     if(isset($_GET["ID-colaborador"])) {
                         # Buscar al colaborador introducido 
                         # en la lista de búsqueda.
-                        if($usuario = $conexion_base->query("SELECT IF(SUBSTRING(nombres, 1, LOCATE(' ', nombres)) = '',
-                        TRIM(SUBSTRING(nombres, LOCATE(' ', nombres) + 1)), 
-                        TRIM(SUBSTRING(nombres, 1, LOCATE(' ', nombres)))) AS primer_nombre,
-                        IF(SUBSTRING(nombres, 1, LOCATE(' ', nombres)) != '',
-                        TRIM(SUBSTRING(nombres, LOCATE(' ', nombres) + 1)), '') AS segundo_nombre,
-                        colaborador.apellido_paterno, colaborador.apellido_materno,
-                        colaborador.ID_carrera, colaborador.ID_modalidad, 
-                        TIME_FORMAT(horario.hora_inicial, '%H:%i') AS hora_inicial,
-                        TIME_FORMAT(horario.hora_final, '%H:%i') AS hora_final,
-                        colaborador.numero_retardos, colaborador.numero_desbloqueos, colaborador.fecha_nacimiento
-                        FROM colaborador JOIN horario ON colaborador.ID_horario = horario.ID
-                        WHERE colaborador.ID = '" . $_GET["ID-colaborador"] . "';")) {
+                        if($usuario = $conexion_base->query("SELECT * FROM desglose_separado_colaboradores
+                        WHERE ID = '" . $_GET["ID-colaborador"] . "';")) {
                             if($usuario->num_rows > 0) {
                                 $datos_usuario = $usuario->fetch_row();
                                 $valido = true;
@@ -254,12 +247,31 @@
                                 </div>
                             </div>
 
+                            <div class="col-12 col-md-6 mb-4">
+                                <label for="participaciones" class="form-label fw-semibold"> Tipo de participación (*) </label>
+                                <select class="form-select" name="participacion" id="participaciones">
+                                    <?php
+                                        if(isset($participaciones) && $participaciones->num_rows > 0) {
+                                            while($participacion = $participaciones->fetch_row()) {
+                                                if($participacion[0] == $datos_usuario[10]) {
+                                                    echo "<option selected value='" . $participacion[0]. "'> " . $participacion[1] . " </option> ";
+                                                }
+                                                else {
+                                                    echo "<option value='" . $participacion[0]. "'> " . $participacion[1] . " </option> ";
+                                                }
+                                            }
+                                        }
+                                    ?>
+                                </select>
+                                <div class="form-text"> 
+                                    Campo obligatorio.
+                                </div>
+                            </div>
+
                             <div class="col-12 col-md-6 mb-4 mb-md-0">
                                 <label for="hora-entrada" class="form-label fw-semibold"> Hora de entrada (*) </label>
-                                <input type="text" class="form-control mayusculas-iniciales" id="hora-entrada" 
-                                autocomplete="OFF" required name="hora-entrada" placeholder="08:00"
-                                pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
-                                value="<?=$datos_usuario[6]?>"
+                                <input type="time" class="form-control mayusculas-iniciales" id="hora-entrada" 
+                                autocomplete="OFF" required name="hora-entrada" min="08:00" max="21:00" value="<?=$datos_usuario[6]?>"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
                                     Campo obligatorio. Formato de 08:00 a 21:00 horas.
@@ -268,10 +280,8 @@
 
                             <div class="col-12 col-md-6">
                                 <label for="hora-salida" class="form-label fw-semibold"> Hora de salida (*) </label>
-                                <input type="text" class="form-control mayusculas-iniciales" id="hora-salida" 
-                                autocomplete="OFF" required name="hora-salida" placeholder="12:00"
-                                pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
-                                value="<?=$datos_usuario[7]?>"
+                                <input type="time" class="form-control mayusculas-iniciales" id="hora-salida" 
+                                autocomplete="OFF" required name="hora-salida" value="<?=$datos_usuario[7]?>" min="08:00" max="21:00"
                                 oninput="verificarRangosHoras('hora-entrada', 'hora-salida')">
                                 <div class="form-text"> 
                                     Campo obligatorio. Formato de 08:00 a 21:00 horas.
@@ -365,6 +375,7 @@
                     document.getElementById("fecha-nacimiento").setAttribute("max", new Date().toLocaleDateString("fr-CA"));
                     dselect(document.getElementById("carreras"), { search: true, maxHeight: "200px" });
                     dselect(document.getElementById("modalidades"), { search: false });
+                    dselect(document.getElementById("participaciones"), { search: false });
                 <?php
                 }
             }

@@ -1,0 +1,3 @@
+CREATE OR REPLACE VIEW cantidad_colaboradores_turnos AS SELECT COALESCE(turno.nombre, 'Todos los turnos') 
+AS nombre_turno, COUNT(colaborador.ID) AS cantidad_colaboradores FROM colaborador LEFT JOIN horario ON horario.ID = colaborador.ID_horario
+JOIN turno ON turno.ID = horario.ID_turno GROUP BY turno.nombre WITH ROLLUP;

@@ -42,6 +42,7 @@
                             }
                         }
                         catch(Exception $e) {
+                            echo $e->getMessage();
                             $resultado = 1;
                         }
                     }
@@ -52,7 +53,8 @@
                 $resultado = 1;
             }   
         }
-        catch(Exception $e) {
+        catch(Exception $e) { 
+            echo $e->getMessage();
             $resultado = 1;
         }
         finally {

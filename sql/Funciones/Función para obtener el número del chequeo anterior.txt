@@ -1,0 +1,11 @@
+DELIMITER $$
+    CREATE OR REPLACE FUNCTION numero_chequeo_anterior (fecha DATE, ID INT(10), numero INT(11)) RETURNS INT(11)
+    BEGIN
+        DECLARE valor INT;
+
+        SELECT numero_chequeo INTO valor FROM chequeo WHERE fecha_chequeo = fecha AND ID_colaborador = ID
+        AND numero_chequeo < numero ORDER BY numero_chequeo DESC LIMIT 1;
+
+        RETURN valor;
+    END $$
+DELIMITER ;

@@ -167,23 +167,22 @@
                             <!--Selección de la fecha de contingencia-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="fecha-registro" class="form-label fw-semibold"> Fecha de contingencia (*) </label>
-                                <input type="date" name="fecha-registro" value="<?=$_GET["fecha-registro"]?>" min="2021-01-01" max="2030-12-30" 
+                                <input type="date" name="fecha-registro" value="<?=$_GET["fecha-registro"]?>" min="2021-01-01"
                                 class="form-control" id="nueva-fecha-registro" autocomplete="OFF" required
                                 onchange="verificarContingencia(document.getElementById('nuevos-colaboradores').value, 
                                 document.getElementById('nueva-fecha-registro').value, 'nueva-fecha-registro', 2)">
                                 <div class="form-text"> 
                                     Campo obligatorio. El rango de fechas admitido se encuentra
-                                    entre 01-01-2021 y 30-12-2030. Cada colaborador
+                                    entre 01-01-2021 y mayor. Cada colaborador
                                     puede tener máximo una contingencia por día.
                                 </div>
                             </div>
 
                             <!--Solicitud de hora inicial-->
                             <div class="col-12 col-md-6 mb-4 mb-md-0">
-                                <label for="hora-inicial" class="form-label fw-semibold"> Hora de entrada (*) </label>
-                                <input type="text" class="form-control" id="hora-inicial" 
-                                autocomplete="OFF" required name="hora-inicial" placeholder="08:00" value="<?=$datos_contingencia[0]?>"
-                                pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
+                                <label for="hora-inicial" class="form-label fw-semibold"> Hora inicial (*) </label>
+                                <input type="time" class="form-control" id="hora-inicial" 
+                                autocomplete="OFF" required name="hora-inicial" value="<?=$datos_contingencia[0]?>" min="08:00" max="21:00"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 
                                     Campo obligatorio. Formato de 08:00 a 21:00 horas.
@@ -192,10 +191,9 @@
 
                             <!--Solicitud de hora final-->
                             <div class="col-12 col-md-6 mb-4">
-                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida </label>
-                                <input type="text" class="form-control" id="hora-final" 
-                                autocomplete="OFF" name="hora-final" placeholder="12:00" value="<?=$datos_contingencia[1]?>"
-                                pattern="^((0[8-9]|1[0-9]|2[0]):[0-5][0-9])|21:00$"
+                                <label for="hora-final" class="form-label fw-semibold"> Hora final (*) </label>
+                                <input type="time" class="form-control" id="hora-final" 
+                                autocomplete="OFF" name="hora-final" required value="<?=$datos_contingencia[1]?>" min="08:00" max="21:00"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
                                 <div class="form-text"> 
                                     Campo obligatorio. Formato de 08:00 a 21:00 horas.

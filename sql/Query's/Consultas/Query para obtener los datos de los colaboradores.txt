@@ -1,6 +1,6 @@
 SELECT colaborador.ID, CONCAT_WS(" ", colaborador.nombres, colaborador.apellido_paterno, colaborador.apellido_materno) AS nombre_completo, colaborador.numero_retardos,
-carrera.nombre AS carrera, modalidad_colaborador.nombre as modalidad, horario.hora_inicial, horario.hora_final 
+carrera.nombre AS carrera, modalidad.nombre as modalidad, horario.hora_inicial, horario.hora_final 
 FROM colaborador
 JOIN carrera ON colaborador.ID_carrera = carrera.ID
-JOIN modalidad_colaborador ON colaborador.ID_modalidad = modalidad_colaborador.ID
+JOIN modalidad ON colaborador.ID_modalidad = modalidad.ID
 JOIN horario ON colaborador.ID_horario = horario.ID;

@@ -1,0 +1,1 @@
+CREATE OR REPLACE INDEX indice_colaborador_fecha_chequeo ON chequeo (fecha_chequeo, ID_colaborador);

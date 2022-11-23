@@ -1,0 +1,4 @@
+INSERT INTO checadorumd.participacion(ID, nombre) VALUES (1, "Presencial"),
+(2, "A distancia"),
+(3, "Mixta"),
+(4, "Otra");

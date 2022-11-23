@@ -1,0 +1,10 @@
+DELIMITER $$
+    CREATE OR REPLACE FUNCTION cantidad_chequeos (fecha DATE, ID INT(10)) RETURNS INT(11)
+    BEGIN
+        DECLARE valor INT;
+
+        SELECT COUNT(*) INTO valor FROM chequeo WHERE fecha_chequeo = fecha AND ID_colaborador = ID LIMIT 1;
+
+        RETURN valor;
+    END $$
+DELIMITER ;

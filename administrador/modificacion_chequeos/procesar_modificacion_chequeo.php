@@ -13,8 +13,8 @@
 
     # Verificar que se haya enviado un
     # formulario de modificación de chequeo.
-    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-chequeo"], $_POST["fecha-anterior"],
-    $_POST["hora-inicial"], $_POST["estado-chequeo"],  $_POST["anterior-ID-colaborador"])) {
+    if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["ID-colaborador"], $_POST["fecha-chequeo"],
+    $_POST["hora-inicial"], $_POST["hora-final"], $_POST["estado-chequeo"],  $_POST["numero-chequeo"])) {
         # Iniciar y verificar la conexión
         # con la base de datos.
         $conexion_base = new mysqli("localhost", "root", "", "checadorumd");
@@ -22,13 +22,13 @@
             die("Hubo un error al conectar con la base de datos. " . $conexion_base->connect_error);
         }
 
-        # Verificar si los datos especificados no corresponden
+        # Verificar si los datos especificados corresponden
         # a un chequeo ya existente en el sistema.
         try {
             if($resultados = $conexion_base->query("SELECT * FROM chequeo WHERE 
-            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-chequeo"] . "';")) {
-                if($resultados->num_rows > 0 && $_POST["ID-colaborador"] != $_POST["anterior-ID-colaborador"] 
-                && $_POST["fecha-anterior"] != $_POST["fecha-chequeo"]) {
+            ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-chequeo"] . "'
+            AND numero_chequeo = " . $_POST["numero-chequeo"] . ";")) {
+                if($resultados->num_rows < 0) {
                     $resultado = 2;
                 }
                 else {
@@ -47,34 +47,117 @@
                         $resultado = 3;
                     }
                     else {
-                        if(strtotime($_POST["fecha-chequeo"]) >= strtotime("2021-01-01") &&
-                        strtotime($_POST["fecha-chequeo"]) <= strtotime("2030-12-30")) {
-                            # Actualizar el chequeo de la base de datos.
-                            try {
-                                if($tiempo_final != "") {
-                                    $registro_hora_final = "'" . date("H:i:s", strtotime($tiempo_final)) . "'";
+                        $hora_inicial_anterior = "";
+                        $hora_final_anterior = "";
+                        $hora_inicial_posterior = "";
+                        $hora_final_posterior = "";
+
+                        # Obtener los horarios del chequeo anterior.
+                        if($resultados = $conexion_base->query("CALL obtener_chequeo_anterior('" . $_POST["fecha-chequeo"] 
+                        . "', " . $_POST["ID-colaborador"] . ", " . $_POST["numero-chequeo"] . ")")) {
+                            do {
+                                if($auxiliar = $conexion_base->store_result()) {
+                                    $auxiliar->free();
                                 }
-                                else {
-                                    $registro_hora_final = "NULL";
+                            } while($conexion_base->more_results() && $conexion_base->next_result());
+
+                            if($resultados->num_rows > 0) {
+                                $registro = $resultados->fetch_row();
+
+                                if(!is_null($registro[1])) {
+                                    $hora_inicial_anterior = date("1970-01-01 " . $registro[1]);
                                 }
 
-                                if($conexion_base->query("UPDATE chequeo SET fecha_chequeo = '" . $_POST["fecha-chequeo"] 
-                                . "', hora_inicial = '" . date("H:i:s", strtotime($tiempo_inicial)) . "', hora_final = $registro_hora_final, "
-                                . " bloqueo_registro = '" . $_POST["estado-chequeo"] . "', ID_colaborador = '" . $_POST["ID-colaborador"] 
-                                . "' WHERE ID_colaborador = '" . $_POST["anterior-ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-anterior"] . "'")) {
-                                    $resultado = 5;
+                                if(!is_null($registro[0])) {
+                                    $hora_final_anterior = date("1970-01-01 " . $registro[0]);
                                 }
-                                else {
+                            }
+                        }
+
+                        # Obtener los horarios del chequeo posterior.
+                        if($resultados = $conexion_base->query("CALL obtener_chequeo_posterior('" . $_POST["fecha-chequeo"] 
+                        . "', " . $_POST["ID-colaborador"] . ", " . $_POST["numero-chequeo"] . ")")) {
+                            do {
+                                if($auxiliar = $conexion_base->store_result()) {
+                                    $auxiliar->free();
+                                }
+                            } while($conexion_base->more_results() && $conexion_base->next_result());
+
+                            if($resultados->num_rows > 0) {
+                                $registro = $resultados->fetch_row();
+
+                                if(!is_null($registro[1])) {
+                                    $hora_inicial_posterior = date("1970-01-01 " . $registro[1]);
+                                }
+
+                                if(!is_null($registro[0])) {
+                                    $hora_final_posterior = date("1970-01-01 " . $registro[0]);
+                                }
+                            }
+                        }
+
+                        # Verificar si no hay conflictos con el horario del chequeo anterior.
+                        if($hora_inicial_anterior != "") {
+                            if($hora_inicial_anterior > $tiempo_inicial) {
+                                $resultado = 6;
+                            }
+                        }
+
+                        if($hora_final_anterior != "") {
+                            if($hora_final_anterior > $tiempo_inicial) {
+                                $resultado = 6;
+                            }
+                        }
+
+                        # Verificar si no hay conflictos con el horario del chequeo posterior.
+                        if($hora_inicial_posterior != "") {
+                            if($hora_inicial_posterior < $tiempo_final) {
+                                $resultado = 6;
+                            }
+                        }
+
+                        if($hora_final_posterior != "") {
+                            if($hora_final_posterior < $tiempo_final) {
+                                $resultado = 6;
+                            }
+                        }
+
+                        if(!isset($resultado)) {
+                            if(strtotime($_POST["fecha-chequeo"]) >= strtotime("2021-01-01")) {
+                                # Actualizar el chequeo de la base de datos.
+                                try {
+                                    if($tiempo_final != "") {
+                                        $registro_hora_final = "'" . date("H:i:s", strtotime($tiempo_final)) . "'";
+                                    }
+                                    else {
+                                        $registro_hora_final = "NULL";
+                                    }
+
+                                    if($conexion_base->query("UPDATE chequeo SET hora_inicial = '" . date("H:i:s", strtotime($tiempo_inicial)) 
+                                    . "', hora_final = $registro_hora_final, bloqueo_registro = '" . $_POST["estado-chequeo"] 
+                                    . "' WHERE ID_colaborador = '" . $_POST["ID-colaborador"] . "' AND fecha_chequeo = '" . $_POST["fecha-chequeo"] 
+                                    . "' AND numero_chequeo = " . $_POST["numero-chequeo"] . ";")) {
+                                        $conexion_base->query("CALL corregir_enumeracion_chequeos('" . $_POST["fecha-chequeo"] . "', " . $_POST["ID-colaborador"] . ");");
+                                        do {
+                                            if($auxiliar = $conexion_base->store_result()) {
+                                                $auxiliar->free();
+                                            }
+                                        } while($conexion_base->more_results() && $conexion_base->next_result());
+
+                                        $resultado = 5;
+                                    }
+                                    else {
+                                        $resultado = 1;
+                                    }
+                                }
+                                catch(Exception $e) {
+                                    echo $e->getMessage();
                                     $resultado = 1;
                                 }
                             }
-                            catch(Exception $e) {
-                                echo $e->getMessage();
-                                $resultado = 1;
+                            else {
+                                $resultado = 4;
                             }
-                        }
-                        else {
-                            $resultado = 4;
                         }
                     }
                 }
@@ -84,7 +167,8 @@
                 $resultado = 1;
             }   
         }
-        catch(Exception $e) {
+        catch(Exception $e) { 
+            echo $e->getMessage();
             $resultado = 1;
         }
         finally {
@@ -148,8 +232,9 @@
                         Swal.fire({
                             icon: "error",
                             title: "Chequeo inexistente",
-                            html: <?php echo "\"<p class='mb-4'> El siguiente chequeo es inexistente en el sistema: </p> \\n"
+                            html: <?php echo "\"<p class='mb-4'> El siguiente chequeo no existe en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
+                            . "<p class='my-2'> <b> Número de chequeo: </b> " . @$_POST["numero-chequeo"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {
@@ -175,7 +260,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Fecha de chequeo no válida",
-                            text: "La fecha de chequeo no corresponde al rango de fechas permitido"
+                            text: "La fecha de chequeo no corresponde al rango de fechas permitido (01-01-2021 o mayor)"
                         }).then((resultado) => {
                             location.href="modificacion_chequeo.php";
                         });
@@ -189,6 +274,23 @@
                             title: "Modificación exitosa de chequeo",
                             html: <?php echo "\"<p class='mb-4'> El siguiente chequeo fue exitosamente modificado en el sistema: </p> \\n"
                             . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
+                            . "<p class='my-2'> <b> Número de chequeo: </b> " . @$_POST["numero-chequeo"] . " </p> \\n"
+                            . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
+                            ?>
+                        }).then((resultado) => {
+                            location.href="modificacion_chequeo.php";
+                        });
+                    });
+                break;
+
+                case 6:
+                    window.addEventListener("load", () => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Inconsistencias entre los horarios del chequeo actualizado y los otros de la fecha correspondiente",
+                            html: <?php echo "\"<p class='mb-4'> Datos del chequeo: </p> \\n"
+                            . "<p class='my-2'> <b> Colaborador: </b> " . @$_POST["ID-colaborador"] . " </p> \\n"
+                            . "<p class='my-2'> <b> Número de chequeo: </b> " . @$_POST["numero-chequeo"] . " </p> \\n"
                             . "<p class='mb-0'> <b> Fecha de chequeo: </b> " . date("d-m-Y", strtotime(@$_POST["fecha-chequeo"])). "</p>\""
                             ?>
                         }).then((resultado) => {

@@ -1,0 +1,5 @@
+CREATE OR REPLACE VIEW cantidad_contingencias_colaboradores AS SELECT 
+COALESCE(desglose_colaboradores.nombre_completo, 'Todos los colaboradores registrados') AS nombre_colaborador, 
+COUNT(*) AS cantidad_contingencias FROM desglose_colaboradores JOIN contingencia ON 
+contingencia.ID_colaborador = desglose_colaboradores.ID 
+GROUP BY desglose_colaboradores.nombre_completo WITH ROLLUP;

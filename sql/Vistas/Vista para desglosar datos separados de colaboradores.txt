@@ -1,0 +1,13 @@
+CREATE OR REPLACE VIEW desglose_separado_colaboradores AS 
+SELECT IF(SUBSTRING(nombres, 1, LOCATE(' ', nombres)) = '',
+TRIM(SUBSTRING(nombres, LOCATE(' ', nombres) + 1)), 
+TRIM(SUBSTRING(nombres, 1, LOCATE(' ', nombres)))) AS primer_nombre,
+IF(SUBSTRING(nombres, 1, LOCATE(' ', nombres)) != '', 
+TRIM(SUBSTRING(nombres, LOCATE(' ', nombres) + 1)), '') AS segundo_nombre,
+colaborador.apellido_paterno, colaborador.apellido_materno, colaborador.ID_carrera, 
+colaborador.ID_modalidad, 
+TIME_FORMAT(horario.hora_inicial, '%H:%i') AS hora_inicial, 
+TIME_FORMAT(horario.hora_final, '%H:%i') AS hora_final,
+colaborador.numero_retardos, colaborador.numero_desbloqueos, 
+colaborador.fecha_nacimiento, colaborador.ID, colaborador.ID_participacion
+FROM colaborador JOIN horario ON colaborador.ID_horario = horario.ID;

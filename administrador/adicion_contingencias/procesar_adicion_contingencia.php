@@ -39,8 +39,7 @@
                         $resultado = 3;
                     }
                     else {
-                        if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01") &&
-                        strtotime($_POST["fecha-registro"]) <= strtotime("2030-12-30")) {
+                        if(strtotime($_POST["fecha-registro"]) >= strtotime("2021-01-01")) {
                             # Agregar la contingencia a la base de datos.
                             try {
                                 if($conexion_base->query("INSERT INTO contingencia(fecha, hora_inicial, hora_final, observaciones, ID_colaborador) "
@@ -54,6 +53,7 @@
                                 }
                             }
                             catch(Exception $e) {
+                                echo $e->getMessage();
                                 $resultado = 1;
                             }
                         }
@@ -69,6 +69,7 @@
             }   
         }
         catch(Exception $e) {
+            echo $e->getMessage();
             $resultado = 1;
         }
         finally {
@@ -159,7 +160,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Fecha de registro no válida",
-                            text: "La fecha de registro no corresponde al rango de fechas permitido"
+                            text: "La fecha de registro no corresponde al rango de fechas permitido (01-01-2021 o mayor)"
                         }).then((resultado) => {
                             location.href="adicion_contingencia.php";
                         });

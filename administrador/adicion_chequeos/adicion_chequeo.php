@@ -85,7 +85,8 @@
                                 <label for="colaboradores" class="form-label fw-semibold"> Colaborador (*) </label>
                                 <select class="form-select" name="ID-colaborador" id="colaboradores" 
                                 onchange="verificarChequeo(document.getElementById('colaboradores').value, 
-                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 1)" required>
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 
+                                'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1, 1)" required>
                                     <?php
                                         if(isset($colaboradores) && $colaboradores->num_rows > 0) {
                                             while($colaborador = $colaboradores->fetch_row()) {
@@ -109,25 +110,24 @@
                             <!--Selección de la fecha de chequeo-->
                             <div class="col-12 col-md-6 mb-4">
                                 <label for="fecha-chequeo" class="form-label fw-semibold"> Fecha de chequeo (*) </label>
-                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01" max="2030-12-30"
+                                <input type="date" name="fecha-chequeo" value="2021-01-01" min="2021-01-01"
                                 class="form-control" id="fecha-chequeo" autocomplete="OFF" required
                                 onchange="verificarChequeo(document.getElementById('colaboradores').value, 
-                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 1)">
+                                document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 
+                                'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1, 1)">
                                 <div class="form-text"> 
                                     Campo obligatorio. El rango de fechas admitido se encuentra
-                                    entre 01-01-2021 y 30-12-2030. Cada colaborador
-                                    puede tener máximo un chequeo por día.
+                                    entre 01-01-2021 y mayor.
                                 </div>
                             </div>
 
                             <!--Solicitud de hora inicial-->
                             <div class="col-12 col-md-6 mb-4 mb-md-0">
                                 <label for="hora-inicial" class="form-label fw-semibold"> Hora de entrada (*) </label>
-                                <input type="text" class="form-control" id="hora-inicial" 
-                                autocomplete="OFF" required name="hora-inicial" placeholder="08:00:00" value="08:00:00"
-                                pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d|24:00:00$"
+                                <input type="time" class="form-control" id="hora-inicial" step="1"
+                                autocomplete="OFF" required name="hora-inicial" value="08:00:00"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
-                                <div class="form-text"> 
+                                <div class="form-text" id="texto-hora-inicial"> 
                                     Campo obligatorio. Formato de 00:00:00 a 24:00:00 horas.
                                 </div>
                             </div>
@@ -135,11 +135,10 @@
                             <!--Solicitud de hora final-->
                             <div class="col-12 col-md-6 mb-4 ">
                                 <label for="hora-final" class="form-label fw-semibold"> Hora de salida </label>
-                                <input type="text" class="form-control" id="hora-final" 
-                                autocomplete="OFF" name="hora-final" placeholder="12:00:00" value="12:00:00"
-                                pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d|24:00:00$"
+                                <input type="time" class="form-control" id="hora-final" step="1"
+                                autocomplete="OFF" name="hora-final" value="12:00:00"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
-                                <div class="form-text"> 
+                                <div class="form-text" id="texto-hora-final"> 
                                     Campo opcional. Formato de 00:00:00 a 24:00:00 horas.
                                 </div>
                             </div>
@@ -208,7 +207,8 @@
                     document.body.onload = () => {
                         document.querySelector("html").classList.remove("invisible");
                         verificarChequeo(document.getElementById('colaboradores').value, 
-                        document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 1)
+                        document.getElementById('fecha-chequeo').value, 'fecha-chequeo', 
+                        'texto-hora-inicial', 'texto-hora-final', 'hora-inicial', 'hora-final', 1, 1);
                     }
                 <?php
                 }

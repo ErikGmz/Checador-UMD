@@ -1,0 +1,13 @@
+CREATE OR REPLACE VIEW desglose_chequeos AS SELECT chequeo.fecha_chequeo, chequeo.hora_inicial, 
+chequeo.hora_final, chequeo.tiempo_total, 
+contingencia.tiempo_total AS tiempo_contingencia, chequeo.bloqueo_registro, 
+chequeo.ID_colaborador, chequeo.numero_chequeo FROM chequeo 
+LEFT JOIN contingencia ON chequeo.fecha_chequeo = contingencia.fecha
+AND chequeo.ID_colaborador = contingencia.ID_colaborador
+UNION
+SELECT contingencia.fecha, chequeo.hora_inicial, 
+chequeo.hora_final, chequeo.tiempo_total, 
+contingencia.tiempo_total AS tiempo_contingencia, chequeo.bloqueo_registro, 
+contingencia.ID_colaborador, chequeo.numero_chequeo FROM chequeo 
+RIGHT JOIN contingencia ON chequeo.fecha_chequeo = contingencia.fecha
+AND chequeo.ID_colaborador = contingencia.ID_colaborador;
