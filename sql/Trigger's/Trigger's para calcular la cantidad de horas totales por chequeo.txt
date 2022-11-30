@@ -1,5 +1,5 @@
 DELIMITER $$
-	CREATE TRIGGER calculoHorasTotalesYValidacionChequeo
+	CREATE OR REPLACE TRIGGER calculoHorasTotalesYValidacionChequeo
 		BEFORE INSERT
 		ON chequeo FOR EACH ROW
 	BEGIN
@@ -60,7 +60,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	CREATE TRIGGER calculoHorasTotalesYValidacionChequeoActualizacion
+	CREATE OR REPLACE TRIGGER calculoHorasTotalesYValidacionChequeoActualizacion
 		BEFORE UPDATE
 		ON chequeo FOR EACH ROW
 	BEGIN
@@ -125,7 +125,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	CREATE TRIGGER calculoHorasContingencia
+	CREATE OR REPLACE TRIGGER calculoHorasContingencia
 		BEFORE INSERT
 		ON contingencia FOR EACH ROW
 	BEGIN
@@ -134,7 +134,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	CREATE TRIGGER calculoHorasContingenciaActualizacion
+	CREATE OR REPLACE TRIGGER calculoHorasContingenciaActualizacion
 		BEFORE UPDATE
 		ON contingencia FOR EACH ROW
 	BEGIN

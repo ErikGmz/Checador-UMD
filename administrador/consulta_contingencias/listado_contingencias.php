@@ -137,10 +137,10 @@
                             $contingencias_desglosadas = $conexion_base->query("SELECT * FROM desglose_contingencias;");
 
                             # Obtener el conteo de cuántas contingencias hay por colaborador.
-                            $estadisticas_colaboradores = $conexion_base->query("SELECT * FROM cantidad_contingencias_colaboradores ORDER BY cantidad_contingencias;");
+                            $estadisticas_colaboradores = $conexion_base->query("SELECT * FROM cantidad_contingencias_colaboradores ORDER BY cantidad_contingencias, nombre_colaborador;");
 
                             # Obtener el conteo de cuántas contingencias hay por fecha.
-                            $estadisticas_fechas = $conexion_base->query("SELECT * FROM cantidad_contingencias_fechas ORDER BY cantidad_contingencias;");
+                            $estadisticas_fechas = $conexion_base->query("SELECT * FROM cantidad_contingencias_fechas ORDER BY cantidad_contingencias, fecha_contingencia;");
                         }
                         else {
                             if($_GET["ID-colaborador"] != -1) {
