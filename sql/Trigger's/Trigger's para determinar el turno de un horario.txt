@@ -1,5 +1,5 @@
 DELIMITER $$
-	CREATE TRIGGER calculoTurnoHorario
+	CREATE OR REPLACE TRIGGER calculoTurnoHorario
 		BEFORE INSERT
 		ON horario FOR EACH ROW
 	BEGIN
@@ -16,7 +16,7 @@ DELIMITER $$
 DELIMITER ;
 
 DELIMITER $$
-	CREATE TRIGGER calculoTurnoHorarioActualizacion
+	CREATE OR REPLACE TRIGGER calculoTurnoHorarioActualizacion
 		BEFORE UPDATE
 		ON horario FOR EACH ROW
 	BEGIN

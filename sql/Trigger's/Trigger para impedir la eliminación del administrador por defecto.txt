@@ -1,0 +1,10 @@
+DELIMITER $$
+	CREATE OR REPLACE TRIGGER verificarEliminadoCoordinador
+		BEFORE DELETE
+		ON coordinador FOR EACH ROW
+	BEGIN
+		IF (OLD.ID = "141414") THEN
+            SIGNAL SQLSTATE '45000' SET message_text = "No se puede eliminar el coordinador predeterminado.";
+        END IF;
+	END$$    
+DELIMITER ;
