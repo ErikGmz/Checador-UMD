@@ -226,7 +226,7 @@
                     ?>
                         <h4 class="text-center mt-4 mb-0">
                             <span class="badge bg-danger py-3">
-                                No hay contingencias a modificar si no existen colaboradores registrados
+                                No hay chequeos a modificar si no existen colaboradores registrados
                             </span>
                         </h4>
                     <?php

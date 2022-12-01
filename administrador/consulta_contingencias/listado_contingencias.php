@@ -287,9 +287,11 @@
                         }
                         else {
                             ?>
-                                <p class="mb-0 fs-5 fw-semibold py-3 text-center"> 
-                                    No hay contingencias registradas en el sistema
-                                </p>
+                            <h4 class="text-center mt-4 mb-0">
+                                <span class="badge bg-danger py-3">
+                                No hay contingencias registradas en el sistema
+                                </span>
+                            </h4>
                             <?php   
                         }
 
