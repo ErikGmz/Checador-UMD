@@ -254,20 +254,20 @@
                             $colaboradores_desglosados = $conexion_base->query("SELECT * FROM desglose_colaboradores;");
 
                             # Obtener el conteo de cuántos colaboradores hay por carrera.
-                            $estadisticas_carreras = $conexion_base->query("SELECT * FROM cantidad_colaboradores_carreras ORDER BY 
-                            cantidad_colaboradores ASC, nombre_carrera ;");
+                            $estadisticas_carreras = $conexion_base->query("SELECT * FROM cantidad_colaboradores_carreras ORDER BY nombre_carrera = 'Todas las carreras registradas', 
+                            cantidad_colaboradores, nombre_carrera;");
 
                             # Obtener el conteo de cuántos colaboradores hay por modalidad.
-                            $estadisticas_modalidades = $conexion_base->query("SELECT * FROM cantidad_colaboradores_modalidades ORDER BY 
-                            cantidad_colaboradores ASC, nombre_modalidad;");
+                            $estadisticas_modalidades = $conexion_base->query("SELECT * FROM cantidad_colaboradores_modalidades ORDER BY nombre_modalidad = 'Todas las modalidades',
+                            cantidad_colaboradores, nombre_modalidad;");
 
                             # Obtener el conteo de cuántos colaboradores hay por tipo de participación.
-                            $estadisticas_participaciones = $conexion_base->query("SELECT * FROM cantidad_colaboradores_participaciones ORDER BY 
-                            cantidad_colaboradores ASC, nombre_participacion;");
+                            $estadisticas_participaciones = $conexion_base->query("SELECT * FROM cantidad_colaboradores_participaciones ORDER BY nombre_participacion = 'Todos los tipos de participación', 
+                            cantidad_colaboradores, nombre_participacion;");
 
                             # Obtener el conteo de cuántos colaboradores hay por turno.
                             $estadisticas_turnos = $conexion_base->query("SELECT * FROM cantidad_colaboradores_turnos ORDER BY 
-                            cantidad_colaboradores ASC, nombre_turno;");
+                            nombre_turno = 'Todos los turnos', cantidad_colaboradores ASC, nombre_turno;");
                         }
                         else {
                             if($_GET["ID-colaborador"] != -1) {
