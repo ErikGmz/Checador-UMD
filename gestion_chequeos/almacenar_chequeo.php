@@ -362,7 +362,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Chequeo de salida ya realizado',
-                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya hizo el chequeo de salida del último registro de la fecha actual (" . date("d-m-Y") . "): </p> \\n"
+                            html: <?php echo "\"<p class='mb-4'> El siguiente colaborador ya hizo el chequeo de salida del último registro que se realizó en la fecha actual (" . date("d-m-Y") . "): </p> \\n"
                             . "<p class='mb-2'> <b> Colaborador: </b> " . @$datos_colaborador[1] . "</p> \\n"
                             . "<p class='mb-0'> <b> ID: </b> " . @$datos_colaborador[0] . "</p> \"" ?>
                         }).then((resultado) => {
