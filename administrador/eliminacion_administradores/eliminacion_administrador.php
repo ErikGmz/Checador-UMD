@@ -16,7 +16,8 @@
     }
 
     # Obtener todos los administradores registrados.
-    $administradores = $conexion_base->query("SELECT * FROM coordinador WHERE ID <> '" . $_SESSION["ID_administrador"] . "';");
+    $administradores = $conexion_base->query("SELECT * FROM coordinador WHERE ID NOT IN 
+    ('" . $_SESSION["ID_administrador"] . "', '141414');");
 ?>
 
 <!--Código HTML del archivo-->
@@ -91,7 +92,7 @@
                                 ?>
                             </select>
                             <div class="form-text text-center">
-                                No se puede eliminar al administrador actual.
+                                No se puede eliminar al administrador actual o predeterminado.
                             </div>
                         </div>
 
