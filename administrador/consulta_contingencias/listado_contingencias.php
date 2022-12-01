@@ -250,7 +250,7 @@
                     <!--Estadísticas generales sobre las fechas de las contingencias--->
                     <div class="rounded-2 text-center fondo-pantone-azul-intermedio mx-auto"> 
                         <h6 class="text-center text-white fondo-pantone-azul-oscuro py-3 rounded-top mb-0 px-3"> 
-                            Cantidad de contingencias por colaborador
+                            Cantidad de contingencias por fecha
                         </h6>
 
                         <div class="table-responsive fondo-pantone-azul-intermedio rounded tabla-desglose p-3">
