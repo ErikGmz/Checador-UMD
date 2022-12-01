@@ -705,7 +705,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `cantidad_contingencias_fechas`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `cantidad_contingencias_fechas`  AS SELECT coalesce(`desglose_contingencias`.`fecha`,'Todos las fechas registradas') AS `fecha_contingencia`, count(0) AS `cantidad_contingencias` FROM `desglose_contingencias` GROUP BY `desglose_contingencias`.`fecha` with rollup  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `cantidad_contingencias_fechas`  AS SELECT coalesce(`desglose_contingencias`.`fecha`,'Todas las fechas registradas') AS `fecha_contingencia`, count(0) AS `cantidad_contingencias` FROM `desglose_contingencias` GROUP BY `desglose_contingencias`.`fecha` with rollup  ;
 
 -- --------------------------------------------------------
 
