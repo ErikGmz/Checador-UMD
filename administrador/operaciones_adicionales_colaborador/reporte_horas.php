@@ -47,9 +47,6 @@
                 $chequeos = $conexion_base->query("SELECT * FROM desglose_chequeos 
                 WHERE ID_colaborador = '" . @$_GET["ID-colaborador"] 
                 . "' ORDER BY fecha_chequeo ASC, numero_chequeo ASC;");
-                echo "SELECT * FROM desglose_chequeos 
-                WHERE ID_colaborador = '" . @$_GET["ID-colaborador"] 
-                . "' ORDER BY fecha_chequeo ASC, numero_chequeo ASC;";
 
                 # Obtener el conteo de horas totales 
                 # de colaboración del usuario.
