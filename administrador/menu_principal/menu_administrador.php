@@ -86,11 +86,21 @@
                         Con los administradores se pueden realizar las siguientes operaciones:
                     </p>
 
-                    <ul class="ps-4 mb-0">
+                    <ul class="ps-4 mb-4">
                         <li class="mb-1"> Consultar los administradores actualmente registrados. </li>
                         <li class="mb-1"> Agregar administradores nuevos. </li>
                         <li class="mb-1"> Modificar la información de administradores existentes. </li>
                         <li class="mb-1"> Eliminar administradores del sistema. </li>
+                    </ul>
+
+                    <p class="fw-semibold">
+                        Con los chequos se pueden realizar las siguientes operaciones:
+                    </p>
+
+                    <ul class="ps-4 mb-0">
+                        <li class="mb-1"> Agregar chequeos nuevos. </li>
+                        <li class="mb-1"> Modificar la información de los chequeos existentes. </li>
+                        <li class="mb-1"> Eliminar chequeos del sistema. </li>
                     </ul>
                 </div>
             </div>
