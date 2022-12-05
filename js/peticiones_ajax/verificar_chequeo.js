@@ -108,9 +108,23 @@ IDCampoHoraFinal, tipoComportamiento, numeroChequeo) {
                             let mensaje_hora_final = "";
 
                             let horaFinalChequeoAnterior = xhttp.responseText.split("-")[1].trim();
+                            let horaInicialChequeoAnterior = xhttp.responseText.split("-")[2].trim();
                             let horaFinalChequeoActual = xhttp.responseText.split("-")[3].trim();
                             let horaInicialChequeoActual = xhttp.responseText.split("-")[4].trim();
                             let horaInicialChequeoPosterior = xhttp.responseText.split("-")[6].trim();
+
+                            if(horaInicialChequeoPosterior && horaInicialChequeoPosterior.length > 0) {
+                                document.getElementById("titulo-hora-final").innerHTML = "Hora de salida (*)"
+                                document.getElementById(IDCampoHoraFinal).setAttribute("required", "");
+                                mensaje_hora_final += "Campo obligatorio. Formato de 00:00:00 a " +
+                                " 24:00:00 horas."
+                            }
+                            else {
+                                document.getElementById("titulo-hora-final").innerHTML = "Hora de salida"
+                                document.getElementById(IDCampoHoraFinal).removeAttribute("required");
+                                mensaje_hora_final += "Campo opcional. Formato de 00:00:00 a " +
+                                " 24:00:00 horas."
+                            }
                         
                             if(horaFinalChequeoAnterior && horaFinalChequeoAnterior.length > 0) {
                                 if(!horaInicialChequeoPosterior && horaInicialChequeoPosterior.length <= 0) {
@@ -126,8 +140,23 @@ IDCampoHoraFinal, tipoComportamiento, numeroChequeo) {
                                 document.getElementById(IDCampoHoraFinal).setAttribute("min", horaFinalChequeoAnterior);
                             }
                             else {
-                                document.getElementById(IDCampoHoraInicial).removeAttribute("min");
-                                document.getElementById(IDCampoHoraFinal).removeAttribute("min");
+                                if(!horaInicialChequeoAnterior && horaInicialChequeoAnterior.length <= 0) {
+                                    document.getElementById(IDCampoHoraInicial).removeAttribute("min");
+                                    document.getElementById(IDCampoHoraFinal).removeAttribute("min");
+                                }
+                                else {
+                                    if(!horaInicialChequeoPosterior && horaInicialChequeoPosterior.length <= 0) {
+                                        mensaje_hora_inicial += " Debe ser mayor o igual a " + horaInicialChequeoAnterior + ".";
+                                        mensaje_hora_final += " Debe ser mayor o igual a " + horaInicialChequeoAnterior + " y estrictamente mayor a la hora de entrada.";
+                                    }
+                                    else {
+                                        mensaje_hora_inicial += " Debe ser mayor o igual a " + horaInicialChequeoAnterior + " ";
+                                        mensaje_hora_final += " Debe ser mayor o igual a " + horaInicialChequeoAnterior;
+                                    }
+
+                                    document.getElementById(IDCampoHoraInicial).setAttribute("min", horaInicialChequeoAnterior);
+                                    document.getElementById(IDCampoHoraFinal).setAttribute("min", horaInicialChequeoAnterior);
+                                }
                             }
 
                             if(horaInicialChequeoActual && horaInicialChequeoActual.length > 0) {
@@ -159,8 +188,7 @@ IDCampoHoraFinal, tipoComportamiento, numeroChequeo) {
 
                             document.getElementById(IDCampoTextoHoraInicial).innerHTML = "Campo obligatorio. Formato de 00:00:00 a " +
                             " 24:00:00 horas." + mensaje_hora_inicial;
-                            document.getElementById(IDCampoTextoHoraFinal).innerHTML = "Campo opcional. Formato de 00:00:00 a " +
-                            " 24:00:00 horas." + mensaje_hora_final;
+                            document.getElementById(IDCampoTextoHoraFinal).innerHTML = mensaje_hora_final;
                         break;
 
                         default:

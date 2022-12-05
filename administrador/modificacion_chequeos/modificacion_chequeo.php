@@ -160,7 +160,7 @@
 
                             <!--Solicitud de hora final-->
                             <div class="col-12 col-md-6 mb-4 ">
-                                <label for="hora-final" class="form-label fw-semibold"> Hora de salida </label>
+                                <label for="hora-final" class="form-label fw-semibold" id="titulo-hora-final"> Hora de salida </label>
                                 <input type="time" class="form-control" id="hora-final" step="1"
                                 autocomplete="OFF" name="hora-final" value="<?=$datos_chequeo[1]?>"
                                 oninput="verificarRangosHoras('hora-inicial', 'hora-final')">
