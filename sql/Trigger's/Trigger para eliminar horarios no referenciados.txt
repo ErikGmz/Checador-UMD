@@ -8,3 +8,14 @@ DELIMITER $$
 		END IF;
 	END$$    
 DELIMITER ;
+
+DELIMITER $$
+	CREATE OR REPLACE TRIGGER eliminadoHorarioNoUtilizadoActualizacion
+		AFTER UPDATE
+		ON colaborador FOR EACH ROW
+	BEGIN
+		IF (SELECT COUNT(ID_horario) FROM `colaborador` WHERE ID_horario = OLD.ID_horario) <= 0 THEN		
+			DELETE FROM `horario` WHERE (ID = OLD.ID_horario);
+		END IF;
+	END$$    
+DELIMITER ;
