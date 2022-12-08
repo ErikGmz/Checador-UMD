@@ -829,18 +829,6 @@ ALTER TABLE `carrera`
   MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
--- AUTO_INCREMENT de la tabla `colaborador`
---
-ALTER TABLE `colaborador`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `coordinador`
---
-ALTER TABLE `coordinador`
-  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141415;
-
---
 -- AUTO_INCREMENT de la tabla `horario`
 --
 ALTER TABLE `horario`
